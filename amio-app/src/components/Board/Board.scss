@@ -1,0 +1,28 @@
+.board {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    margin-top: 10px;
+    margin-bottom: 180px;
+    /* Space for TempSlot, ToolBar, and Slot */
+    overflow: hidden;
+
+    .board-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        height: 380px;
+        /* Visible boundary */
+        border: 2px solid rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.3);
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .tile-wrapper {
+        position: absolute;
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+}

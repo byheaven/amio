@@ -1,0 +1,33 @@
+.game-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #eef2f5;
+
+    .header {
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 20px 40px;
+        border-radius: 10px;
+        z-index: 100;
+
+        .msg {
+            font-size: 30px;
+            font-weight: bold;
+        }
+    }
+}

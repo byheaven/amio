@@ -1,0 +1,47 @@
+.temp-slot {
+    width: 180px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: fixed;
+    bottom: 190px;
+    /* Moved up slightly */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px dashed #ccc;
+    z-index: 95;
+    gap: 8px;
+
+    .temp-position {
+        width: 50px;
+        min-height: 55px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        cursor: pointer;
+
+        .stacked-tile {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .empty-slot {
+            width: 40px;
+            height: 44px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            background: rgba(200, 200, 200, 0.2);
+        }
+
+        .tile {
+            transform: scale(0.85);
+        }
+    }
+}
