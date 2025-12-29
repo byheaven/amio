@@ -1,73 +1,73 @@
-# AMIO - AI为爱定制
+# AMIO - AI-Powered Fan Game Platform
 
-> 玩游戏，赢周边
+> Play games, win merchandise
 
-一个偶像主题的 3-Tiles 消除游戏平台。
+An idol-themed 3-Tiles match game platform.
 
-## 🎮 功能特性
+## 🎮 Features
 
-- **3-Tiles 消除玩法**: 点击选中图块，凑齐3个相同图块自动消除
-- **每日关卡**: 每天一关，全平台用户共享相同布局
-- **游戏道具**: 撤回、洗牌、Pop堆叠
-- **宝箱奖励**: 通关获得宝箱，次日解锁领取
-- **宝箱等级**: 根据挑战次数和道具使用评定等级
+- **3-Tiles Match Gameplay**: Click to select tiles, match 3 identical tiles to clear them
+- **Daily Levels**: One level per day, same layout for all users
+- **Game Props**: Undo, Shuffle, Pop (stacking)
+- **Treasure Chest**: Complete levels to earn chests, unlock next day
+- **Chest Levels**: Bronze/Silver/Gold/Diamond based on attempts and prop usage
 
-## 🛠 技术栈
+## 🛠 Tech Stack
 
-- **框架**: Taro 4.x (React)
-- **语言**: TypeScript
-- **样式**: SCSS
-- **目标平台**: H5, 微信小程序, 抖音小程序
+- **Framework**: Taro 4.x (React)
+- **Language**: TypeScript
+- **Styling**: SCSS
+- **Platforms**: H5, WeChat Mini Program, Douyin Mini Program
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
 ```bash
-# 安装依赖
+# Install dependencies
 cd amio-app
 npm install
 
-# 启动 H5 开发服务器
+# Start H5 dev server
 npm run dev:h5
 
-# 构建微信小程序
+# Build for WeChat Mini Program
 npm run build:weapp
 
-# 构建 H5
+# Build for H5
 npm run build:h5
 ```
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 amio/
-├── amio-app/                # Taro 应用
+├── amio-app/                # Taro application
 │   ├── src/
-│   │   ├── components/      # 组件
-│   │   │   ├── Board/       # 游戏面板
-│   │   │   ├── Tile/        # 方块
-│   │   │   ├── Slot/        # 收集槽
-│   │   │   ├── TempSlot/    # 临时槽（Pop）
-│   │   │   ├── ToolBar/     # 工具栏
-│   │   │   └── ChestModal/  # 宝箱弹窗
-│   │   ├── pages/           # 页面
-│   │   │   ├── home/        # 首页
-│   │   │   └── game/        # 游戏页
-│   │   ├── utils/           # 工具函数
-│   │   │   ├── gameLogic.ts # 游戏逻辑
-│   │   │   ├── dailyLevel.ts# 每日关卡
-│   │   │   └── toolsLogic.ts# 道具逻辑
-│   │   └── constants/       # 常量
-│   └── config/              # Taro 配置
-└── docs/                    # 文档
-    └── AMIO_MVP_PRD_V3.md   # 产品需求文档
+│   │   ├── components/      # Components
+│   │   │   ├── Board/       # Game board
+│   │   │   ├── Tile/        # Tile piece
+│   │   │   ├── Slot/        # Collection slot
+│   │   │   ├── TempSlot/    # Temporary slot (Pop)
+│   │   │   ├── ToolBar/     # Toolbar
+│   │   │   └── ChestModal/  # Chest reward modal
+│   │   ├── pages/           # Pages
+│   │   │   ├── home/        # Home page
+│   │   │   └── game/        # Game page
+│   │   ├── utils/           # Utilities
+│   │   │   ├── gameLogic.ts # Core game logic
+│   │   │   ├── dailyLevel.ts# Daily level generation
+│   │   │   └── toolsLogic.ts# Game props logic
+│   │   └── constants/       # Constants
+│   └── config/              # Taro config
+└── docs/                    # Documentation
+    └── AMIO_MVP_PRD_V3.md   # Product requirements
 ```
 
-## 📝 开发进度
+## 📝 Development Progress
 
-- [x] Phase 1: 游戏核心循环
-- [x] Phase 2: 视觉效果 & 道具系统
-- [x] Phase 3: 每日关卡 & 宝箱奖励
-- [ ] Phase 4: 宝箱等级系统
+- [x] Phase 1: Core game loop
+- [x] Phase 2: Visuals & props system
+- [x] Phase 3: Daily levels & chest rewards
+- [ ] Phase 4: Chest level system
 
 ## 📜 License
 
