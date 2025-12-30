@@ -12,6 +12,7 @@ An idol-themed 3-Tiles match game platform.
 - **Story System**: Unlock daily story chapters after completing levels (typewriter animation)
 - **Treasure Chest**: Complete levels to earn chests, unlock next day
 - **Chest Levels**: Bronze/Silver/Gold/Diamond based on attempts and prop usage
+- **Intro Story**: Immersive opening story sequence for new users
 
 ## 🛠 Tech Stack
 
@@ -71,6 +72,7 @@ amio/
 - [x] Phase 3: Daily levels & chest rewards
 - [x] Phase 4: Chest level system
 - [x] Phase 5: Story system (post-level cutscenes)
+- [x] Phase 6: Intro story page (new user onboarding)
 
 ## 📜 License
 

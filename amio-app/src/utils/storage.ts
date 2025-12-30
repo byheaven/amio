@@ -29,6 +29,7 @@ export interface GameProgress {
     totalDaysPlayed: number;     // 总游戏天数
     storyProgress: number;       // 已解锁到第几天的故事
     viewedStories: number[];     // 已观看的故事日期列表
+    hasSeenIntro: boolean;       // 是否已观看开场剧情
 }
 
 const STORAGE_KEY = 'amio_game_progress';
@@ -58,6 +59,7 @@ export const createInitialProgress = (): GameProgress => ({
     totalDaysPlayed: 0,
     storyProgress: 0,
     viewedStories: [],
+    hasSeenIntro: false,
 });
 
 /**
@@ -89,6 +91,9 @@ export const loadProgress = (): GameProgress => {
             }
             if (progress.viewedStories === undefined) {
                 progress.viewedStories = [];
+            }
+            if (progress.hasSeenIntro === undefined) {
+                progress.hasSeenIntro = false;
             }
 
             // 检查是否是新的一天
@@ -362,3 +367,13 @@ export const markStoryViewed = (day: number): void => {
 
     saveProgress(progress);
 };
+
+/**
+ * 标记开场剧情已观看
+ */
+export const markIntroSeen = (): void => {
+    const progress = loadProgress();
+    progress.hasSeenIntro = true;
+    saveProgress(progress);
+};
+
