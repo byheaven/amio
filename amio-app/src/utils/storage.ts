@@ -23,7 +23,8 @@ export interface GameProgress {
     heroAttempted: boolean;      // 今日Hero是否已尝试
     heroCompleted: boolean;      // 今日Hero是否通关
     pendingChest: PendingChest | null; // 待领取宝箱
-    consecutiveDays: number;     // 连续开箱天数
+    consecutiveDays: number;     // 连续通关天数
+    lastCompletionDate: string | null; // 上次通关日期
     lastClaimDate: string | null; // 上次领取日期
     totalDaysPlayed: number;     // 总游戏天数
 }
@@ -50,6 +51,7 @@ export const createInitialProgress = (): GameProgress => ({
     heroCompleted: false,
     pendingChest: null,
     consecutiveDays: 0,
+    lastCompletionDate: null,
     lastClaimDate: null,
     totalDaysPlayed: 0,
 });
@@ -72,11 +74,16 @@ export const loadProgress = (): GameProgress => {
                 }
             }
 
+            // 数据迁移：添加 lastCompletionDate 字段（如果不存在）
+            if (progress.lastCompletionDate === undefined) {
+                progress.lastCompletionDate = null;
+            }
+
             // 检查是否是新的一天
             const today = getTodayDateString();
             if (progress.todayDate !== today) {
                 // 新的一天，重置今日数据
-                return {
+                const newProgress: GameProgress = {
                     ...progress,
                     todayDate: today,
                     todayAttempts: 0,
@@ -85,6 +92,9 @@ export const loadProgress = (): GameProgress => {
                     heroAttempted: false,
                     heroCompleted: false,
                 };
+                // 保存新一天的进度，确保后续操作基于正确的日期
+                saveProgress(newProgress);
+                return newProgress;
             }
             return progress;
         }
@@ -106,7 +116,8 @@ export const saveProgress = (progress: GameProgress): void => {
 };
 
 /**
- * 更新今日游戏状态
+ * 更新今日游戏状态（通关时调用）
+ * 这里处理streak和day counter的逻辑，与宝箱无关
  */
 export const updateTodayStatus = (
     attempts: number,
@@ -116,27 +127,67 @@ export const updateTodayStatus = (
     heroCompleted: boolean
 ): void => {
     const progress = loadProgress();
+    const wasCompletedBefore = progress.todayCompleted;
+    const now = new Date();
+    const today = getTodayDateString();
+
     progress.todayAttempts = attempts;
     progress.todayCompleted = completed;
     progress.todayChestLevel = chestLevel;
     progress.heroAttempted = heroAttempted;
     progress.heroCompleted = heroCompleted;
+
+    // 如果是今天第一次通关，更新streak和day counter
+    if (completed && !wasCompletedBefore) {
+        // 增加总天数
+        progress.totalDaysPlayed += 1;
+
+        // 更新连续通关天数
+        if (progress.lastCompletionDate) {
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+
+            if (progress.lastCompletionDate === yesterdayStr) {
+                // 昨天也通关了，连续+1
+                progress.consecutiveDays += 1;
+            } else if (progress.lastCompletionDate !== today) {
+                // 不是昨天也不是今天，重置为1
+                progress.consecutiveDays = 1;
+            }
+        } else {
+            // 第一次通关
+            progress.consecutiveDays = 1;
+        }
+        progress.lastCompletionDate = today;
+    }
+
     saveProgress(progress);
 };
 
 /**
- * 保存宝箱到待领取
+ * 保存宝箱到待领取（通关时调用）
+ * 注意：宝箱只是奖励，streak和day counter由updateTodayStatus处理
  */
 export const savePendingChest = (levels: ChestLevel[], isHeroBonus: boolean): void => {
     const progress = loadProgress();
     const now = new Date();
+    const today = getTodayDateString();
 
-    // 如果已经有宝箱，只更新等级，不重置倒计时
+    // 检查是否有今天的宝箱（通过earnedAt日期判断）
+    let isTodayChest = false;
     if (progress.pendingChest) {
+        const earnedDate = new Date(progress.pendingChest.earnedAt);
+        const earnedDateStr = `${earnedDate.getFullYear()}-${String(earnedDate.getMonth() + 1).padStart(2, '0')}-${String(earnedDate.getDate()).padStart(2, '0')}`;
+        isTodayChest = (earnedDateStr === today);
+    }
+
+    if (progress.pendingChest && isTodayChest) {
+        // 今天已经有宝箱了，只更新等级（Hero模式升级等情况）
         progress.pendingChest.levels = levels;
         progress.pendingChest.isHeroBonus = isHeroBonus;
     } else {
-        // 新建宝箱
+        // 新建今天的宝箱（替换旧的未领取宝箱）
         const unlockAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24小时后解锁
         const expiresAt = new Date(unlockAt.getTime() + 24 * 60 * 60 * 1000); // 解锁后24小时过期
         progress.pendingChest = {
@@ -146,8 +197,6 @@ export const savePendingChest = (levels: ChestLevel[], isHeroBonus: boolean): vo
             expiresAt: expiresAt.toISOString(),
             isHeroBonus,
         };
-        // 只在第一次创建宝箱时增加总天数
-        progress.totalDaysPlayed += 1;
     }
     saveProgress(progress);
 };
@@ -175,28 +224,13 @@ export const claimChest = (): PendingChest | null => {
     if (now > expiresAt) {
         console.log('Chest expired');
         progress.pendingChest = null;
-        progress.consecutiveDays = 0; // 过期则连续天数归零
+        // 注意：过期不再重置连续天数，连续天数由通关决定
         saveProgress(progress);
         return null;
     }
 
-    // 更新连续天数
+    // 成功领取
     const today = getTodayDateString();
-    if (progress.lastClaimDate) {
-        const lastClaim = new Date(progress.lastClaimDate);
-        const yesterday = new Date(now);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-
-        if (progress.lastClaimDate === yesterdayStr) {
-            progress.consecutiveDays += 1;
-        } else if (progress.lastClaimDate !== today) {
-            progress.consecutiveDays = 1;
-        }
-    } else {
-        progress.consecutiveDays = 1;
-    }
-
     progress.lastClaimDate = today;
     progress.pendingChest = null;
     saveProgress(progress);

@@ -65,6 +65,35 @@ export function getChestLevelInfo(level: ChestLevel): {
 }
 
 /**
+ * 获取宝箱奖励详情（用于tooltip显示）
+ */
+export function getChestRewardDetails(level: ChestLevel): {
+  coins: string;
+  props: string;
+  lottery: string;
+  physical: string;
+}[] {
+  switch (level) {
+    case ChestLevel.DIAMOND:
+      return [
+        { coins: '金币×500', props: '道具×3', lottery: '抽奖券×2', physical: '10%实体周边' },
+      ];
+    case ChestLevel.GOLD:
+      return [
+        { coins: '金币×300', props: '道具×2', lottery: '抽奖券×1', physical: '3%实体周边' },
+      ];
+    case ChestLevel.SILVER:
+      return [
+        { coins: '金币×150', props: '道具×1', lottery: '5%抽奖券', physical: '' },
+      ];
+    case ChestLevel.BRONZE:
+      return [
+        { coins: '金币×50', props: '道具碎片', lottery: '', physical: '' },
+      ];
+  }
+}
+
+/**
  * Hero模式升级宝箱等级 (+2级，可能获得多个宝箱)
  * - 青铜 → 黄金 (1个)
  * - 白银 → 钻石 (1个)

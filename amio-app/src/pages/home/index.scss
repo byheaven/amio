@@ -94,6 +94,11 @@
             margin-bottom: 12px;
         }
 
+        .chest-icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
         .chest-icon {
             width: 80px;
             height: 80px;
@@ -103,6 +108,11 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+            transition: transform 0.2s ease;
+
+            &:active {
+                transform: scale(0.95);
+            }
 
             .chest-emoji {
                 font-size: 40px;
@@ -113,10 +123,112 @@
             }
         }
 
+        .chest-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            padding: 12px 16px;
+            min-width: 180px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 8px solid transparent;
+                border-top-color: rgba(0, 0, 0, 0.9);
+            }
+
+            .tooltip-title {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 8px;
+                white-space: nowrap;
+            }
+
+            .tooltip-rewards {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .tooltip-item {
+                    font-size: 13px;
+                    color: #ddd;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        // Desktop hover support - show tooltip on hover (hidden by default, shown on hover)
+        .chest-icon-wrapper {
+            .chest-tooltip-hover {
+                display: none;
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-bottom: 8px;
+                background: rgba(0, 0, 0, 0.9);
+                border-radius: 12px;
+                padding: 12px 16px;
+                min-width: 180px;
+                z-index: 100;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border: 8px solid transparent;
+                    border-top-color: rgba(0, 0, 0, 0.9);
+                }
+
+                .tooltip-title {
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #fff;
+                    margin-bottom: 8px;
+                    white-space: nowrap;
+                }
+
+                .tooltip-rewards {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    .tooltip-item {
+                        font-size: 13px;
+                        color: #ddd;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            // Show tooltip on hover (desktop)
+            &:hover .chest-tooltip-hover {
+                display: block;
+            }
+        }
+
         @keyframes glow {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
             }
+
             50% {
                 box-shadow: 0 4px 30px rgba(255, 193, 7, 0.6);
             }
@@ -185,7 +297,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
 
             .streak-icon {
                 font-size: 20px;
@@ -198,10 +310,36 @@
             }
         }
 
-        .streak-reward {
-            .reward-hint {
-                font-size: 13px;
-                color: #FF6B00;
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .milestone-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                background: #f5f5f5;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+
+                &.completed {
+                    background: #E8F5E9;
+
+                    .milestone-text {
+                        color: #4CAF50;
+                    }
+                }
+
+                .milestone-check {
+                    font-size: 14px;
+                }
+
+                .milestone-text {
+                    font-size: 13px;
+                    color: #666;
+                }
             }
         }
     }

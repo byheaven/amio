@@ -12,7 +12,7 @@ import { getDailyLayoutSeed, generateDailyLayout, assignRandomTileTypes } from '
 import { generateHeroLevel } from '../../utils/heroLevel';
 import { undoLastTile, shuffleBoard, popTilesToTemp, returnTileFromTempStack, TempSlotStacks } from '../../utils/toolsLogic';
 import { calculateChestLevel, createInitialStats, upgradeChestForHero } from '../../utils/chestLogic';
-import { savePendingChest, updateTodayStatus } from '../../utils/storage';
+import { savePendingChest, updateTodayStatus, loadProgress } from '../../utils/storage';
 import './index.scss';
 
 // Layout position type (matches dailyLevel.ts)
@@ -48,7 +48,11 @@ const Game: React.FC = () => {
         // 检查URL参数决定启动模式
         const mode = router.params.mode;
         if (mode === 'hero') {
-            // 直接启动Hero模式
+            // 直接启动Hero模式，需要从storage加载已有宝箱等级
+            const progress = loadProgress();
+            const existingChestLevel = progress.pendingChest?.levels?.[0] || ChestLevel.BRONZE;
+            setChestLevels([existingChestLevel]);
+
             const heroTiles = generateHeroLevel(seed);
             setBoardTiles(heroTiles);
             setSlotTiles([]);
