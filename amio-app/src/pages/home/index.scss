@@ -88,6 +88,12 @@
             color: #ccc;
         }
 
+        .chest-icons-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
         .chest-icon {
             width: 80px;
             height: 80px;
@@ -96,7 +102,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 12px;
             box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
 
             .chest-emoji {

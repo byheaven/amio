@@ -56,9 +56,12 @@ const Home: React.FC = () => {
     const handleClaimChest = () => {
         const claimed = claimChest();
         if (claimed) {
-            const info = getChestLevelInfo(claimed.level);
+            const infos = claimed.levels.map(level => getChestLevelInfo(level));
+            const title = claimed.levels.length > 1
+                ? `获得 ${infos.map(i => i.emoji).join(' + ')}`
+                : `获得 ${infos[0].emoji} ${infos[0].name}`;
             Taro.showToast({
-                title: `获得 ${info.emoji} ${info.name}`,
+                title,
                 icon: 'success',
             });
             setProgress(loadProgress());
@@ -67,7 +70,7 @@ const Home: React.FC = () => {
     };
 
     const streakInfo = getStreakRewardInfo(progress.consecutiveDays);
-    const chestInfo = chestStatus.chest ? getChestLevelInfo(chestStatus.chest.level) : null;
+    const chestInfos = chestStatus.chest ? chestStatus.chest.levels.map(level => getChestLevelInfo(level)) : null;
 
     return (
         <View className="home-page">
@@ -94,12 +97,21 @@ const Home: React.FC = () => {
                     </View>
                 )}
 
-                {chestStatus.status === 'locked' && chestInfo && (
+                {chestStatus.status === 'locked' && chestInfos && (
                     <View className="chest-locked">
-                        <View className="chest-icon">
-                            <Text className="chest-emoji">{chestInfo.emoji}</Text>
+                        <View className="chest-icons-row">
+                            {chestInfos.map((info, index) => (
+                                <View key={index} className="chest-icon">
+                                    <Text className="chest-emoji">{info.emoji}</Text>
+                                </View>
+                            ))}
                         </View>
-                        <Text className="chest-name">{chestInfo.name}</Text>
+                        <Text className="chest-name">
+                            {chestInfos.length > 1
+                                ? chestInfos.map(i => i.name).join(' + ')
+                                : chestInfos[0].name
+                            }
+                        </Text>
                         <View className="countdown-box">
                             <Text className="countdown-label">🔒 解锁倒计时</Text>
                             <Text className="countdown-time">{countdown}</Text>
@@ -107,12 +119,21 @@ const Home: React.FC = () => {
                     </View>
                 )}
 
-                {chestStatus.status === 'unlocked' && chestInfo && (
+                {chestStatus.status === 'unlocked' && chestInfos && (
                     <View className="chest-unlocked">
-                        <View className="chest-icon glowing">
-                            <Text className="chest-emoji">{chestInfo.emoji}</Text>
+                        <View className="chest-icons-row">
+                            {chestInfos.map((info, index) => (
+                                <View key={index} className="chest-icon glowing">
+                                    <Text className="chest-emoji">{info.emoji}</Text>
+                                </View>
+                            ))}
                         </View>
-                        <Text className="chest-name">{chestInfo.name}</Text>
+                        <Text className="chest-name">
+                            {chestInfos.length > 1
+                                ? chestInfos.map(i => i.name).join(' + ')
+                                : chestInfos[0].name
+                            }
+                        </Text>
                         <Button className="claim-btn" onClick={handleClaimChest}>
                             开启宝箱
                         </Button>

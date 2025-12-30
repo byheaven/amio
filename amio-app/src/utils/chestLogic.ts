@@ -65,21 +65,22 @@ export function getChestLevelInfo(level: ChestLevel): {
 }
 
 /**
- * Hero模式升级宝箱等级
- * - 青铜 → 白银 (+2级但不超过白银)
- * - 白银 → 黄金 (+2级但不超过黄金)
- * - 黄金 → 钻石 (+1级)
- * - 钻石 → 钻石+ (保持)
+ * Hero模式升级宝箱等级 (+2级，可能获得多个宝箱)
+ * - 青铜 → 黄金 (1个)
+ * - 白银 → 钻石 (1个)
+ * - 黄金 → 钻石 + 黄金 (2个)
+ * - 钻石 → 钻石 × 2 (2个)
  */
-export function upgradeChestForHero(originalLevel: ChestLevel): ChestLevel {
+export function upgradeChestForHero(originalLevel: ChestLevel): ChestLevel[] {
   switch (originalLevel) {
     case ChestLevel.BRONZE:
-      return ChestLevel.SILVER;
+      return [ChestLevel.GOLD];                          // 青铜 +2 → 黄金
     case ChestLevel.SILVER:
-      return ChestLevel.GOLD;
+      return [ChestLevel.DIAMOND];                       // 白银 +2 → 钻石
     case ChestLevel.GOLD:
+      return [ChestLevel.DIAMOND, ChestLevel.GOLD];      // 黄金 → 钻石 + 黄金
     case ChestLevel.DIAMOND:
-      return ChestLevel.DIAMOND;
+      return [ChestLevel.DIAMOND, ChestLevel.DIAMOND];   // 钻石 → 钻石 × 2
   }
 }
 

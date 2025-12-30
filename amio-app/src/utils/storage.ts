@@ -5,7 +5,7 @@ import { ChestLevel } from '../constants/game';
  * 待领取的宝箱
  */
 export interface PendingChest {
-    level: ChestLevel;
+    levels: ChestLevel[];  // 宝箱等级数组（Hero模式可能获得多个）
     earnedAt: string;      // ISO 时间戳
     unlockAt: string;      // 解锁时间（24小时后）
     expiresAt: string;     // 过期时间（解锁后24小时）
@@ -62,6 +62,16 @@ export const loadProgress = (): GameProgress => {
         const data = Taro.getStorageSync(STORAGE_KEY);
         if (data) {
             const progress: GameProgress = JSON.parse(data);
+
+            // 数据迁移：将旧的 level 字段转换为 levels 数组
+            if (progress.pendingChest) {
+                const chest = progress.pendingChest as any;
+                if (chest.level !== undefined && chest.levels === undefined) {
+                    chest.levels = [chest.level];
+                    delete chest.level;
+                }
+            }
+
             // 检查是否是新的一天
             const today = getTodayDateString();
             if (progress.todayDate !== today) {
@@ -117,20 +127,20 @@ export const updateTodayStatus = (
 /**
  * 保存宝箱到待领取
  */
-export const savePendingChest = (level: ChestLevel, isHeroBonus: boolean): void => {
+export const savePendingChest = (levels: ChestLevel[], isHeroBonus: boolean): void => {
     const progress = loadProgress();
     const now = new Date();
 
     // 如果已经有宝箱，只更新等级，不重置倒计时
     if (progress.pendingChest) {
-        progress.pendingChest.level = level;
+        progress.pendingChest.levels = levels;
         progress.pendingChest.isHeroBonus = isHeroBonus;
     } else {
         // 新建宝箱
         const unlockAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24小时后解锁
         const expiresAt = new Date(unlockAt.getTime() + 24 * 60 * 60 * 1000); // 解锁后24小时过期
         progress.pendingChest = {
-            level,
+            levels,
             earnedAt: now.toISOString(),
             unlockAt: unlockAt.toISOString(),
             expiresAt: expiresAt.toISOString(),

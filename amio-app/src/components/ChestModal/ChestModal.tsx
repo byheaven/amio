@@ -5,7 +5,7 @@ import { getChestLevelInfo, upgradeChestForHero } from '../../utils/chestLogic';
 import './ChestModal.scss';
 
 interface ChestModalProps {
-    chestLevel: ChestLevel;
+    chestLevels: ChestLevel[];
     stats: GameStats;
     gameMode: GameMode;
     canChallengeHero: boolean;
@@ -15,7 +15,7 @@ interface ChestModalProps {
 }
 
 const ChestModal: React.FC<ChestModalProps> = ({
-    chestLevel,
+    chestLevels,
     stats,
     gameMode,
     canChallengeHero,
@@ -23,12 +23,12 @@ const ChestModal: React.FC<ChestModalProps> = ({
     onHeroChallenge,
     onClose,
 }) => {
-    const chestInfo = getChestLevelInfo(chestLevel);
     const isHeroMode = gameMode === GameMode.HERO;
+    const chestInfos = chestLevels.map(level => getChestLevelInfo(level));
 
-    // 计算Hero模式可能升级到的等级
-    const upgradedLevel = upgradeChestForHero(chestLevel);
-    const upgradedInfo = getChestLevelInfo(upgradedLevel);
+    // 计算Hero模式可能升级到的等级（用于预览）
+    const upgradedLevels = upgradeChestForHero(chestLevels[0]);
+    const upgradedInfos = upgradedLevels.map(level => getChestLevelInfo(level));
 
     return (
         <View className="chest-modal-overlay">
@@ -38,14 +38,22 @@ const ChestModal: React.FC<ChestModalProps> = ({
                 </Text>
 
                 <View className="chest-container">
-                    <View
-                        className={`chest-display chest-${chestLevel}`}
-                        style={{ borderColor: chestInfo.color }}
-                    >
-                        <Text className="chest-emoji">{chestInfo.emoji}</Text>
+                    <View className="chest-row">
+                        {chestInfos.map((info, index) => (
+                            <View
+                                key={index}
+                                className={`chest-display chest-${chestLevels[index]}`}
+                                style={{ borderColor: info.color }}
+                            >
+                                <Text className="chest-emoji">{info.emoji}</Text>
+                            </View>
+                        ))}
                     </View>
-                    <Text className="chest-name" style={{ color: chestInfo.color }}>
-                        {chestInfo.name}
+                    <Text className="chest-name" style={{ color: chestInfos[0].color }}>
+                        {chestLevels.length > 1
+                            ? `${chestInfos.map(i => i.name).join(' + ')}`
+                            : chestInfos[0].name
+                        }
                     </Text>
                     {isHeroMode && (
                         <Text className="hero-bonus">🔥 Hero加成生效！</Text>
@@ -68,7 +76,7 @@ const ChestModal: React.FC<ChestModalProps> = ({
                     <View className="hero-section">
                         <Text className="hero-title">🔥 挑战Hero模式？</Text>
                         <Text className="hero-desc">
-                            通关可升级为 {upgradedInfo.emoji} {upgradedInfo.name}
+                            通关可升级为 {upgradedInfos.map(i => `${i.emoji} ${i.name}`).join(' + ')}
                         </Text>
                         <Text className="hero-warning">⚠️ 仅有1次机会，失败不扣宝箱</Text>
                     </View>

@@ -53,6 +53,12 @@
         margin-bottom: 20px;
     }
 
+    .chest-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 10px;
+    }
+
     .chest-display {
         width: 100px;
         height: 100px;
@@ -63,7 +69,6 @@
         align-items: center;
         background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;
 
         .chest-emoji {
             font-size: 48px;

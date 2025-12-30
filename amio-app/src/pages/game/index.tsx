@@ -30,7 +30,7 @@ const Game: React.FC = () => {
     const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
     const [gameMode, setGameMode] = useState<GameMode>(GameMode.NORMAL);
     const [gameStats, setGameStats] = useState<GameStats>(createInitialStats());
-    const [chestLevel, setChestLevel] = useState<ChestLevel>(ChestLevel.BRONZE);
+    const [chestLevels, setChestLevels] = useState<ChestLevel[]>([ChestLevel.BRONZE]);
     const [heroAttempted, setHeroAttempted] = useState<boolean>(false);
     const [normalCompleted, setNormalCompleted] = useState<boolean>(false);
     const [showResult, setShowResult] = useState<boolean>(false);
@@ -140,12 +140,12 @@ const Game: React.FC = () => {
     const handleClaim = () => {
         console.log('handleClaim - heroAttempted:', heroAttempted, 'gameMode:', gameMode);
         // 保存宝箱到待领取
-        savePendingChest(chestLevel, gameMode === GameMode.HERO);
+        savePendingChest(chestLevels, gameMode === GameMode.HERO);
         // 更新今日状态
         updateTodayStatus(
             gameStats.attempts,
             true,
-            chestLevel,
+            chestLevels[0], // 用第一个宝箱作为今日宝箱等级
             heroAttempted,
             gameMode === GameMode.HERO && status === 'won'
         );
@@ -183,13 +183,13 @@ const Game: React.FC = () => {
             setStatus('won');
 
             if (gameMode === GameMode.HERO) {
-                // Hero模式通关，升级宝箱
-                const upgradedLevel = upgradeChestForHero(chestLevel);
-                setChestLevel(upgradedLevel);
+                // Hero模式通关，升级宝箱（可能获得多个）
+                const upgradedLevels = upgradeChestForHero(chestLevels[0]);
+                setChestLevels(upgradedLevels);
             } else {
                 // 普通模式通关，计算宝箱等级
                 const level = calculateChestLevel(gameStats);
-                setChestLevel(level);
+                setChestLevels([level]);
                 setNormalCompleted(true);
             }
             setShowResult(true);
@@ -279,13 +279,13 @@ const Game: React.FC = () => {
         setStatus('won');
 
         if (gameMode === GameMode.HERO) {
-            // Hero模式通关，升级宝箱
-            const upgradedLevel = upgradeChestForHero(chestLevel);
-            setChestLevel(upgradedLevel);
+            // Hero模式通关，升级宝箱（可能获得多个）
+            const upgradedLevels = upgradeChestForHero(chestLevels[0]);
+            setChestLevels(upgradedLevels);
         } else {
             // 普通模式通关，计算宝箱等级
             const level = calculateChestLevel(gameStats);
-            setChestLevel(level);
+            setChestLevels([level]);
             setNormalCompleted(true);
         }
         setShowResult(true);
@@ -333,7 +333,7 @@ const Game: React.FC = () => {
             {/* 通关结算弹窗 */}
             {showResult && status === 'won' && (
                 <ChestModal
-                    chestLevel={chestLevel}
+                    chestLevels={chestLevels}
                     stats={gameStats}
                     gameMode={gameMode}
                     canChallengeHero={canChallengeHero}
@@ -361,7 +361,7 @@ const Game: React.FC = () => {
                     <View className="lost-modal hero-lost">
                         <Text className="lost-title">Hero挑战失败</Text>
                         <Text className="lost-msg">再试一次，或领取当前宝箱</Text>
-                        <Text className="chest-keep">当前 {chestLevel === ChestLevel.DIAMOND ? '💎' : chestLevel === ChestLevel.GOLD ? '🥇' : chestLevel === ChestLevel.SILVER ? '🥈' : '🥉'} 宝箱</Text>
+                        <Text className="chest-keep">当前 {chestLevels[0] === ChestLevel.DIAMOND ? '💎' : chestLevels[0] === ChestLevel.GOLD ? '🥇' : chestLevels[0] === ChestLevel.SILVER ? '🥈' : '🥉'} 宝箱</Text>
                         <Text className="lost-attempt">本次挑战：第 {gameStats.attempts} 次</Text>
                         <Button className="retry-btn" onClick={handleRetry}>再来一次</Button>
                         <Button className="claim-btn-secondary" onClick={handleClaim}>领取宝箱</Button>
