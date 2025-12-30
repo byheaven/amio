@@ -1,46 +1,96 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Button } from '@tarojs/components';
+import { ChestLevel, GameStats, GameMode } from '../../constants/game';
+import { getChestLevelInfo, upgradeChestForHero } from '../../utils/chestLogic';
 import './ChestModal.scss';
 
 interface ChestModalProps {
+    chestLevel: ChestLevel;
+    stats: GameStats;
+    gameMode: GameMode;
+    canChallengeHero: boolean;
     onClaim: () => void;
+    onHeroChallenge: () => void;
     onClose: () => void;
 }
 
-const ChestModal: React.FC<ChestModalProps> = ({ onClaim, onClose }) => {
-    const [isOpened, setIsOpened] = useState(false);
+const ChestModal: React.FC<ChestModalProps> = ({
+    chestLevel,
+    stats,
+    gameMode,
+    canChallengeHero,
+    onClaim,
+    onHeroChallenge,
+    onClose,
+}) => {
+    const chestInfo = getChestLevelInfo(chestLevel);
+    const isHeroMode = gameMode === GameMode.HERO;
 
-    const handleClaim = () => {
-        if (!isOpened) {
-            setIsOpened(true);
-            // Delay before calling onClaim to show animation
-            setTimeout(() => {
-                onClaim();
-            }, 800);
-        }
-    };
+    // 计算Hero模式可能升级到的等级
+    const upgradedLevel = upgradeChestForHero(chestLevel);
+    const upgradedInfo = getChestLevelInfo(upgradedLevel);
 
     return (
-        <View className="chest-modal">
-            <Text className="victory-text">🎉 恭喜过关！</Text>
-
-            <View className="chest-container">
-                <View className={`chest-icon ${isOpened ? 'chest-opened' : ''}`} onClick={handleClaim} />
-
-                <Text className="reward-text">
-                    {isOpened ? '获得今日奖励！' : '点击宝箱领取奖励'}
+        <View className="chest-modal-overlay">
+            <View className="chest-modal">
+                <Text className="victory-text">
+                    {isHeroMode ? '🏆 Hero通关！' : '🎉 恭喜通关！'}
                 </Text>
-            </View>
 
-            {!isOpened ? (
-                <Button className="claim-button" onClick={handleClaim}>
-                    开启宝箱
-                </Button>
-            ) : (
-                <Button className="close-button" onClick={onClose}>
-                    继续
-                </Button>
-            )}
+                <View className="chest-container">
+                    <View
+                        className={`chest-display chest-${chestLevel}`}
+                        style={{ borderColor: chestInfo.color }}
+                    >
+                        <Text className="chest-emoji">{chestInfo.emoji}</Text>
+                    </View>
+                    <Text className="chest-name" style={{ color: chestInfo.color }}>
+                        {chestInfo.name}
+                    </Text>
+                    {isHeroMode && (
+                        <Text className="hero-bonus">🔥 Hero加成生效！</Text>
+                    )}
+                </View>
+
+                <View className="stats-container">
+                    <View className="stat-item">
+                        <Text className="stat-label">挑战次数</Text>
+                        <Text className="stat-value">{stats.attempts}次</Text>
+                    </View>
+                    <View className="stat-item">
+                        <Text className="stat-label">道具使用</Text>
+                        <Text className="stat-value">{stats.toolsUsed}个</Text>
+                    </View>
+                </View>
+
+                {/* 只在普通模式通关且可以挑战Hero时显示Hero区域 */}
+                {canChallengeHero && (
+                    <View className="hero-section">
+                        <Text className="hero-title">🔥 挑战Hero模式？</Text>
+                        <Text className="hero-desc">
+                            通关可升级为 {upgradedInfo.emoji} {upgradedInfo.name}
+                        </Text>
+                        <Text className="hero-warning">⚠️ 仅有1次机会，失败不扣宝箱</Text>
+                    </View>
+                )}
+
+                <View className="button-group">
+                    {canChallengeHero ? (
+                        <>
+                            <Button className="btn-secondary" onClick={onClaim}>
+                                领取宝箱
+                            </Button>
+                            <Button className="btn-primary" onClick={onHeroChallenge}>
+                                挑战Hero！
+                            </Button>
+                        </>
+                    ) : (
+                        <Button className="btn-primary full-width" onClick={onClaim}>
+                            领取宝箱
+                        </Button>
+                    )}
+                </View>
+            </View>
         </View>
     );
 };
