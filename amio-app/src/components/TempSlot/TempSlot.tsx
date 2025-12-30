@@ -29,14 +29,14 @@ const TempSlot: React.FC<TempSlotProps> = ({ stacks, onStackClick }) => {
                             className="stacked-tile"
                             style={{
                                 zIndex: stackIndex,
-                                transform: `translateY(${-stackIndex * 4}px)` // Visual offset for stacking
+                                transform: `translate(-50%, calc(-50% - ${stackIndex * 4}px))` // Centered + Visual offset for stacking
                             }}
                         >
                             <Tile
                                 data={{ ...tile, isClickable: stackIndex === stack.length - 1 }}
                                 onClick={() => { }} // Click handled by parent
-                                width={40}
-                                height={44}
+                                width={48}
+                                height={53}
                             />
                         </View>
                     ))}

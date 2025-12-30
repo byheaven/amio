@@ -37,4 +37,16 @@
             background-color: rgba(0, 0, 0, 0.06);
         }
     }
+
+    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
+    @media (max-width: 768PX) {
+        height: 50PX;
+        bottom: 10PX;
+        width: 95%;
+        padding: 4PX;
+
+        .slot-cell .tile {
+            transform: scale(0.7);
+        }
+    }
 }

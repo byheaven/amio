@@ -1,12 +1,11 @@
 .temp-slot {
-    width: 180px;
+    width: fit-content;
     height: 80px;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center; // Vertical centering
     position: fixed;
     bottom: 190px;
-    /* Moved up slightly */
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.8);
@@ -14,34 +13,55 @@
     padding: 8px 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border: 1px dashed #ccc;
-    z-index: 95;
+    z-index: 105;
     gap: 8px;
 
     .temp-position {
-        width: 50px;
-        min-height: 55px;
+        width: 48px;
+        height: 66px; // Height to accommodate tile and stacking
         position: relative;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: center;
         cursor: pointer;
 
         .stacked-tile {
             position: absolute;
-            bottom: 0;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
         }
 
         .empty-slot {
-            width: 40px;
-            height: 44px;
+            width: 48px;
+            height: 53px;
             border: 2px dashed #ddd;
             border-radius: 6px;
             background: rgba(200, 200, 200, 0.2);
         }
+    }
 
-        .tile {
-            transform: scale(0.85);
+    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
+    @media (max-width: 768PX) {
+        width: fit-content;
+        height: 75PX;
+        bottom: 145PX;
+        padding: 6PX 10PX;
+        gap: 8PX;
+
+        .temp-position {
+            width: 48PX;
+            height: 60PX;
+
+            .empty-slot {
+                width: 48PX;
+                height: 53PX;
+                box-sizing: border-box;
+            }
+
+            .tile {
+                transform: none;
+            }
         }
     }
 }

@@ -157,8 +157,18 @@ const Game: React.FC = () => {
             heroAttempted,
             gameMode === GameMode.HERO && status === 'won'
         );
-        // 返回首页
-        Taro.navigateBack();
+
+        // 明确关闭结算界面，防止留在当前页且逻辑泄露
+        setShowResult(false);
+        setStatus('won');
+
+        // 返回首页，增加回滚处理
+        Taro.navigateBack({
+            fail: () => {
+                // 如果 navigateBack 失败（比如在 H5 直接刷新进入），则 relaunch 到首页
+                Taro.reLaunch({ url: '/pages/home/index' });
+            }
+        });
     };
 
     const handleTileClick = (tile: TileData) => {

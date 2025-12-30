@@ -61,4 +61,29 @@
             }
         }
     }
+
+    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
+    @media (max-width: 768PX) {
+        bottom: 75PX;
+        gap: 12PX;
+
+        .tool-btn {
+            width: 60PX;
+            height: 60PX;
+            border-radius: 12PX;
+            border-width: 1PX;
+
+            .tool-icon {
+                font-size: 18PX;
+            }
+
+            .tool-name {
+                font-size: 10PX;
+            }
+
+            .tool-count {
+                font-size: 9PX;
+            }
+        }
+    }
 }
