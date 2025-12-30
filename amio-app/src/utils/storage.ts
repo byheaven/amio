@@ -27,6 +27,8 @@ export interface GameProgress {
     lastCompletionDate: string | null; // 上次通关日期
     lastClaimDate: string | null; // 上次领取日期
     totalDaysPlayed: number;     // 总游戏天数
+    storyProgress: number;       // 已解锁到第几天的故事
+    viewedStories: number[];     // 已观看的故事日期列表
 }
 
 const STORAGE_KEY = 'amio_game_progress';
@@ -54,6 +56,8 @@ export const createInitialProgress = (): GameProgress => ({
     lastCompletionDate: null,
     lastClaimDate: null,
     totalDaysPlayed: 0,
+    storyProgress: 0,
+    viewedStories: [],
 });
 
 /**
@@ -77,6 +81,14 @@ export const loadProgress = (): GameProgress => {
             // 数据迁移：添加 lastCompletionDate 字段（如果不存在）
             if (progress.lastCompletionDate === undefined) {
                 progress.lastCompletionDate = null;
+            }
+
+            // 数据迁移：添加故事进度字段（如果不存在）
+            if (progress.storyProgress === undefined) {
+                progress.storyProgress = 0;
+            }
+            if (progress.viewedStories === undefined) {
+                progress.viewedStories = [];
             }
 
             // 检查是否是新的一天
@@ -314,4 +326,39 @@ export const formatRemainingTime = (ms: number): string => {
     const secs = seconds % 60;
 
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+};
+
+/**
+ * 获取下一个要展示的故事天数
+ * 返回 0 表示没有新故事需要展示
+ */
+export const getNextStoryDay = (): number => {
+    const progress = loadProgress();
+    const nextDay = progress.storyProgress + 1;
+
+    // 检查这个故事是否已经观看过
+    if (progress.viewedStories.includes(nextDay)) {
+        return 0;
+    }
+
+    return nextDay;
+};
+
+/**
+ * 标记故事已观看
+ */
+export const markStoryViewed = (day: number): void => {
+    const progress = loadProgress();
+
+    // 添加到已观看列表
+    if (!progress.viewedStories.includes(day)) {
+        progress.viewedStories.push(day);
+    }
+
+    // 更新故事进度
+    if (day > progress.storyProgress) {
+        progress.storyProgress = day;
+    }
+
+    saveProgress(progress);
 };

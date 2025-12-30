@@ -94,6 +94,17 @@ amio-app/src/
 - `savePendingChest()` - Store earned chest (24hr unlock, 24hr expiry)
 - `claimChest()` - Claim unlocked chest, update streak
 - `getChestStatus()` - Check chest state (none/locked/unlocked/expired)
+- `getNextStoryDay()` - Get next story day to display
+- `markStoryViewed(day)` - Mark story as viewed
+
+### Story System (src/constants/storyData.ts)
+- 7 days of story content for Sun Yingsha's table tennis journey
+- `getStoryByDay(day)` - Get story content for specific day
+
+### Story Modal (src/components/StoryModal/)
+- Displays after level completion (before chest modal)
+- Typewriter text animation effect
+- Skip button + Continue button
 
 ## Key Types (src/constants/game.ts)
 

@@ -125,3 +125,51 @@ export function createInitialStats(): GameStats {
     popUsed: false,
   };
 }
+
+/**
+ * 从宝箱等级生成具体奖励列表
+ */
+export function generateRewardsFromChest(level: ChestLevel): string[] {
+  const rewards: string[] = [];
+  const details = getChestRewardDetails(level)[0]; // 目前每个等级只有一种配置
+
+  // 解析金币
+  if (details.coins) {
+    rewards.push(details.coins);
+  }
+
+  // 解析道具
+  if (details.props) {
+    rewards.push(details.props);
+  }
+
+  // 解析抽奖券 (可能是 "抽奖券×2" 或 "5%抽奖券")
+  if (details.lottery) {
+    if (details.lottery.includes('%')) {
+      // 概率获取
+      const probability = parseInt(details.lottery);
+      if (Math.random() * 100 < probability) {
+        // 提取物品名称，去掉概率部分
+        const name = details.lottery.replace(/\d+%/, '');
+        rewards.push(name || '抽奖券');
+      }
+    } else {
+      rewards.push(details.lottery);
+    }
+  }
+
+  // 解析实物 (同理)
+  if (details.physical) {
+    if (details.physical.includes('%')) {
+      const probability = parseInt(details.physical);
+      if (Math.random() * 100 < probability) {
+        const name = details.physical.replace(/\d+%/, '');
+        rewards.push(name || '实体周边');
+      }
+    } else {
+      rewards.push(details.physical);
+    }
+  }
+
+  return rewards;
+}

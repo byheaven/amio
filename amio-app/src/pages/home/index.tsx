@@ -13,12 +13,15 @@ import {
 import { getChestLevelInfo, getChestRewardDetails } from '../../utils/chestLogic';
 import { ChestLevel } from '../../constants/game';
 import './index.scss';
+import { ChestRewardModal } from '../../components/ChestRewardModal';
 
 const Home: React.FC = () => {
     const [progress, setProgress] = useState(loadProgress());
     const [chestStatus, setChestStatus] = useState(getChestStatus());
     const [countdown, setCountdown] = useState('');
     const [tooltipVisible, setTooltipVisible] = useState<number | null>(null);
+    const [rewardModalVisible, setRewardModalVisible] = useState(false);
+    const [rewardChestLevels, setRewardChestLevels] = useState<ChestLevel[]>([]);
 
     // 页面显示时刷新数据（从游戏页面返回时）
     useDidShow(() => {
@@ -122,17 +125,18 @@ const Home: React.FC = () => {
     const handleClaimChest = () => {
         const claimed = claimChest();
         if (claimed) {
-            const infos = claimed.levels.map(level => getChestLevelInfo(level));
-            const title = claimed.levels.length > 1
-                ? `获得 ${infos.map(i => i.emoji).join(' + ')}`
-                : `获得 ${infos[0].emoji} ${infos[0].name}`;
-            Taro.showToast({
-                title,
-                icon: 'success',
-            });
+            // 设置奖励宝箱等级并打开弹窗
+            setRewardChestLevels(claimed.levels);
+            setRewardModalVisible(true);
+
+            // 刷新状态 (claimedChest会在claimChest()内部自动清除pendingChest，所以getChestStatus()会返回none)
             setProgress(loadProgress());
             setChestStatus(getChestStatus());
         }
+    };
+
+    const handleRewardModalClose = () => {
+        setRewardModalVisible(false);
     };
 
     // 显示的连续天数（现在在通关时就已计算，无需+1）
@@ -188,6 +192,11 @@ const Home: React.FC = () => {
 
     return (
         <View className="home-page" onClick={handlePageClick}>
+            <ChestRewardModal
+                visible={rewardModalVisible}
+                chestLevels={rewardChestLevels}
+                onClose={handleRewardModalClose}
+            />
             {/* 顶部区域 */}
             <View className="header-section">
                 <Text className="title">🦈 鲨之星</Text>

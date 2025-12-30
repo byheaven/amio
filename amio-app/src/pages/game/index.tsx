@@ -6,13 +6,15 @@ import Slot from '../../components/Slot/Slot';
 import TempSlot from '../../components/TempSlot/TempSlot';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import ChestModal from '../../components/ChestModal/ChestModal';
+import StoryModal from '../../components/StoryModal/StoryModal';
 import { TileData, MAX_SLOTS, GameStats, ChestLevel, GameMode } from '../../constants/game';
 import { checkMatch, updateClickableStatus } from '../../utils/gameLogic';
 import { getDailyLayoutSeed, generateDailyLayout, assignRandomTileTypes } from '../../utils/dailyLevel';
 import { generateHeroLevel } from '../../utils/heroLevel';
 import { undoLastTile, shuffleBoard, popTilesToTemp, returnTileFromTempStack, TempSlotStacks } from '../../utils/toolsLogic';
 import { calculateChestLevel, createInitialStats, upgradeChestForHero } from '../../utils/chestLogic';
-import { savePendingChest, updateTodayStatus, loadProgress } from '../../utils/storage';
+import { savePendingChest, updateTodayStatus, loadProgress, getNextStoryDay, markStoryViewed } from '../../utils/storage';
+import { getStoryByDay } from '../../constants/storyData';
 import './index.scss';
 
 // Layout position type (matches dailyLevel.ts)
@@ -34,6 +36,8 @@ const Game: React.FC = () => {
     const [heroAttempted, setHeroAttempted] = useState<boolean>(false);
     const [normalCompleted, setNormalCompleted] = useState<boolean>(false);
     const [showResult, setShowResult] = useState<boolean>(false);
+    const [showStory, setShowStory] = useState<boolean>(false);
+    const [currentStoryDay, setCurrentStoryDay] = useState<number>(0);
 
     // Store daily layout (fixed positions) - persists across retries
     const dailyLayoutRef = useRef<LayoutPosition[]>([]);
@@ -190,13 +194,24 @@ const Game: React.FC = () => {
                 // Hero模式通关，升级宝箱（可能获得多个）
                 const upgradedLevels = upgradeChestForHero(chestLevels[0]);
                 setChestLevels(upgradedLevels);
+                // Hero模式不显示新故事（同一天只有一个故事）
+                setShowResult(true);
             } else {
                 // 普通模式通关，计算宝箱等级
                 const level = calculateChestLevel(gameStats);
                 setChestLevels([level]);
                 setNormalCompleted(true);
+
+                // 检查是否有新故事需要展示
+                const storyDay = getNextStoryDay();
+                const story = getStoryByDay(storyDay);
+                if (storyDay > 0 && story) {
+                    setCurrentStoryDay(storyDay);
+                    setShowStory(true);
+                } else {
+                    setShowResult(true);
+                }
             }
-            setShowResult(true);
         }
     };
 
@@ -286,12 +301,29 @@ const Game: React.FC = () => {
             // Hero模式通关，升级宝箱（可能获得多个）
             const upgradedLevels = upgradeChestForHero(chestLevels[0]);
             setChestLevels(upgradedLevels);
+            setShowResult(true);
         } else {
             // 普通模式通关，计算宝箱等级
             const level = calculateChestLevel(gameStats);
             setChestLevels([level]);
             setNormalCompleted(true);
+
+            // 检查是否有新故事需要展示
+            const storyDay = getNextStoryDay();
+            const story = getStoryByDay(storyDay);
+            if (storyDay > 0 && story) {
+                setCurrentStoryDay(storyDay);
+                setShowStory(true);
+            } else {
+                setShowResult(true);
+            }
         }
+    };
+
+    // 故事观看完成后的回调
+    const handleStoryComplete = () => {
+        markStoryViewed(currentStoryDay);
+        setShowStory(false);
         setShowResult(true);
     };
 
@@ -333,6 +365,14 @@ const Game: React.FC = () => {
                 shuffleDisabled={gameStats.shuffleUsed}
                 removeDisabled={gameStats.popUsed}
             />
+
+            {/* 故事弹窗 */}
+            {showStory && (
+                <StoryModal
+                    storyDay={currentStoryDay}
+                    onComplete={handleStoryComplete}
+                />
+            )}
 
             {/* 通关结算弹窗 */}
             {showResult && status === 'won' && (

@@ -9,6 +9,7 @@ An idol-themed 3-Tiles match game platform.
 - **3-Tiles Match Gameplay**: Click to select tiles, match 3 identical tiles to clear them
 - **Daily Levels**: One level per day, same layout for all users
 - **Game Props**: Undo, Shuffle, Pop (stacking)
+- **Story System**: Unlock daily story chapters after completing levels (typewriter animation)
 - **Treasure Chest**: Complete levels to earn chests, unlock next day
 - **Chest Levels**: Bronze/Silver/Gold/Diamond based on attempts and prop usage
 
@@ -48,6 +49,7 @@ amio/
 │   │   │   ├── Slot/        # Collection slot
 │   │   │   ├── TempSlot/    # Temporary slot (Pop)
 │   │   │   ├── ToolBar/     # Toolbar
+│   │   │   ├── StoryModal/  # Story cutscene modal
 │   │   │   └── ChestModal/  # Chest reward modal
 │   │   ├── pages/           # Pages
 │   │   │   ├── home/        # Home page
@@ -67,7 +69,8 @@ amio/
 - [x] Phase 1: Core game loop
 - [x] Phase 2: Visuals & props system
 - [x] Phase 3: Daily levels & chest rewards
-- [ ] Phase 4: Chest level system
+- [x] Phase 4: Chest level system
+- [x] Phase 5: Story system (post-level cutscenes)
 
 ## 📜 License
 
