@@ -2,9 +2,9 @@
     position: relative;
     width: 100%;
     flex: 1;
-    margin-top: 10px;
-    margin-bottom: 180px;
-    /* Space for TempSlot, ToolBar, and Slot */
+    margin-top: 5px;
+    margin-bottom: 125px;
+    /* Space for TempSlot, Slot, and ToolBar */
     overflow: hidden;
 
     .board-container {
@@ -12,16 +12,25 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 320px;
-        height: 380px;
+        width: 95%;
+        max-width: 360px;
+        height: 90%;
+        max-height: 420px;
         /* Visible boundary */
-        border: 2px solid rgba(0, 0, 0, 0.15);
+        border: 2px solid rgba(0, 0, 0, 0.1);
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.3);
-        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.03);
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .tiles-area {
+        position: relative;
+        /* Fill nearly all of board-container, leave small margin */
+        width: 340px;
+        height: 400px;
     }
 
     .tile-wrapper {
@@ -31,16 +40,16 @@
 
     // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
     @media (max-width: 768PX) {
-        margin-bottom: 230PX; // Increased to clear Slot, ToolBar, and TempSlot
+        margin-bottom: 115PX;
 
         .board-container {
-            // Instead of drastic scale(0.7), use a more moderate scale or adjust size
-            transform: translate(-50%, -50%) scale(0.85);
-            width: 320PX;
-            height: 380PX;
-            border-width: 2PX; // Keep border consistent
-            border-color: rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.4);
+            width: 95%;
+            max-width: 340PX;
+            height: 92%;
+            max-height: 400PX;
+            border-width: 1.5PX;
+            border-color: rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.3);
         }
     }
 }

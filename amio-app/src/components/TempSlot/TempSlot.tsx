@@ -35,8 +35,8 @@ const TempSlot: React.FC<TempSlotProps> = ({ stacks, onStackClick }) => {
                             <Tile
                                 data={{ ...tile, isClickable: stackIndex === stack.length - 1 }}
                                 onClick={() => { }} // Click handled by parent
-                                width={48}
-                                height={53}
+                                width={32}
+                                height={36}
                             />
                         </View>
                     ))}

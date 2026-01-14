@@ -36,15 +36,15 @@ interface LayoutPosition {
 }
 
 // Generate fixed layout positions based on seed
-export const generateDailyLayout = (seed: number, totalTiles: number = 30): LayoutPosition[] => {
+export const generateDailyLayout = (seed: number, totalTiles: number = 75): LayoutPosition[] => {
     const random = createSeededRandom(seed);
     const positions: LayoutPosition[] = [];
 
     for (let i = 0; i < totalTiles; i++) {
         positions.push({
-            x: Math.floor(random() * 8),      // 0-7 x pos
-            y: Math.floor(random() * 10),     // 0-9 y pos
-            layer: Math.floor(random() * 5),  // 0-4 layers
+            x: Math.floor(random() * 9),      // 0-8 x pos (9 columns)
+            y: Math.floor(random() * 12),     // 0-11 y pos (12 rows)
+            layer: Math.floor(random() * 6),  // 0-5 layers (more stacking)
         });
     }
 

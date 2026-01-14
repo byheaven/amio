@@ -47,7 +47,7 @@ const Game: React.FC = () => {
         // Generate daily layout once on mount
         const seed = getDailyLayoutSeed();
         dailySeedRef.current = seed;
-        dailyLayoutRef.current = generateDailyLayout(seed, 30); // 10 triples = 30 tiles
+        dailyLayoutRef.current = generateDailyLayout(seed, 75); // 25 triples = 75 tiles (~3 min gameplay)
 
         // 检查URL参数决定启动模式
         const mode = router.params.mode;
@@ -162,13 +162,8 @@ const Game: React.FC = () => {
         setShowResult(false);
         setStatus('won');
 
-        // 返回首页，增加回滚处理
-        Taro.navigateBack({
-            fail: () => {
-                // 如果 navigateBack 失败（比如在 H5 直接刷新进入），则 relaunch 到首页
-                Taro.reLaunch({ url: '/pages/home/index' });
-            }
-        });
+        // 直接使用 reLaunch 返回首页，避免 navigateBack 在 H5 下可能静默失败的问题
+        Taro.reLaunch({ url: '/pages/home/index' });
     };
 
     const handleTileClick = (tile: TileData) => {

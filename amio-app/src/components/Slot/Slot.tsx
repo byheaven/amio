@@ -25,8 +25,8 @@ const Slot: React.FC<SlotProps> = ({ tiles }) => {
                         <Tile
                             data={{ ...tile, isClickable: false }}
                             onClick={() => { }}
-                            width={45}
-                            height={50}
+                            width={32}
+                            height={36}
                         />
                     )}
                 </View>

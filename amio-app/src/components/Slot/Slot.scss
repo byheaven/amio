@@ -1,26 +1,26 @@
 .slot-bar {
-    width: 92%;
-    height: 70px;
-    background: white;
-    /* Glassmorphism attempt */
+    width: fit-content;
+    max-width: 280px;
+    height: 45px;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px;
+    padding: 4px 8px;
+    gap: 2px;
     position: fixed;
-    bottom: 40px;
+    bottom: 65px;
     left: 50%;
     transform: translateX(-50%);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 -2px 5px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-sizing: border-box;
     z-index: 100;
 
     .slot-cell {
-        /* Use grid-like flex for even spacing */
-        flex: 0 0 calc(100% / 7);
+        flex: 0 0 36px;
+        width: 36px;
         height: 100%;
         display: flex;
         justify-content: center;
@@ -40,13 +40,15 @@
 
     // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
     @media (max-width: 768PX) {
-        height: 50PX;
-        bottom: 10PX;
-        width: 95%;
-        padding: 4PX;
+        height: 40PX;
+        bottom: 58PX;
+        max-width: 270PX;
+        padding: 3PX 6PX;
+        border-radius: 10PX;
 
-        .slot-cell .tile {
-            transform: scale(0.7);
+        .slot-cell {
+            flex: 0 0 34PX;
+            width: 34PX;
         }
     }
 }

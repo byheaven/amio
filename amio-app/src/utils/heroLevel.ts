@@ -45,14 +45,14 @@ export const generateHeroLayout = (seed: number): HeroLayoutPosition[] => {
     const random = createSeededRandom(seed + 1000); // 不同于普通模式的seed offset
     const positions: HeroLayoutPosition[] = [];
 
-    // Hero模式: 36个三元组 = 108个图块
-    const totalTiles = 108;
+    // Hero模式: 50个三元组 = 150个图块 (~6分钟游戏时长)
+    const totalTiles = 150;
 
     for (let i = 0; i < totalTiles; i++) {
         positions.push({
-            x: Math.floor(random() * 10),     // 0-9 更宽的x范围
-            y: Math.floor(random() * 12),     // 0-11 更高的y范围
-            layer: Math.floor(random() * 6),  // 0-5 更多层数
+            x: Math.floor(random() * 9),      // 0-8 same as normal mode
+            y: Math.floor(random() * 12),     // 0-11 same as normal mode (fits board)
+            layer: Math.floor(random() * 8),  // 0-7 more layers for Hero difficulty
         });
     }
 

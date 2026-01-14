@@ -1,24 +1,25 @@
 .temp-slot {
     width: fit-content;
-    height: 80px;
+    height: 50px;
     display: flex;
     justify-content: center;
-    align-items: center; // Vertical centering
+    align-items: center;
     position: fixed;
-    bottom: 190px;
+    // Position above Slot (Slot is at bottom: 65px, height 45px)
+    bottom: 115px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
-    padding: 8px 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 1px dashed #ccc;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border: 2px dashed #3B82F6;
     z-index: 105;
-    gap: 8px;
+    gap: 6px;
 
     .temp-position {
-        width: 48px;
-        height: 66px; // Height to accommodate tile and stacking
+        width: 32px;
+        height: 42px;
         position: relative;
         display: flex;
         align-items: center;
@@ -33,10 +34,10 @@
         }
 
         .empty-slot {
-            width: 48px;
-            height: 53px;
+            width: 32px;
+            height: 36px;
             border: 2px dashed #ddd;
-            border-radius: 6px;
+            border-radius: 4px;
             background: rgba(200, 200, 200, 0.2);
         }
     }
@@ -44,18 +45,19 @@
     // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
     @media (max-width: 768PX) {
         width: fit-content;
-        height: 75PX;
-        bottom: 145PX;
-        padding: 6PX 10PX;
-        gap: 8PX;
+        height: 45PX;
+        bottom: 103PX;
+        padding: 5PX 8PX;
+        gap: 5PX;
+        border-radius: 8PX;
 
         .temp-position {
-            width: 48PX;
-            height: 60PX;
+            width: 32PX;
+            height: 40PX;
 
             .empty-slot {
-                width: 48PX;
-                height: 53PX;
+                width: 32PX;
+                height: 36PX;
                 box-sizing: border-box;
             }
 

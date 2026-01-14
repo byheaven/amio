@@ -10,22 +10,27 @@ interface BoardProps {
 }
 
 const Board: React.FC<BoardProps> = ({ tiles, onTileClick }) => {
+    // Tiles grid: x = 0-8 (9 cols), y = 0-11 (12 rows)
+    // With 36px spacing to fill 340x400 tiles-area
+
     return (
         <View className="board">
             <View className="board-container">
-                {tiles.map((tile) => (
-                    <View
-                        key={tile.id}
-                        className="tile-wrapper"
-                        style={{
-                            left: `${tile.x * 32}px`, // Simple generic scaling for now
-                            top: `${tile.y * 32}px`,
-                            zIndex: tile.layer,
-                        }}
-                    >
-                        <Tile data={tile} onClick={onTileClick} />
-                    </View>
-                ))}
+                <View className="tiles-area">
+                    {tiles.map((tile) => (
+                        <View
+                            key={tile.id}
+                            className="tile-wrapper"
+                            style={{
+                                left: `${tile.x * 36}px`,
+                                top: `${tile.y * 32}px`,
+                                zIndex: tile.layer,
+                            }}
+                        >
+                            <Tile data={tile} onClick={onTileClick} width={40} height={44} />
+                        </View>
+                    ))}
+                </View>
             </View>
         </View>
     );
