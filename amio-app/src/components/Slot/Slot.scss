@@ -1,54 +1,94 @@
+// ============================================
+// Slot Component - 玻璃拟态选牌栏
+// ============================================
+
 .slot-bar {
-    width: fit-content;
-    max-width: 280px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
+  width: fit-content;
+  max-width: 280px;
+  height: 48px;
+
+  // 玻璃拟态效果
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(247, 250, 252, 0.95) 100%
+  );
+
+  backdrop-filter: var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+
+  border-radius: var(--radius-lg);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-bottom: 3px solid var(--color-silver-200);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  gap: 2px;
+
+  position: fixed;
+  bottom: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    0 -2px 10px rgba(255, 255, 255, 0.5);
+
+  box-sizing: border-box;
+  z-index: var(--z-overlay);
+
+  // 有牌时的脉冲动画
+  &.has-tiles {
+    animation: slotPulse 2s ease-in-out infinite;
+  }
+
+  // 即将满格时的警告状态 (6+ 牌)
+  &.nearly-full {
+    border-color: var(--color-coral-300);
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.1),
+      0 0 15px rgba(245, 101, 101, 0.3);
+  }
+
+  .slot-cell {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 4px 8px;
-    gap: 2px;
-    position: fixed;
-    bottom: 65px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-sizing: border-box;
-    z-index: 100;
+    align-items: center;
+    position: relative;
+
+    // 渐变式分隔线
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        var(--color-silver-300) 50%,
+        transparent 100%
+      );
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 768PX) {
+    height: 42PX;
+    bottom: 58PX;
+    max-width: 270PX;
+    padding: 3PX 6PX;
+    border-radius: var(--radius-md);
 
     .slot-cell {
-        flex: 0 0 36px;
-        width: 36px;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-
-        &:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 20%;
-            height: 60%;
-            width: 1px;
-            background-color: rgba(0, 0, 0, 0.06);
-        }
+      flex: 0 0 34PX;
+      width: 34PX;
     }
-
-    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
-    @media (max-width: 768PX) {
-        height: 40PX;
-        bottom: 58PX;
-        max-width: 270PX;
-        padding: 3PX 6PX;
-        border-radius: 10PX;
-
-        .slot-cell {
-            flex: 0 0 34PX;
-            width: 34PX;
-        }
-    }
+  }
 }

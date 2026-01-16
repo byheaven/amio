@@ -1,55 +1,103 @@
+// ============================================
+// Board Component - 玻璃容器效果
+// ============================================
+
 .board {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  margin-top: var(--space-2);
+  margin-bottom: 125px;
+  overflow: hidden;
+
+  .board-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    max-width: 360px;
+    height: 90%;
+    max-height: 420px;
+
+    // 玻璃拟态容器
+    background:
+      linear-gradient(
+        180deg,
+        rgba(144, 205, 244, 0.08) 0%,
+        rgba(99, 179, 237, 0.04) 50%,
+        rgba(66, 153, 225, 0.08) 100%
+      ),
+      rgba(255, 255, 255, 0.15);
+
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+
+    border-radius: var(--radius-xl);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+      inset 0 0 30px rgba(255, 255, 255, 0.1),
+      0 8px 32px rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // 装饰性角标 - 海洋主题
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(99, 179, 237, 0.3);
+      pointer-events: none;
+    }
+
+    &::before {
+      top: var(--space-3);
+      left: var(--space-3);
+      border-right: none;
+      border-bottom: none;
+      border-radius: var(--radius-md) 0 0 0;
+    }
+
+    &::after {
+      bottom: var(--space-3);
+      right: var(--space-3);
+      border-left: none;
+      border-top: none;
+      border-radius: 0 0 var(--radius-md) 0;
+    }
+  }
+
+  .tiles-area {
     position: relative;
-    width: 100%;
-    flex: 1;
-    margin-top: 5px;
-    margin-bottom: 125px;
-    /* Space for TempSlot, Slot, and ToolBar */
-    overflow: hidden;
+    width: 340px;
+    height: 400px;
+  }
+
+  .tile-wrapper {
+    position: absolute;
+    transition: all 0.4s var(--transition-smooth);
+  }
+
+  // Mobile responsive - 使用大写 PX 绕过 Taro 转换
+  @media (max-width: 768PX) {
+    margin-bottom: 115PX;
 
     .board-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 95%;
-        max-width: 360px;
-        height: 90%;
-        max-height: 420px;
-        /* Visible boundary */
-        border: 2px solid rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.25);
-        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.03);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+      width: 95%;
+      max-width: 340PX;
+      height: 92%;
+      max-height: 400PX;
 
-    .tiles-area {
-        position: relative;
-        /* Fill nearly all of board-container, leave small margin */
-        width: 340px;
-        height: 400px;
+      &::before,
+      &::after {
+        width: 30PX;
+        height: 30PX;
+      }
     }
-
-    .tile-wrapper {
-        position: absolute;
-        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    }
-
-    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
-    @media (max-width: 768PX) {
-        margin-bottom: 115PX;
-
-        .board-container {
-            width: 95%;
-            max-width: 340PX;
-            height: 92%;
-            max-height: 400PX;
-            border-width: 1.5PX;
-            border-color: rgba(0, 0, 0, 0.12);
-            background: rgba(255, 255, 255, 0.3);
-        }
-    }
+  }
 }

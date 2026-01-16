@@ -1,0 +1,270 @@
+// ============================================
+// AMIO Design System - 鲨之星 Shark Star Theme
+// ============================================
+
+// ========== 设计令牌 (Design Tokens) ==========
+:root {
+  // 鲨鱼主题色板 - Ocean Blue
+  --color-ocean-900: #0d2137;  // 最深 - 深海背景
+  --color-ocean-800: #1a365d;  // 深色背景
+  --color-ocean-700: #234876;  // 主要元素
+  --color-ocean-600: #2c5282;  // 主要悬停
+  --color-ocean-500: #3182ce;  // 强调元素
+  --color-ocean-400: #4299e1;  // 交互高亮
+  --color-ocean-300: #63b3ed;  // 浅色强调
+  --color-ocean-200: #90cdf4;  // 微妙高亮
+  --color-ocean-100: #bee3f8;  // 浅色背景
+  --color-ocean-50: #ebf8ff;   // 最浅
+
+  // 银灰色 - Silver Gray
+  --color-silver-900: #1a202c;
+  --color-silver-800: #2d3748;
+  --color-silver-700: #4a5568;
+  --color-silver-600: #718096;
+  --color-silver-500: #a0aec0;
+  --color-silver-400: #cbd5e0;
+  --color-silver-300: #e2e8f0;
+  --color-silver-200: #edf2f7;
+  --color-silver-100: #f7fafc;
+
+  // 珊瑚色 - Coral Accent
+  --color-coral-600: #e53e3e;
+  --color-coral-500: #f56565;
+  --color-coral-400: #fc8181;
+  --color-coral-300: #feb2b2;
+  --color-coral-200: #fed7d7;
+
+  // 特效色 - Effect Colors
+  --color-aqua-glow: rgba(99, 179, 237, 0.4);
+  --color-aqua-soft: rgba(144, 205, 244, 0.2);
+  --color-shimmer: rgba(255, 255, 255, 0.15);
+
+  // 宝箱等级色 - Chest Level Colors
+  --color-diamond: #00d4ff;
+  --color-diamond-glow: rgba(0, 212, 255, 0.4);
+  --color-gold: #ffd700;
+  --color-gold-glow: rgba(255, 215, 0, 0.4);
+  --color-silver-chest: #c0c0c0;
+  --color-silver-chest-glow: rgba(192, 192, 192, 0.4);
+  --color-bronze: #cd7f32;
+  --color-bronze-glow: rgba(205, 127, 50, 0.4);
+
+  // ========== 玻璃拟态 (Glass Morphism) ==========
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-light: rgba(255, 255, 255, 0.12);
+  --glass-bg-solid: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-blur: blur(12px);
+  --glass-blur-heavy: blur(20px);
+
+  // ========== 阴影系统 (Shadows) ==========
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-premium:
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 40px var(--color-aqua-soft);
+  --shadow-tile:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --shadow-tile-hover:
+    0 6px 16px rgba(0, 0, 0, 0.15),
+    0 0 20px var(--color-aqua-glow);
+
+  // ========== 字体系统 (Typography) ==========
+  --font-display: 'ZCOOL KuaiLe', 'Noto Sans SC', system-ui, sans-serif;
+  --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
+
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+
+  // ========== 间距系统 (Spacing) ==========
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  // ========== 圆角系统 (Border Radius) ==========
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  // ========== 过渡动画 (Transitions) ==========
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  // ========== 层级系统 (Z-Index) ==========
+  --z-base: 1;
+  --z-elevated: 10;
+  --z-sticky: 50;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+}
+
+// ========== 全局关键帧动画 (Keyframes) ==========
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--color-aqua-glow);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--color-aqua-glow);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes matchClear {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes slotPulse {
+  0%, 100% {
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.1),
+      0 0 0 0 rgba(99, 179, 237, 0);
+  }
+  50% {
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.1),
+      0 0 0 4px rgba(99, 179, 237, 0.2);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tileClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+// ========== 全局样式重置 ==========
+page {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

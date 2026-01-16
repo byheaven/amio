@@ -1,69 +1,91 @@
+// ============================================
+// TempSlot Component - 临时存储区 (珊瑚色点缀)
+// ============================================
+
 .temp-slot {
-    width: fit-content;
-    height: 50px;
+  width: fit-content;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  bottom: 118px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  // 玻璃效果 + 珊瑚色渐变
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(254, 215, 215, 0.3) 100%
+  );
+
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--color-coral-400);
+  padding: var(--space-2) var(--space-3);
+
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 0 20px rgba(245, 101, 101, 0.05);
+
+  z-index: calc(var(--z-overlay) + 5);
+  gap: var(--space-2);
+
+  .temp-position {
+    width: 32px;
+    height: 42px;
+    position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: fixed;
-    // Position above Slot (Slot is at bottom: 65px, height 45px)
-    bottom: 115px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    padding: 6px 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    border: 2px dashed #3B82F6;
-    z-index: 105;
-    gap: 6px;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    .stacked-tile {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center;
+    }
+
+    .empty-slot {
+      width: 32px;
+      height: 36px;
+      border: 2px dashed var(--color-silver-400);
+      border-radius: var(--radius-sm);
+      background: linear-gradient(
+        135deg,
+        rgba(200, 200, 200, 0.15) 0%,
+        rgba(200, 200, 200, 0.05) 100%
+      );
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 768PX) {
+    height: 45PX;
+    bottom: 106PX;
+    padding: 5PX 8PX;
+    gap: 5PX;
+    border-radius: var(--radius-sm);
 
     .temp-position {
-        width: 32px;
-        height: 42px;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+      width: 32PX;
+      height: 40PX;
 
-        .stacked-tile {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform-origin: center;
-        }
-
-        .empty-slot {
-            width: 32px;
-            height: 36px;
-            border: 2px dashed #ddd;
-            border-radius: 4px;
-            background: rgba(200, 200, 200, 0.2);
-        }
+      .empty-slot {
+        width: 32PX;
+        height: 36PX;
+        box-sizing: border-box;
+      }
     }
-
-    // Mobile responsive scaling - Use uppercase PX to bypass Taro postcss-pxtransform
-    @media (max-width: 768PX) {
-        width: fit-content;
-        height: 45PX;
-        bottom: 103PX;
-        padding: 5PX 8PX;
-        gap: 5PX;
-        border-radius: 8PX;
-
-        .temp-position {
-            width: 32PX;
-            height: 40PX;
-
-            .empty-slot {
-                width: 32PX;
-                height: 36PX;
-                box-sizing: border-box;
-            }
-
-            .tile {
-                transform: none;
-            }
-        }
-    }
+  }
 }
