@@ -39,7 +39,7 @@ const IntroPage: React.FC = () => {
     }, []);
 
     const redirectToHome = () => {
-        Taro.redirectTo({ url: '/pages/home/index' });
+        Taro.switchTab({ url: '/pages/starlight/index' });
     };
 
     const handleNext = () => {
