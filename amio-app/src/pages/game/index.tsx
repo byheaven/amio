@@ -13,7 +13,7 @@ import { getDailyLayoutSeed, generateDailyLayout, assignRandomTileTypes } from '
 import { generateHeroLevel } from '../../utils/heroLevel';
 import { undoLastTile, shuffleBoard, popTilesToTemp, returnTileFromTempStack, TempSlotStacks } from '../../utils/toolsLogic';
 import { calculateChestLevel, createInitialStats, upgradeChestForHero } from '../../utils/chestLogic';
-import { savePendingChest, updateTodayStatus, loadProgress, getNextStoryDay, markStoryViewed } from '../../utils/storage';
+import { savePendingChest, updateTodayStatus, loadProgress, getNextStoryDay, markStoryViewed, updateEnergyAfterGame } from '../../utils/storage';
 import { getStoryByDay } from '../../constants/storyData';
 import './index.scss';
 
@@ -195,16 +195,22 @@ const Game: React.FC = () => {
         if (updatedBoardTiles.length === 0 && newSlots.length === 0 && tempTilesCount === 0) {
             setStatus('won');
 
+            // Calculate chest level first
+            let finalChestLevel: ChestLevel;
+            let finalChestLevels: ChestLevel[];
+
             if (gameMode === GameMode.HERO) {
                 // Hero模式通关，升级宝箱（可能获得多个）
-                const upgradedLevels = upgradeChestForHero(chestLevels[0]);
-                setChestLevels(upgradedLevels);
+                finalChestLevels = upgradeChestForHero(chestLevels[0]);
+                setChestLevels(finalChestLevels);
+                finalChestLevel = finalChestLevels[0];
                 // Hero模式不显示新故事（同一天只有一个故事）
                 setShowResult(true);
             } else {
                 // 普通模式通关，计算宝箱等级
-                const level = calculateChestLevel(gameStats);
-                setChestLevels([level]);
+                finalChestLevel = calculateChestLevel(gameStats);
+                finalChestLevels = [finalChestLevel];
+                setChestLevels(finalChestLevels);
                 setNormalCompleted(true);
 
                 // 检查是否有新故事需要展示
@@ -217,6 +223,10 @@ const Game: React.FC = () => {
                     setShowResult(true);
                 }
             }
+
+            // Update energy after game completion
+            const progress = loadProgress();
+            updateEnergyAfterGame(gameMode, finalChestLevel, progress.consecutiveDays);
         }
     };
 
@@ -302,15 +312,19 @@ const Game: React.FC = () => {
         setTempStacks([[], [], []]);
         setStatus('won');
 
+        // Calculate chest level first
+        let finalChestLevel: ChestLevel;
+
         if (gameMode === GameMode.HERO) {
             // Hero模式通关，升级宝箱（可能获得多个）
             const upgradedLevels = upgradeChestForHero(chestLevels[0]);
             setChestLevels(upgradedLevels);
+            finalChestLevel = upgradedLevels[0];
             setShowResult(true);
         } else {
             // 普通模式通关，计算宝箱等级
-            const level = calculateChestLevel(gameStats);
-            setChestLevels([level]);
+            finalChestLevel = calculateChestLevel(gameStats);
+            setChestLevels([finalChestLevel]);
             setNormalCompleted(true);
 
             // 检查是否有新故事需要展示
@@ -323,6 +337,10 @@ const Game: React.FC = () => {
                 setShowResult(true);
             }
         }
+
+        // Update energy after game completion
+        const progress = loadProgress();
+        updateEnergyAfterGame(gameMode, finalChestLevel, progress.consecutiveDays);
     };
 
     // 故事观看完成后的回调

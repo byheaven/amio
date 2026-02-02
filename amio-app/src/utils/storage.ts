@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro';
-import { ChestLevel } from '../constants/game';
+import { ChestLevel, GameMode } from '../constants/game';
 import type { EnergyContribution, UserRanking, PlanetProgress, Milestone, UserTitle } from '../constants/game';
+import { calculatePowerCoreEnergy, calculateTotalContribution } from './energyLogic';
 
 /**
  * 待领取的宝箱
@@ -509,3 +510,107 @@ export const markIntroSeen = (): void => {
     saveProgress(progress);
 };
 
+/**
+ * 更新能量 after game completion
+ */
+export function updateEnergyAfterGame(
+    mode: GameMode,
+    chestLevel: ChestLevel,
+    consecutiveDays: number
+): void {
+    const progress = loadProgress();
+
+    // Calculate power core earned
+    const powerCoreEarned = calculatePowerCoreEnergy(mode, chestLevel, consecutiveDays);
+
+    // Update energy
+    progress.energy.powerCore += powerCoreEarned;
+    progress.energy.totalContribution = calculateTotalContribution(progress.energy);
+
+    // Add to daily history
+    const today = getTodayDateString();
+    const existingEntry = progress.dailyEnergyHistory.find(e => e.date === today);
+
+    if (existingEntry) {
+        existingEntry.powerCore += powerCoreEarned;
+    } else {
+        progress.dailyEnergyHistory.push({
+            date: today,
+            powerCore: powerCoreEarned,
+            wisdomCrystal: 0,
+        });
+    }
+
+    // Check and update milestones
+    checkMilestones(progress);
+
+    saveProgress(progress);
+}
+
+/**
+ * 检查并解锁里程碑
+ */
+function checkMilestones(progress: GameProgress): void {
+    const today = getTodayDateString();
+
+    progress.milestones.forEach(milestone => {
+        if (milestone.unlockedAt) return;
+
+        let shouldUnlock = false;
+
+        switch (milestone.id) {
+            case 'first_light':
+                shouldUnlock = progress.totalDaysPlayed >= 1;
+                break;
+            case 'week_warrior':
+                shouldUnlock = progress.consecutiveDays >= 7;
+                break;
+            case 'month_master':
+                shouldUnlock = progress.consecutiveDays >= 30;
+                break;
+            case 'first_hero':
+                shouldUnlock = progress.heroCompleted;
+                break;
+            case 'diamond_hunter':
+                shouldUnlock = progress.todayChestLevel === ChestLevel.DIAMOND;
+                break;
+            case 'contrib_1k':
+                shouldUnlock = progress.energy.totalContribution >= 1000;
+                break;
+            case 'contrib_10k':
+                shouldUnlock = progress.energy.totalContribution >= 10000;
+                break;
+        }
+
+        if (shouldUnlock) {
+            milestone.unlockedAt = today;
+        }
+    });
+}
+
+/**
+ * 更新 wisdom crystal (for social actions)
+ */
+export function addWisdomCrystal(amount: number): void {
+    const progress = loadProgress();
+
+    progress.energy.wisdomCrystal += amount;
+    progress.energy.totalContribution = calculateTotalContribution(progress.energy);
+
+    // Add to daily history
+    const today = getTodayDateString();
+    const existingEntry = progress.dailyEnergyHistory.find(e => e.date === today);
+
+    if (existingEntry) {
+        existingEntry.wisdomCrystal += amount;
+    } else {
+        progress.dailyEnergyHistory.push({
+            date: today,
+            powerCore: 0,
+            wisdomCrystal: amount,
+        });
+    }
+
+    checkMilestones(progress);
+    saveProgress(progress);
+}
