@@ -44,3 +44,52 @@ export enum GameMode {
   NORMAL = 'normal',
   HERO = 'hero',
 }
+
+// Energy types for planet development
+export interface EnergyContribution {
+  powerCore: number;        // ⚡ from gaming
+  wisdomCrystal: number;    // 💡 from social
+  totalContribution: number;
+}
+
+export interface UserRanking {
+  globalRank: number;
+  percentile: number;       // e.g., 5.2 for top 5.2%
+  landingBatch: 'pioneer' | 'early_pioneer' | 'builder' | 'resident';
+}
+
+export interface DailyEnergy {
+  date: string;             // YYYY-MM-DD
+  powerCore: number;
+  wisdomCrystal: number;
+}
+
+export interface PlanetProgress {
+  currentProgress: number;  // 0-100
+  stage: 'desolate' | 'sprout' | 'construction' | 'prosperity' | 'launch' | 'landing';
+  dailyActiveUsers: number;
+  todayContribution: {
+    powerCore: number;
+    wisdomCrystal: number;
+  };
+}
+
+// Milestone types for timeline
+export interface Milestone {
+  id: string;
+  day: number;
+  type: 'streak' | 'achievement' | 'contribution' | 'title' | 'social';
+  title: string;
+  description: string;
+  unlockedAt: string | null;  // null if not yet unlocked
+  icon: string;
+}
+
+// Achievement/Titles
+export interface UserTitle {
+  id: string;
+  name: string;
+  description: string;
+  unlockedAt: string;
+  icon: string;
+}

@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro';
 import { ChestLevel } from '../constants/game';
+import type { EnergyContribution, UserRanking, PlanetProgress, Milestone, UserTitle } from '../constants/game';
 
 /**
  * 待领取的宝箱
@@ -10,6 +11,15 @@ export interface PendingChest {
     unlockAt: string;      // 解锁时间（24小时后）
     expiresAt: string;     // 过期时间（解锁后24小时）
     isHeroBonus: boolean;  // 是否有Hero加成
+}
+
+/**
+ * 每日能源记录
+ */
+export interface DailyEnergy {
+    date: string;             // YYYY-MM-DD
+    powerCore: number;
+    wisdomCrystal: number;
 }
 
 /**
@@ -30,6 +40,28 @@ export interface GameProgress {
     storyProgress: number;       // 已解锁到第几天的故事
     viewedStories: number[];     // 已观看的故事日期列表
     hasSeenIntro: boolean;       // 是否已观看开场剧情
+
+    // Energy system
+    energy: EnergyContribution;
+    dailyEnergyHistory: DailyEnergy[];
+
+    // Ranking
+    ranking: UserRanking;
+
+    // Planet progress (cached from server)
+    planetProgress: PlanetProgress;
+    lastPlanetSync: string;
+
+    // Milestones and achievements
+    milestones: Milestone[];
+    titles: UserTitle[];
+    currentTitle: string | null;
+
+    // Social
+    postsCount: number;
+    likesReceived: number;
+    commentsReceived: number;
+    friendsInvited: number;
 }
 
 const STORAGE_KEY = 'amio_game_progress';
@@ -43,24 +75,73 @@ export const getTodayDateString = (): string => {
 };
 
 /**
+ * 生成默认里程碑列表
+ */
+const generateDefaultMilestones = (): Milestone[] => {
+    return [
+        { id: 'first_light', day: 1, type: 'streak', title: '首次发出星光', description: '完成了第一次游戏', unlockedAt: null, icon: '✨' },
+        { id: 'week_warrior', day: 7, type: 'streak', title: '连续一周', description: '连续7天完成游戏', unlockedAt: null, icon: '🔥' },
+        { id: 'month_master', day: 30, type: 'streak', title: '忠实鲨鱼', description: '连续30天完成游戏', unlockedAt: null, icon: '🦈' },
+        { id: 'first_hero', day: 0, type: 'achievement', title: '英雄挑战', description: '首次完成Hero模式', unlockedAt: null, icon: '🦸' },
+        { id: 'diamond_hunter', day: 0, type: 'achievement', title: '钻石猎人', description: '获得钻石宝箱', unlockedAt: null, icon: '💎' },
+        { id: 'contrib_1k', day: 0, type: 'contribution', title: '千能贡献者', description: '累计贡献1000能量', unlockedAt: null, icon: '⚡' },
+        { id: 'contrib_10k', day: 0, type: 'contribution', title: '万能源头', description: '累计贡献10000能量', unlockedAt: null, icon: '🌟' },
+    ];
+};
+
+/**
  * 创建初始进度数据
  */
-export const createInitialProgress = (): GameProgress => ({
-    todayDate: getTodayDateString(),
-    todayAttempts: 0,
-    todayCompleted: false,
-    todayChestLevel: null,
-    heroAttempted: false,
-    heroCompleted: false,
-    pendingChest: null,
-    consecutiveDays: 0,
-    lastCompletionDate: null,
-    lastClaimDate: null,
-    totalDaysPlayed: 0,
-    storyProgress: 0,
-    viewedStories: [],
-    hasSeenIntro: false,
-});
+export const createInitialProgress = (): GameProgress => {
+    const today = getTodayDateString();
+    return {
+        todayDate: today,
+        todayAttempts: 0,
+        todayCompleted: false,
+        todayChestLevel: null,
+        heroAttempted: false,
+        heroCompleted: false,
+        pendingChest: null,
+        consecutiveDays: 0,
+        lastCompletionDate: null,
+        lastClaimDate: null,
+        totalDaysPlayed: 0,
+        storyProgress: 0,
+        viewedStories: [],
+        hasSeenIntro: false,
+
+        // Energy system defaults
+        energy: {
+            powerCore: 0,
+            wisdomCrystal: 0,
+            totalContribution: 0,
+        },
+        dailyEnergyHistory: [],
+
+        ranking: {
+            globalRank: 0,
+            percentile: 100,
+            landingBatch: 'resident',
+        },
+
+        planetProgress: {
+            currentProgress: 0,
+            stage: 'desolate',
+            dailyActiveUsers: 1,
+            todayContribution: { powerCore: 0, wisdomCrystal: 0 },
+        },
+        lastPlanetSync: today,
+
+        milestones: generateDefaultMilestones(),
+        titles: [],
+        currentTitle: null,
+
+        postsCount: 0,
+        likesReceived: 0,
+        commentsReceived: 0,
+        friendsInvited: 0,
+    };
+};
 
 /**
  * 加载游戏进度
@@ -94,6 +175,57 @@ export const loadProgress = (): GameProgress => {
             }
             if (progress.hasSeenIntro === undefined) {
                 progress.hasSeenIntro = false;
+            }
+
+            // 数据迁移：添加能量系统字段（如果不存在）
+            if (progress.energy === undefined) {
+                progress.energy = {
+                    powerCore: 0,
+                    wisdomCrystal: 0,
+                    totalContribution: 0,
+                };
+            }
+            if (progress.dailyEnergyHistory === undefined) {
+                progress.dailyEnergyHistory = [];
+            }
+            if (progress.ranking === undefined) {
+                progress.ranking = {
+                    globalRank: 0,
+                    percentile: 100,
+                    landingBatch: 'resident',
+                };
+            }
+            if (progress.planetProgress === undefined) {
+                progress.planetProgress = {
+                    currentProgress: 0,
+                    stage: 'desolate',
+                    dailyActiveUsers: 1,
+                    todayContribution: { powerCore: 0, wisdomCrystal: 0 },
+                };
+            }
+            if (progress.lastPlanetSync === undefined) {
+                progress.lastPlanetSync = getTodayDateString();
+            }
+            if (progress.milestones === undefined) {
+                progress.milestones = generateDefaultMilestones();
+            }
+            if (progress.titles === undefined) {
+                progress.titles = [];
+            }
+            if (progress.currentTitle === undefined) {
+                progress.currentTitle = null;
+            }
+            if (progress.postsCount === undefined) {
+                progress.postsCount = 0;
+            }
+            if (progress.likesReceived === undefined) {
+                progress.likesReceived = 0;
+            }
+            if (progress.commentsReceived === undefined) {
+                progress.commentsReceived = 0;
+            }
+            if (progress.friendsInvited === undefined) {
+                progress.friendsInvited = 0;
             }
 
             // 检查是否是新的一天
