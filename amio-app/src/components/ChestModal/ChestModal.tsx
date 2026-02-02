@@ -21,7 +21,6 @@ const ChestModal: React.FC<ChestModalProps> = ({
     canChallengeHero,
     onClaim,
     onHeroChallenge,
-    onClose,
 }) => {
     const isHeroMode = gameMode === GameMode.HERO;
     const chestInfos = chestLevels.map(level => getChestLevelInfo(level));

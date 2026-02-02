@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import StarTrail from '../../components/StarTrail';
 import { loadProgress } from '../../utils/storage';
-import { calculateTotalContribution, determineLandingBatch } from '../../utils/energyLogic';
+import { determineLandingBatch } from '../../utils/energyLogic';
 import type { GameProgress } from '../../utils/storage';
 import './index.scss';
 
@@ -15,7 +15,6 @@ const Home: React.FC = () => {
 
   if (!progress) return null;
 
-  const totalContrib = calculateTotalContribution(progress.energy);
   const landingBatch = determineLandingBatch(progress.ranking.percentile);
 
   const batchNames: Record<string, string> = {

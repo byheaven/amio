@@ -1,3 +1,7 @@
+// ============================================
+// ChestRewardModal - 海洋主题宝箱奖励弹窗
+// ============================================
+
 @keyframes shake {
     0% {
         transform: scale(1) rotate(0deg);
@@ -20,34 +24,23 @@
     }
 }
 
-@keyframes popIn {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    60% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
 .chest-reward-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(
+        180deg,
+        rgba(13, 33, 55, 0.95) 0%,
+        rgba(26, 54, 93, 0.95) 100%
+    );
+    backdrop-filter: var(--glass-blur-heavy);
+    -webkit-backdrop-filter: var(--glass-blur-heavy);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: var(--z-modal);
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s;
@@ -58,25 +51,60 @@
     }
 
     .modal-content {
-        width: 80%;
-        max-width: 600px;
-        background: linear-gradient(135deg, #2a2a72, #009ffd);
-        border-radius: 24px;
-        padding: 32px;
+        width: 85%;
+        max-width: 360px;
+
+        // 高级卡片 + 海洋主题
+        background: linear-gradient(
+            165deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(235, 248, 255, 0.95) 100%
+        );
+
+        border-radius: var(--radius-2xl);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        padding: var(--space-8);
         display: flex;
         flex-direction: column;
         align-items: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        min-height: 400px;
+
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.3),
+            0 0 80px var(--color-aqua-glow),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+        min-height: 380px;
         justify-content: center;
+        animation: slideUp 0.5s var(--transition-bounce);
+
+        position: relative;
+        overflow: hidden;
+
+        // 微光叠加层
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
 
         .chest-container {
-            margin-bottom: 24px;
+            margin-bottom: var(--space-6);
+            position: relative;
+            z-index: 1;
 
             .chest-icon {
-                font-size: 80px;
+                font-size: 72px;
                 transition: transform 0.3s;
+                filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 
                 &.shaking {
                     animation: shake 0.5s infinite;
@@ -90,56 +118,90 @@
         }
 
         .message {
-            color: #fff;
-            font-size: 32px;
-            font-weight: bold;
+            color: var(--color-ocean-700);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            font-family: var(--font-display);
             text-align: center;
-            margin-bottom: 16px;
-            min-height: 48px;
+            margin-bottom: var(--space-3);
+            min-height: 40px;
+            position: relative;
+            z-index: 1;
+
+            // 渐变文字
+            background: linear-gradient(
+                90deg,
+                var(--color-ocean-600) 0%,
+                var(--color-ocean-400) 50%,
+                var(--color-ocean-600) 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
         }
 
         .sub-message {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 24px;
-            margin-bottom: 32px;
-            min-height: 36px;
+            color: var(--color-silver-600);
+            font-size: var(--font-size-md);
+            margin-bottom: var(--space-6);
+            min-height: 28px;
+            position: relative;
+            z-index: 1;
         }
 
         .rewards-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: var(--space-3);
             width: 100%;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: var(--space-6);
+            position: relative;
+            z-index: 1;
 
             .reward-item {
-                background: rgba(255, 255, 255, 0.1);
-                padding: 12px 24px;
-                border-radius: 12px;
-                color: #ffd700;
-                font-size: 28px;
-                font-weight: bold;
+                background: linear-gradient(
+                    135deg,
+                    rgba(99, 179, 237, 0.15) 0%,
+                    rgba(144, 205, 244, 0.1) 100%
+                );
+                padding: var(--space-3) var(--space-6);
+                border-radius: var(--radius-lg);
+                color: var(--color-ocean-700);
+                font-size: var(--font-size-lg);
+                font-weight: 600;
                 width: 100%;
                 text-align: center;
                 animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                border: 1px solid rgba(255, 215, 0, 0.3);
+                border: 1px solid rgba(99, 179, 237, 0.3);
+                box-shadow: 0 0 20px rgba(99, 179, 237, 0.15);
             }
         }
 
         .action-btn {
-            background: linear-gradient(to right, #ff512f, #dd2476);
+            background: linear-gradient(
+                135deg,
+                var(--color-ocean-500) 0%,
+                var(--color-ocean-600) 100%
+            );
             color: white;
             border: none;
-            padding: 12px 48px;
-            border-radius: 50px;
-            font-size: 28px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4);
-            transition: transform 0.2s;
+            padding: var(--space-3) var(--space-10);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            box-shadow:
+                0 4px 16px rgba(49, 130, 206, 0.4),
+                0 0 30px rgba(99, 179, 237, 0.2);
+            transition: all var(--transition-base);
+            position: relative;
+            z-index: 1;
 
             &:active {
-                transform: scale(0.95);
+                transform: scale(0.98);
+                box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
             }
         }
     }

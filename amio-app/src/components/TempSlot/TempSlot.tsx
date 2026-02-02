@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from '@tarojs/components';
-import { TileData } from '../../constants/game';
 import { TempSlotStacks } from '../../utils/toolsLogic';
 import Tile from '../Tile/Tile';
 import './TempSlot.scss';

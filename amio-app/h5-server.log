@@ -1,0 +1,1265 @@
+
+> amio-app@1.0.0 dev:h5
+> npm run build:h5 -- --watch
+
+
+> amio-app@1.0.0 build:h5
+> taro build --type h5 --watch
+
+👽 Taro v3.6.32
+
+Tips:
+1. 建议开启持久化缓存功能，能有效提升二次编译速度，详情请参考: https://docs.taro.zone/docs/config-detail#cache。
+
+
+Prebundle dependencies: 
+     @tarojs/components
+     @tarojs/plugin-framework-react/dist/runtime
+     @tarojs/router
+     @tarojs/runtime
+     @tarojs/taro
+     react
+     react-dom
+     react/jsx-runtime
+
+▲ [WARNING] The glob pattern import("./**/*.entry.js*") did not match any files [empty-glob]
+
+    node_modules/@stencil/core/internal/client/index.js:3234:4:
+      3234 │     `./${bundleId}.entry.js${BUILD.hotModuleReplacement && hmrVe...
+           ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ValidationError: Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.environment has an unknown property 'asyncFunction'. These properties are valid:
+   object { arrowFunction?, bigIntLiteral?, const?, destructuring?, dynamicImport?, forOf?, module?, optionalChaining?, templateLiteral? }
+   -> The abilities of the environment where the webpack generated code should run.
+    at validate (/Users/yubai/amio/amio-app/node_modules/webpack/node_modules/schema-utils/dist/validate.js:191:11)
+    at validateSchema (/Users/yubai/amio/amio-app/node_modules/webpack/lib/validateSchema.js:78:2)
+    at create (/Users/yubai/amio/amio-app/node_modules/webpack/lib/webpack.js:111:24)
+    at webpack (/Users/yubai/amio/amio-app/node_modules/webpack/lib/webpack.js:158:32)
+    at f (/Users/yubai/amio/amio-app/node_modules/webpack/lib/index.js:64:16)
+    at WebPrebundle.getRemoteWebpackCompiler (/Users/yubai/amio/amio-app/node_modules/@tarojs/webpack5-prebundle/src/prebundle/index.ts:259:19)
+    at WebPrebundle.<anonymous> (/Users/yubai/amio/amio-app/node_modules/@tarojs/webpack5-prebundle/src/web.ts:97:29)
+    at Generator.next (<anonymous>)
+    at /Users/yubai/amio/amio-app/node_modules/@tarojs/webpack5-prebundle/dist/web.js:8:71
+    at new Promise (<anonymous>) {
+  errors: [
+    {
+      keyword: 'additionalProperties',
+      dataPath: '.output.environment',
+      schemaPath: '#/definitions/Environment/additionalProperties',
+      params: [Object],
+      message: 'should NOT have additional properties',
+      schema: false,
+      parentSchema: [Object],
+      data: [Object]
+    }
+  ],
+  schema: {
+    definitions: {
+      Amd: [Object],
+      AmdContainer: [Object],
+      AssetFilterItemTypes: [Object],
+      AssetFilterTypes: [Object],
+      AssetGeneratorDataUrl: [Object],
+      AssetGeneratorDataUrlFunction: [Object],
+      AssetGeneratorDataUrlOptions: [Object],
+      AssetGeneratorOptions: [Object],
+      AssetInlineGeneratorOptions: [Object],
+      AssetModuleFilename: [Object],
+      AssetModuleOutputPath: [Object],
+      AssetParserDataUrlFunction: [Object],
+      AssetParserDataUrlOptions: [Object],
+      AssetParserOptions: [Object],
+      AssetResourceGeneratorOptions: [Object],
+      AuxiliaryComment: [Object],
+      Bail: [Object],
+      CacheOptions: [Object],
+      CacheOptionsNormalized: [Object],
+      Charset: [Object],
+      ChunkFilename: [Object],
+      ChunkFormat: [Object],
+      ChunkLoadTimeout: [Object],
+      ChunkLoading: [Object],
+      ChunkLoadingGlobal: [Object],
+      ChunkLoadingType: [Object],
+      Clean: [Object],
+      CleanOptions: [Object],
+      CompareBeforeEmit: [Object],
+      Context: [Object],
+      CrossOriginLoading: [Object],
+      CssChunkFilename: [Object],
+      CssExperimentOptions: [Object],
+      CssFilename: [Object],
+      CssGeneratorOptions: [Object],
+      CssParserOptions: [Object],
+      Dependencies: [Object],
+      DevServer: [Object],
+      DevTool: [Object],
+      DevtoolFallbackModuleFilenameTemplate: [Object],
+      DevtoolModuleFilenameTemplate: [Object],
+      DevtoolNamespace: [Object],
+      EmptyGeneratorOptions: [Object],
+      EmptyParserOptions: [Object],
+      EnabledChunkLoadingTypes: [Object],
+      EnabledLibraryTypes: [Object],
+      EnabledWasmLoadingTypes: [Object],
+      Entry: [Object],
+      EntryDescription: [Object],
+      EntryDescriptionNormalized: [Object],
+      EntryDynamic: [Object],
+      EntryDynamicNormalized: [Object],
+      EntryFilename: [Object],
+      EntryItem: [Object],
+      EntryNormalized: [Object],
+      EntryObject: [Object],
+      EntryRuntime: [Object],
+      EntryStatic: [Object],
+      EntryStaticNormalized: [Object],
+      EntryUnnamed: [Object],
+      Environment: [Object],
+      Experiments: [Object],
+      ExperimentsCommon: [Object],
+      ExperimentsNormalized: [Object],
+      ExternalItem: [Object],
+      ExternalItemFunctionData: [Object],
+      ExternalItemValue: [Object],
+      Externals: [Object],
+      ExternalsPresets: [Object],
+      ExternalsType: [Object],
+      FileCacheOptions: [Object],
+      Filename: [Object],
+      FilenameTemplate: [Object],
+      FilterItemTypes: [Object],
+      FilterTypes: [Object],
+      GeneratorOptionsByModuleType: [Object],
+      GlobalObject: [Object],
+      HashDigest: [Object],
+      HashDigestLength: [Object],
+      HashFunction: [Object],
+      HashSalt: [Object],
+      HotUpdateChunkFilename: [Object],
+      HotUpdateGlobal: [Object],
+      HotUpdateMainFilename: [Object],
+      HttpUriAllowedUris: [Object],
+      HttpUriOptions: [Object],
+      HttpUriOptionsAllowedUris: [Object],
+      IgnoreWarnings: [Object],
+      IgnoreWarningsNormalized: [Object],
+      Iife: [Object],
+      ImportFunctionName: [Object],
+      ImportMetaName: [Object],
+      InfrastructureLogging: [Object],
+      JavascriptParserOptions: [Object],
+      Layer: [Object],
+      LazyCompilationDefaultBackendOptions: [Object],
+      LazyCompilationOptions: [Object],
+      Library: [Object],
+      LibraryCustomUmdCommentObject: [Object],
+      LibraryCustomUmdObject: [Object],
+      LibraryExport: [Object],
+      LibraryName: [Object],
+      LibraryOptions: [Object],
+      LibraryType: [Object],
+      Loader: [Object],
+      MemoryCacheOptions: [Object],
+      Mode: [Object],
+      ModuleFilterItemTypes: [Object],
+      ModuleFilterTypes: [Object],
+      ModuleOptions: [Object],
+      ModuleOptionsNormalized: [Object],
+      Name: [Object],
+      NoParse: [Object],
+      Node: [Object],
+      NodeOptions: [Object],
+      Optimization: [Object],
+      OptimizationRuntimeChunk: [Object],
+      OptimizationRuntimeChunkNormalized: [Object],
+      OptimizationSplitChunksCacheGroup: [Object],
+      OptimizationSplitChunksGetCacheGroups: [Object],
+      OptimizationSplitChunksOptions: [Object],
+      OptimizationSplitChunksSizes: [Object],
+      Output: [Object],
+      OutputModule: [Object],
+      OutputNormalized: [Object],
+      Parallelism: [Object],
+      ParserOptionsByModuleType: [Object],
+      Path: [Object],
+      Pathinfo: [Object],
+      Performance: [Object],
+      PerformanceOptions: [Object],
+      Plugins: [Object],
+      Profile: [Object],
+      PublicPath: [Object],
+      RawPublicPath: [Object],
+      RecordsInputPath: [Object],
+      RecordsOutputPath: [Object],
+      RecordsPath: [Object],
+      Resolve: [Object],
+      ResolveAlias: [Object],
+      ResolveLoader: [Object],
+      ResolveOptions: [Object],
+      ResolvePluginInstance: [Object],
+      RuleSetCondition: [Object],
+      RuleSetConditionAbsolute: [Object],
+      RuleSetConditionOrConditions: [Object],
+      RuleSetConditionOrConditionsAbsolute: [Object],
+      RuleSetConditions: [Object],
+      RuleSetConditionsAbsolute: [Object],
+      RuleSetLoader: [Object],
+      RuleSetLoaderOptions: [Object],
+      RuleSetLogicalConditions: [Object],
+      RuleSetLogicalConditionsAbsolute: [Object],
+      RuleSetRule: [Object],
+      RuleSetRules: [Object],
+      RuleSetUse: [Object],
+      RuleSetUseItem: [Object],
+      ScriptType: [Object],
+      SnapshotOptions: [Object],
+      SourceMapFilename: [Object],
+      SourcePrefix: [Object],
+      StatsOptions: [Object],
+      StatsValue: [Object],
+      StrictModuleErrorHandling: [Object],
+      StrictModuleExceptionHandling: [Object],
+      Target: [Object],
+      TrustedTypes: [Object],
+      UmdNamedDefine: [Object],
+      UniqueName: [Object],
+      WarningFilterItemTypes: [Object],
+      WarningFilterTypes: [Object],
+      WasmLoading: [Object],
+      WasmLoadingType: [Object],
+      Watch: [Object],
+      WatchOptions: [Object],
+      WebassemblyModuleFilename: [Object],
+      WebpackOptionsNormalized: [Object],
+      WebpackPluginFunction: [Object],
+      WebpackPluginInstance: [Object],
+      WorkerPublicPath: [Object]
+    },
+    title: 'WebpackOptions',
+    description: 'Options object as provided by the user.',
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      amd: [Object],
+      bail: [Object],
+      cache: [Object],
+      context: [Object],
+      dependencies: [Object],
+      devServer: [Object],
+      devtool: [Object],
+      entry: [Object],
+      experiments: [Object],
+      externals: [Object],
+      externalsPresets: [Object],
+      externalsType: [Object],
+      ignoreWarnings: [Object],
+      infrastructureLogging: [Object],
+      loader: [Object],
+      mode: [Object],
+      module: [Object],
+      name: [Object],
+      node: [Object],
+      optimization: [Object],
+      output: [Object],
+      parallelism: [Object],
+      performance: [Object],
+      plugins: [Object],
+      profile: [Object],
+      recordsInputPath: [Object],
+      recordsOutputPath: [Object],
+      recordsPath: [Object],
+      resolve: [Object],
+      resolveLoader: [Object],
+      snapshot: [Object],
+      stats: [Object],
+      target: [Object],
+      watch: [Object],
+      watchOptions: [Object]
+    }
+  },
+  headerName: 'Webpack',
+  baseDataPath: 'configuration',
+  postFormatter: [Function: postFormatter]
+}
+依赖预编译失败，已经为您跳过预编译步骤，但是编译速度可能会受到影响。
+
+
+● Webpack █████████████████████████ setup (3%)  
+ watch run
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (10%) 0/4 entries 1/4 dependencie
+s 0/1 modules 1 active 
+ node_modules/webpack/hot/only-dev-server.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (10%)  
+ import loader ./node_modules/babel-loader/lib/index.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (10%)  
+ import loader ./node_modules/@tarojs/taro-loader/lib/h5.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (10%) 0/4 entries 20/32 dependenc
+ies 4/15 modules 11 active 
+ node_modules/webpack-dev-server/client/utils/reloadApp.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (23%) 1/4 entries 70/81 dependenc
+ies 19/45 modules 21 active 
+ ...s/@pmmmwh/react-refresh-webpack-plugin/overlay/components/RuntimeErrorFoot
+er.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (23%) 1/4 entries 96/153 dependen
+cies 23/52 modules 29 active 
+ node_modules/react/cjs/react.development.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 173/250 depende
+ncies 28/117 modules 24 active 
+ ...bel-loader › node_modules/@tarojs/plugin-platform-h5/dist/runtime/apis/ind
+ex.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%)  
+ import loader ./node_modules/resolve-url-loader/index.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 328/427 depende
+ncies 33/194 modules 84 active 
+ node_modules/@tarojs/components/dist/components/taro-page-container-core.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 415/509 depende
+ncies 33/227 modules 129 active 
+ node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 635/714 depende
+ncies 70/260 modules 163 active 
+ ...\.entry\.js$/|exclude: /\.system\.entry\.js$/|groupOptions: {}|namespace o
+bject
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 715/925 depende
+ncies 89/285 modules 174 active 
+ .../Users/yubai/amio/amio-app/node_modules/@babel/runtime/helpers/esm/constru
+ct.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1155/1224 depen
+dencies 119/462 modules 227 active 
+ ....js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1211/1263 depen
+dencies 119/489 modules 285 active 
+ ...r › node_modules/@tarojs/taro-h5/dist/api/media/video/saveVideoToPhotosAlb
+um.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1258/1296 depen
+dencies 119/490 modules 296 active 
+ javascript/esm|/Users/yubai/amio/amio-app/node_modules/lodash-es/keys.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1443/1524 depen
+dencies 169/522 modules 306 active 
+ node_modules/swiper/esm/components/pagination/pagination.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1532/1586 depen
+dencies 267/558 modules 267 active 
+ ...|/Users/yubai/amio/amio-app/node_modules/core-js-pure/internals/to-primiti
+ve.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1712/1773 depen
+dencies 309/647 modules 276 active 
+ ...yubai/amio/amio-app/node_modules/core-js-pure/internals/is-null-or-undefin
+ed.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (37%) 2/4 entries 1897/1900 depen
+dencies 588/714 modules 125 active 
+ ...s
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (51%) 3/4 entries 1956/1961 depen
+dencies 701/745 modules 44 active 
+ node_modules/property-expr/index.js
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (70%)  
+ finish module graph
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (88%)  
+ runtime requirements
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (92%)  
+ asset processing
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+(node:10061) [DEP_WEBPACK_TEMPLATE_PATH_PLUGIN_REPLACE_PATH_VARIABLES_HASH] DeprecationWarning: [hash] is now [fullhash] (also consider using [chunkhash] or [contenthash], see documentation for details)
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 2.85s
+
+- 即将开始启动编译，请稍等~
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:10086/
+<i> [webpack-dev-server] On Your Network (IPv4): http://192.168.1.51:10086/
+<i> [webpack-dev-server] On Your Network (IPv6): http://[fd00:6152::1]:10086/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/yubai/amio/amio-app/dist' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+<i> [webpack-dev-middleware] wait until bundle finished: /
+(node:10061) [DEP_WEBPACK_TEMPLATE_PATH_PLUGIN_REPLACE_PATH_VARIABLES_HASH] DeprecationWarning: [hash] is now [fullhash] (also consider using [chunkhash] or [contenthash], see documentation for details)
+(Use `node --trace-deprecation ...` to show where the warning was created)
+→ Watching... [2/2/2026, 2:46:34 PM]
+
+✅  编译成功 2/2/2026, 2:46:34 PM
+
+
+ℹ️  Listening at http://192.168.1.51:10086/
+
+监听文件修改中...
+
+assets by info 1.19 MiB [immutable]
+  asset js/app.8b7c0b22.js 1.14 MiB [emitted] [immutable] (name: app)
+  asset js/runtime.8b7c0b22.js 49 KiB [emitted] [immutable] (name: runtime)
+asset js/src_app_boot_js._chunkhash_.js 4.86 MiB [emitted]
+asset js/node_modules_hls_js_dist_hls_mjs._chunkhash_.js 3.23 MiB [emitted]
+asset js/src_pages_game_index_tsx._chunkhash_.js 3.06 MiB [emitted]
+asset js/src_pages_home_index_tsx._chunkhash_.js 2.85 MiB [emitted]
+asset js/src_pages_intro_index_tsx._chunkhash_.js 2.56 MiB [emitted]
+asset js/node_modules_stencil_core_internal_client_shadow-css_js._chunkhash_.js 41 KiB [emitted]
+asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.8b7c0b22.js 49 KiB js/app.8b7c0b22.js 1.14 MiB
+orphan modules 669 KiB [orphan] 294 modules
+runtime modules 32.3 KiB 18 modules
+modules by path ./node_modules/ 4.23 MiB 484 modules
+modules by path ./src/ 316 KiB
+  modules by path ./src/components/ 135 KiB 24 modules
+  modules by path ./src/pages/ 105 KiB 9 modules
+  modules by path ./src/utils/*.ts 36.2 KiB 6 modules
+  modules by path ./src/constants/*.ts 9.5 KiB 3 modules
+  modules by path ./src/*.ts 2.35 KiB 2 modules
+  modules by path ./src/*.scss 23.8 KiB
+    ./src/app.scss 2.89 KiB [built] [code generated]
+    ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].oneOf[0].use[0]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[0]!./node_modules/resolve-url-loader/index.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./src/app.scss 20.9 KiB [built] [code generated]
+  ./src/app.boot.js 3.23 KiB [built] [code generated]
+data:application/octet-stream;base64,AAEAAAALAIAAAwAw.. 6.1 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 2850 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 48.98ms
+
+→ Watching... [2/2/2026, 2:46:34 PM]
+
+✅  编译成功 2/2/2026, 2:46:34 PM
+
+assets by status 16.6 MiB [cached] 6 assets
+assets by path . 1.19 MiB
+  assets by path js/*.js 1.19 MiB
+    asset js/app.8653d17a.js 1.14 MiB [emitted] [immutable] (name: app)
+    asset js/runtime.8653d17a.js 49 KiB [emitted] [immutable] (name: runtime)
+  assets by info 897 bytes [hmr]
+    asset runtime.8b7c0b22ba670da80378.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+    asset runtime.8b7c0b22ba670da80378.hot-update.json 31 bytes [emitted] [immutable] [hmr]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.8653d17a.js 49 KiB runtime.8b7c0b22ba670da80378.hot-update.js 866 bytes js/app.8653d17a.js 1.14 MiB
+cached modules 5.2 MiB [cached] 826 modules
+runtime modules 32.3 KiB 18 modules
+webpack 5.78.0 compiled successfully in 49 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 84/84 dependenc
+ies 745/55 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 101.66ms
+
+→ Watching... [2/2/2026, 3:02:02 PM]
+
+✅  编译成功 2/2/2026, 3:02:02 PM
+
+assets by status 17.8 MiB [cached] 8 assets
+asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.8653d17a.js 49 KiB js/app.8653d17a.js 1.14 MiB
+cached modules 5.2 MiB (javascript) 32.3 KiB (runtime) [cached] 843 modules
+./src/app.config.ts 1000 bytes [built]
+webpack 5.78.0 compiled successfully in 103 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (63%) 3/4 entries 83/84 dependenc
+ies 739/57 modules 2 active 
+ babel-loader › src/utils/energyLogic.ts
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 111/111 depende
+ncies 741/71 modules 4 active 
+ ...loader › resolve-url-loader › sass-loader › src/components/StarTrail/index
+.scss
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 177.13ms
+
+→ Watching... [2/2/2026, 3:06:26 PM]
+
+✅  编译成功 2/2/2026, 3:06:26 PM
+
+assets by status 13.7 MiB [cached] 5 assets
+assets by path . 3.97 MiB
+  assets by info 1.28 MiB [immutable]
+    assets by info 94.6 KiB [hmr]
+      asset src_pages_home_index_tsx.8653d17abcf0ed093db9.hot-update.js 93.1 KiB [emitted] [immutable] [hmr]
+      asset runtime.8653d17abcf0ed093db9.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.8653d17abcf0ed093db9.hot-update.json 722 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.df36c047.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.df36c047.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.69 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.df36c047.js 49 KiB runtime.8653d17abcf0ed093db9.hot-update.js 866 bytes js/app.df36c047.js 1.14 MiB
+cached modules 5.16 MiB [cached] 822 modules
+runtime modules 32.3 KiB 18 modules
+javascript modules 29 KiB
+  modules by path ./src/components/StarTrail/ 17.9 KiB
+    modules by path ./src/components/StarTrail/*.scss 11 KiB
+      ./src/components/StarTrail/index.scss 3 KiB [built] [code generated]
+      ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].oneOf[0].use[0]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[0]!./node_modules/resolve-url-loader/index.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./src/components/StarTrail/index.scss 8.01 KiB [built] [code generated]
+    ./src/components/StarTrail/index.ts 1020 bytes [built] [code generated]
+    ./src/components/StarTrail/StarTrail.tsx 5.85 KiB [built] [code generated]
+  ./src/pages/home/index.tsx 7.49 KiB [built] [code generated]
+  ./src/utils/energyLogic.ts 3.65 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 178 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (51%) 3/4 entries 84/84 dependenc
+ies 743/56 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ emitting (98%)  
+ after emit
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 229.42ms
+
+→ Watching... [2/2/2026, 3:11:02 PM]
+
+✅  编译成功 2/2/2026, 3:11:02 PM
+
+assets by status 13.7 MiB [cached] 5 assets
+assets by path . 3.87 MiB
+  assets by info 1.22 MiB [immutable]
+    assets by info 35.7 KiB [hmr]
+      asset src_pages_home_index_tsx.df36c047d49eccdc5b72.hot-update.js 34.8 KiB [emitted] [immutable] [hmr]
+      asset runtime.df36c047d49eccdc5b72.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.df36c047d49eccdc5b72.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.2de4dba6.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.2de4dba6.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.65 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.2de4dba6.js 49 KiB runtime.df36c047d49eccdc5b72.hot-update.js 866 bytes js/app.2de4dba6.js 1.14 MiB
+cached modules 5.16 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].oneOf[0].use[0]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[0]!./node_modules/resolve-url-loader/index.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./src/pages/home/index.scss 12.8 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 234 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 87/87 dependenc
+ies 738/59 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ emitting (98%)  
+ after emit
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 181.80ms
+
+→ Watching... [2/2/2026, 3:14:07 PM]
+
+✅  编译成功 2/2/2026, 3:14:07 PM
+
+assets by status 8.12 MiB [cached] 3 assets
+assets by path . 9.59 MiB
+  assets by info 1.32 MiB [immutable]
+    assets by info 131 KiB [hmr]
+      asset src_pages_intro_index_tsx.2de4dba64e48a6708471.hot-update.js 43.4 KiB [emitted] [immutable] [hmr]
+      asset src_pages_game_index_tsx.2de4dba64e48a6708471.hot-update.js 43.4 KiB [emitted] [immutable] [hmr]
+      asset src_pages_home_index_tsx.2de4dba64e48a6708471.hot-update.js 43.4 KiB [emitted] [immutable] [hmr]
+      + 2 assets
+    assets by path js/*.js 1.19 MiB
+      asset js/app.811266d8.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.811266d8.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.06 MiB [emitted]
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.65 MiB [emitted]
+  asset js/src_pages_intro_index_tsx._chunkhash_.js 2.56 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.811266d8.js 49 KiB runtime.2de4dba64e48a6708471.hot-update.js 866 bytes js/app.811266d8.js 1.14 MiB
+cached modules 5.16 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/utils/storage.ts 14 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 185 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 89/89 dependenc
+ies 742/59 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 86.89ms
+
+→ Watching... [2/2/2026, 3:14:55 PM]
+
+✅  编译成功 2/2/2026, 3:14:55 PM
+
+assets by status 8.12 MiB [cached] 3 assets
+assets by path . 9.7 MiB
+  assets by info 1.37 MiB [immutable]
+    assets by info 185 KiB [hmr]
+      asset src_pages_intro_index_tsx.811266d83d782f8a37f7.hot-update.js 69.9 KiB [emitted] [immutable] [hmr]
+      asset src_pages_game_index_tsx.811266d83d782f8a37f7.hot-update.js 62.8 KiB [emitted] [immutable] [hmr]
+      asset src_pages_home_index_tsx.811266d83d782f8a37f7.hot-update.js 51.3 KiB [emitted] [immutable] [hmr]
+      + 2 assets
+    assets by path js/*.js 1.19 MiB
+      asset js/app.67190552.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.67190552.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.08 MiB [emitted]
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.66 MiB [emitted]
+  asset js/src_pages_intro_index_tsx._chunkhash_.js 2.59 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.67190552.js 49 KiB runtime.811266d83d782f8a37f7.hot-update.js 866 bytes js/app.67190552.js 1.14 MiB
+cached modules 5.13 MiB [cached] 824 modules
+runtime modules 32.3 KiB 18 modules
+javascript modules 47.5 KiB
+  ./src/pages/intro/index.tsx 4.55 KiB [code generated]
+  ./src/pages/home/index.tsx 7.49 KiB [code generated]
+  ./src/pages/game/index.tsx 18.7 KiB [code generated]
+  ./src/utils/storage.ts 16.7 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 88 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 94/94 dependenc
+ies 745/64 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ emitting (98%)  
+ after emit
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 144.25ms
+
+→ Watching... [2/2/2026, 3:17:53 PM]
+
+✅  编译成功 2/2/2026, 3:17:53 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.33 MiB
+  assets by info 1.24 MiB [immutable]
+    assets by info 58.8 KiB [hmr]
+      asset src_pages_game_index_tsx.671905525768ae73deb1.hot-update.js 57.9 KiB [emitted] [immutable] [hmr]
+      asset runtime.671905525768ae73deb1.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.671905525768ae73deb1.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.929ef310.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.929ef310.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.08 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.929ef310.js 49 KiB runtime.671905525768ae73deb1.hot-update.js 866 bytes js/app.929ef310.js 1.14 MiB
+cached modules 5.16 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/game/index.tsx 18.7 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 146 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 94/94 dependenc
+ies 745/64 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 92.61ms
+
+→ Watching... [2/2/2026, 3:18:14 PM]
+
+✅  编译成功 2/2/2026, 3:18:14 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.33 MiB
+  assets by info 1.25 MiB [immutable]
+    assets by info 59.9 KiB [hmr]
+      asset src_pages_game_index_tsx.929ef3104900ac5e9df6.hot-update.js 59 KiB [emitted] [immutable] [hmr]
+      asset runtime.929ef3104900ac5e9df6.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.929ef3104900ac5e9df6.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.705495d7.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.705495d7.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.09 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.705495d7.js 49 KiB runtime.929ef3104900ac5e9df6.hot-update.js 866 bytes js/app.705495d7.js 1.14 MiB
+cached modules 5.16 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/game/index.tsx 19.1 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 92 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 94/94 dependenc
+ies 745/64 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 96.68ms
+
+→ Watching... [2/2/2026, 3:19:33 PM]
+
+✅  编译成功 2/2/2026, 3:19:34 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.33 MiB
+  assets by info 1.25 MiB [immutable]
+    assets by info 60.7 KiB [hmr]
+      asset src_pages_game_index_tsx.705495d700336865279d.hot-update.js 59.8 KiB [emitted] [immutable] [hmr]
+      asset runtime.705495d700336865279d.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.705495d700336865279d.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.9db10643.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.9db10643.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.09 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.9db10643.js 49 KiB runtime.705495d700336865279d.hot-update.js 866 bytes js/app.9db10643.js 1.14 MiB
+cached modules 5.16 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/game/index.tsx 19.4 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 96 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (63%) 3/4 entries 92/92 dependenc
+ies 745/62 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 88.81ms
+
+→ Watching... [2/2/2026, 3:22:52 PM]
+
+✅  编译成功 2/2/2026, 3:22:52 PM
+
+assets by status 13.9 MiB [cached] 5 assets
+assets by path . 3.79 MiB
+  assets by info 1.2 MiB [immutable]
+    assets by info 15.1 KiB [hmr]
+      asset src_pages_intro_index_tsx.9db10643d48647363356.hot-update.js 14.2 KiB [emitted] [immutable] [hmr]
+      asset runtime.9db10643d48647363356.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.9db10643d48647363356.hot-update.json 59 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.7d80c3d7.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.7d80c3d7.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_intro_index_tsx._chunkhash_.js 2.59 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.7d80c3d7.js 49 KiB runtime.9db10643d48647363356.hot-update.js 866 bytes js/app.7d80c3d7.js 1.14 MiB
+cached modules 5.17 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/intro/index.tsx 4.56 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 89 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (60%) 3/4 entries 86/86 dependenc
+ies 743/56 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 82.06ms
+
+→ Watching... [2/2/2026, 3:23:49 PM]
+
+✅  编译成功 2/2/2026, 3:23:49 PM
+
+assets by status 11.6 MiB [cached] 5 assets
+assets by status 6.13 MiB [emitted]
+  assets by info 1.26 MiB [immutable]
+    assets by info 69.4 KiB [hmr]
+      asset src_app_boot_js.7d80c3d78106de58eee4.hot-update.js 68.5 KiB [emitted] [immutable] [hmr]
+      asset runtime.7d80c3d78106de58eee4.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.7d80c3d78106de58eee4.hot-update.json 49 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.e5228672.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.e5228672.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_app_boot_js._chunkhash_.js 4.87 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.e5228672.js 49 KiB runtime.7d80c3d78106de58eee4.hot-update.js 866 bytes js/app.e5228672.js 1.14 MiB
+cached modules 5.15 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].oneOf[0].use[0]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[0]!./node_modules/resolve-url-loader/index.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[5].use[1]!./src/app.scss 26.8 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 83 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ building (64%) 3/4 entries 91/91 dependenc
+ies 743/61 modules 0 active 
+ 
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 105.21ms
+
+→ Watching... [2/2/2026, 4:31:56 PM]
+
+✅  编译成功 2/2/2026, 4:31:56 PM
+
+assets by status 13.8 MiB [cached] 5 assets
+assets by path . 3.86 MiB
+  assets by info 1.21 MiB [immutable]
+    assets by info 18.2 KiB [hmr]
+      asset src_pages_home_index_tsx.e522867263877a554da0.hot-update.js 17.3 KiB [emitted] [immutable] [hmr]
+      asset runtime.e522867263877a554da0.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.e522867263877a554da0.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.b59daf20.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.b59daf20.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.66 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.b59daf20.js 49 KiB runtime.e522867263877a554da0.hot-update.js 866 bytes js/app.b59daf20.js 1.14 MiB
+cached modules 5.17 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/components/StarTrail/StarTrail.tsx 5.85 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 106 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (84%)  
+ chunk ids
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 66.42ms
+
+→ Watching... [2/2/2026, 4:32:06 PM]
+
+✅  编译成功 2/2/2026, 4:32:06 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.29 MiB
+  assets by info 1.21 MiB [immutable]
+    assets by info 18.5 KiB [hmr]
+      asset src_pages_game_index_tsx.b59daf201da9b0edc2b4.hot-update.js 17.6 KiB [emitted] [immutable] [hmr]
+      asset runtime.b59daf201da9b0edc2b4.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.b59daf201da9b0edc2b4.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.6e83b802.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.6e83b802.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.09 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.6e83b802.js 49 KiB runtime.b59daf201da9b0edc2b4.hot-update.js 866 bytes js/app.6e83b802.js 1.14 MiB
+cached modules 5.17 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/components/ChestModal/ChestModal.tsx 5.43 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 67 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (73%)  
+ after chunk graph
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 69.48ms
+
+→ Watching... [2/2/2026, 4:32:16 PM]
+
+✅  编译成功 2/2/2026, 4:32:16 PM
+
+assets by status 13.8 MiB [cached] 5 assets
+assets by path . 3.87 MiB
+  assets by info 1.21 MiB [immutable]
+    assets by info 23.2 KiB [hmr]
+      asset src_pages_home_index_tsx.6e83b802ba1db0b2bc40.hot-update.js 22.3 KiB [emitted] [immutable] [hmr]
+      asset runtime.6e83b802ba1db0b2bc40.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.6e83b802ba1db0b2bc40.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.68740af9.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.68740af9.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.66 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.68740af9.js 49 KiB runtime.6e83b802ba1db0b2bc40.hot-update.js 866 bytes js/app.68740af9.js 1.14 MiB
+cached modules 5.17 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/home/index.tsx 7.4 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 70 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (84%)  
+ chunk ids
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 62.47ms
+
+→ Watching... [2/2/2026, 4:32:19 PM]
+
+✅  编译成功 2/2/2026, 4:32:19 PM
+
+assets by status 13.8 MiB [cached] 5 assets
+assets by path . 3.87 MiB
+  assets by info 1.21 MiB [immutable]
+    assets by info 23.2 KiB [hmr]
+      asset src_pages_home_index_tsx.68740af97a337cca5366.hot-update.js 22.3 KiB [emitted] [immutable] [hmr]
+      asset runtime.68740af97a337cca5366.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.68740af97a337cca5366.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.8975292f.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.8975292f.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_home_index_tsx._chunkhash_.js 2.66 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.8975292f.js 49 KiB runtime.68740af97a337cca5366.hot-update.js 866 bytes js/app.8975292f.js 1.14 MiB
+cached modules 5.17 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/home/index.tsx 7.4 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 63 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 49.81ms
+
+→ Watching... [2/2/2026, 4:32:24 PM]
+
+✅  编译成功 2/2/2026, 4:32:24 PM
+
+assets by status 13.9 MiB [cached] 5 assets
+assets by path . 3.79 MiB
+  assets by info 1.2 MiB [immutable]
+    assets by info 15.1 KiB [hmr]
+      asset src_pages_intro_index_tsx.8975292f7e3743a60c6d.hot-update.js 14.2 KiB [emitted] [immutable] [hmr]
+      asset runtime.8975292f7e3743a60c6d.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.8975292f7e3743a60c6d.hot-update.json 59 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.29a147bd.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.29a147bd.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_intro_index_tsx._chunkhash_.js 2.59 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.29a147bd.js 49 KiB runtime.8975292f7e3743a60c6d.hot-update.js 866 bytes js/app.29a147bd.js 1.14 MiB
+cached modules 5.18 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/pages/intro/index.tsx 4.56 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 50 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ sealing (87%)  
+ code generation
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 62.84ms
+
+→ Watching... [2/2/2026, 4:32:32 PM]
+
+✅  编译成功 2/2/2026, 4:32:32 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.28 MiB
+  assets by info 1.2 MiB [immutable]
+    assets by info 10.2 KiB [hmr]
+      asset src_pages_game_index_tsx.29a147bd41ce49042572.hot-update.js 9.29 KiB [emitted] [immutable] [hmr]
+      asset runtime.29a147bd41ce49042572.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.29a147bd41ce49042572.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.73fa6b7f.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.73fa6b7f.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.09 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.73fa6b7f.js 49 KiB runtime.29a147bd41ce49042572.hot-update.js 866 bytes js/app.73fa6b7f.js 1.14 MiB
+cached modules 5.18 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/components/TempSlot/TempSlot.tsx 2.73 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 64 ms
+
+● Webpack █████████████████████████ setup (7%) compile 
+ ExternalsPlugin
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+● Webpack █████████████████████████ emitting (98%)  
+ after emit
+
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[G
+✔ Webpack
+  Compiled successfully in 51.72ms
+
+→ Watching... [2/2/2026, 4:32:39 PM]
+
+✅  编译成功 2/2/2026, 4:32:39 PM
+
+assets by status 13.4 MiB [cached] 5 assets
+assets by path . 4.29 MiB
+  assets by info 1.2 MiB [immutable]
+    assets by info 12.2 KiB [hmr]
+      asset src_pages_game_index_tsx.73fa6b7fbc98aa4817ac.hot-update.js 11.3 KiB [emitted] [immutable] [hmr]
+      asset runtime.73fa6b7fbc98aa4817ac.hot-update.js 866 bytes [emitted] [immutable] [hmr] (name: runtime)
+      asset runtime.73fa6b7fbc98aa4817ac.hot-update.json 58 bytes [emitted] [immutable] [hmr]
+    assets by path js/*.js 1.19 MiB
+      asset js/app.9a476540.js 1.14 MiB [emitted] [immutable] (name: app)
+      asset js/runtime.9a476540.js 49 KiB [emitted] [immutable] (name: runtime)
+  asset js/src_pages_game_index_tsx._chunkhash_.js 3.09 MiB [emitted]
+  asset index.html 918 bytes [emitted]
+Entrypoint app 1.19 MiB = js/runtime.9a476540.js 49 KiB runtime.73fa6b7fbc98aa4817ac.hot-update.js 866 bytes js/app.9a476540.js 1.14 MiB
+cached modules 5.18 MiB [cached] 827 modules
+runtime modules 32.3 KiB 18 modules
+./src/utils/gameLogic.ts 3.86 KiB [built] [code generated]
+webpack 5.78.0 compiled successfully in 52 ms

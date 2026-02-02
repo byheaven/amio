@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from '@tarojs/components';
 import type { Milestone } from '../../constants/game';
 import './index.scss';
 
-interface StarTrailProps {
+export interface StarTrailProps {
   milestones: Milestone[];
   consecutiveDays: number;
 }

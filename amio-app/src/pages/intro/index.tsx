@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Image } from '@tarojs/components';
-import Taro, { useDidShow } from '@tarojs/taro';
+import { View, Text, Button } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import { loadProgress, markIntroSeen } from '../../utils/storage';
 import './index.scss';
 

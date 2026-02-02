@@ -1,3 +1,4 @@
+
 # AGENTS.md - Development Guide for AI Agents
 
 This guide provides essential context for agents working on the AMIO project (idol-themed 3-Tiles match game).

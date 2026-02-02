@@ -3,7 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { getPlanetStage } from '../../utils/energyLogic';
 import './index.scss';
 
-interface PlanetViewProps {
+export interface PlanetViewProps {
   progress: number;
   size?: 'small' | 'medium' | 'large';
   showLabel?: boolean;

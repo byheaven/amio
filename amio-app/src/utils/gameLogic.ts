@@ -1,4 +1,4 @@
-import { TileData, TileType, MAX_SLOTS } from '../constants/game';
+import { TileData, TileType } from '../constants/game';
 
 // Simple overlap check: assumes tile size is roughly 2x2 units in the grid system
 const TILE_WIDTH_UNIT = 2;
