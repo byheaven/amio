@@ -45,6 +45,9 @@ amio-app/src/
 │   ├── ToolBar/       # Undo/Shuffle/Pop tools
 │   └── ChestModal/    # Victory result modal
 ├── pages/          # Route pages
+│   ├── intro/         # Intro story page (first-time user experience)
+│   ├── starlight/     # Starlight tab (main hub)
+│   ├── starocean/     # Star Ocean tab
 │   ├── home/          # Home page (chest status, streak, game entry)
 │   └── game/          # Main game page
 ├── utils/          # Pure function game logic
@@ -60,6 +63,34 @@ amio-app/src/
 
 ### Path Alias
 `@/*` → `./src/*` (configured in tsconfig.json and Taro config)
+
+## Navigation & Page Flow
+
+### Intro Page (src/pages/intro/index.tsx)
+First-time user experience showing the "Shark Star" story introduction.
+
+**Navigation Pattern:**
+- Uses `Taro.switchTab()` with error handling and fallback to navigate to Starlight tab
+- Implements success/fail callbacks to catch navigation failures
+- Falls back to `Taro.navigateTo()` if `switchTab` fails
+- Marks intro as seen via `markIntroSeen()` before navigation
+
+**Important:** Always use `Taro.switchTab()` for tab bar pages with proper error handling:
+```typescript
+Taro.switchTab({
+    url: '/pages/starlight/index',
+    success: () => console.log('Navigation successful'),
+    fail: (err) => {
+        console.error('Navigation failed:', err);
+        Taro.navigateTo({ url: '/pages/starlight/index' });
+    }
+});
+```
+
+### Tab Bar Pages
+- **Starlight** (`pages/starlight/index`): Main hub page
+- **Star Ocean** (`pages/starocean/index`): Star Ocean feature page
+- **Home** (`pages/home/index`): Home/profile page
 
 ## Core Game Logic
 

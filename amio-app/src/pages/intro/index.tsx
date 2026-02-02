@@ -39,7 +39,18 @@ const IntroPage: React.FC = () => {
     }, []);
 
     const redirectToHome = () => {
-        Taro.switchTab({ url: '/pages/starlight/index' });
+        console.log('Attempting to navigate to starlight...');
+        Taro.switchTab({
+            url: '/pages/starlight/index',
+            success: () => {
+                console.log('Navigation successful');
+            },
+            fail: (err) => {
+                console.error('Navigation failed:', err);
+                // Fallback: try navigateTo if switchTab fails
+                Taro.navigateTo({ url: '/pages/starlight/index' });
+            }
+        });
     };
 
     const handleNext = () => {
