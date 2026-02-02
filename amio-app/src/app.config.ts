@@ -11,17 +11,23 @@ export default defineAppConfig({
       {
         pagePath: 'pages/starlight/index',
         text: '星光',
+        iconPath: './assets/tabbar/starlight.png',
+        selectedIconPath: './assets/tabbar/starlight-active.png'
       },
       {
         pagePath: 'pages/starocean/index',
         text: '星海',
+        iconPath: './assets/tabbar/starocean.png',
+        selectedIconPath: './assets/tabbar/starocean-active.png'
       },
       {
         pagePath: 'pages/home/index',
         text: '星轨',
+        iconPath: './assets/tabbar/home.png',
+        selectedIconPath: './assets/tabbar/home-active.png'
       },
     ],
-    color: '#666',
+    color: '#999',
     selectedColor: '#4a9eff',
     backgroundColor: '#1a1a2e',
     borderStyle: 'black',

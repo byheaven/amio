@@ -20,21 +20,36 @@ const IntroPage: React.FC = () => {
     useEffect(() => {
         console.log('IntroPage mounted');
         try {
-            // Check if already seen
-            const progress = loadProgress();
-            console.log('IntroPage progress:', progress);
-            if (progress && progress.hasSeenIntro) {
-                console.log('Intro already seen, redirecting...');
-                redirectToHome();
-            } else {
-                console.log('Starting intro animation');
-                // Start animation
+            // 获取当前页面路径
+            const router = Taro.getCurrentInstance().router;
+            const currentPath = router?.path || '';
+            console.log('Current path:', currentPath);
+
+            // 判断是否是根路径访问（path 为空或者是 intro 页面本身）
+            const isRootAccess = !currentPath ||
+                                 currentPath === '/' ||
+                                 currentPath.includes('/pages/intro/index');
+
+            if (isRootAccess) {
+                // 根路径访问：始终显示 intro
+                console.log('Root access: always show intro');
                 setFadeIn(true);
+            } else {
+                // 直接访问子页面：检查是否已看过 intro
+                const progress = loadProgress();
+                console.log('Direct subpage access, progress:', progress);
+                if (progress?.hasSeenIntro) {
+                    console.log('Intro already seen, redirecting...');
+                    redirectToHome();
+                } else {
+                    console.log('Intro not seen yet, showing intro');
+                    setFadeIn(true);
+                }
             }
         } catch (error) {
             console.error('Error in IntroPage useEffect:', error);
-            // Fallback to home if error
-            redirectToHome();
+            // Fallback: show intro on error
+            setFadeIn(true);
         }
     }, []);
 

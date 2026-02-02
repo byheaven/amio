@@ -53,6 +53,11 @@ const Starlight: React.FC = () => {
         <Text className="settings-icon">⚙️</Text>
       </View>
 
+      {/* Introduction */}
+      <View className="starlight__intro">
+        <Text className="intro-text">完成每日挑战，点亮一束光，为鲨之星注入能量</Text>
+      </View>
+
       {/* Planet Visualization */}
       <View className="starlight__planet">
         <PlanetView progress={planetProgress} size="large" />

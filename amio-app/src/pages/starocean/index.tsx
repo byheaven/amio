@@ -23,6 +23,11 @@ const StarOcean: React.FC = () => {
         <Text className="star-ocean__notify">🔔</Text>
       </View>
 
+      {/* Introduction */}
+      <View className="star-ocean__intro">
+        <Text className="intro-text">分享你的故事，为鲨之星贡献💡智慧能量，留下属于你的星际记忆</Text>
+      </View>
+
       <ScrollView className="star-ocean__content" scrollY>
         {/* Planet Card */}
         <View className="planet-card">

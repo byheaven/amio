@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Wave/Ocean icon -->
+  <path d="M10 50 Q20 40 30 50 T50 50 T70 50 T90 50" stroke="#666" stroke-width="4" fill="none"/>
+  <path d="M10 60 Q20 50 30 60 T50 60 T70 60 T90 60" stroke="#666" stroke-width="4" fill="none"/>
+  <path d="M10 70 Q20 60 30 70 T50 70 T70 70 T90 70" stroke="#666" stroke-width="3" fill="none"/>
+</svg>

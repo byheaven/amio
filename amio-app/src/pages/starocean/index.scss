@@ -23,6 +23,19 @@
     opacity: 0.6;
   }
 
+  &__intro {
+    padding: 12px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .intro-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+  }
+
   &__content {
     flex: 1;
     padding: 16px;

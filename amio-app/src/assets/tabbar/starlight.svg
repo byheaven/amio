@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Sparkles/Star icon -->
+  <path d="M50 10 L55 35 L80 40 L55 45 L50 70 L45 45 L20 40 L45 35 Z" fill="#666"/>
+  <circle cx="75" cy="25" r="3" fill="#666"/>
+  <circle cx="25" cy="65" r="3" fill="#666"/>
+</svg>
