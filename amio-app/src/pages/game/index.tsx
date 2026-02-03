@@ -51,6 +51,8 @@ const Game: React.FC = () => {
 
         // 检查URL参数决定启动模式
         const mode = router.params.mode;
+        const autoWin = router.params.autowin === 'true';
+
         if (mode === 'hero') {
             // 直接启动Hero模式，需要从storage加载已有宝箱等级
             const progress = loadProgress();
@@ -67,6 +69,13 @@ const Game: React.FC = () => {
             setNormalCompleted(true); // 从首页进入Hero说明普通模式已通关
         } else {
             startNewGame();
+        }
+
+        // 调试功能：自动获胜
+        if (autoWin) {
+            setTimeout(() => {
+                handleTestWin();
+            }, 500);
         }
     }, []);
 
@@ -162,8 +171,28 @@ const Game: React.FC = () => {
         setShowResult(false);
         setStatus('won');
 
-        // 直接使用 reLaunch 返回首页，避免 navigateBack 在 H5 下可能静默失败的问题
-        Taro.reLaunch({ url: '/pages/home/index' });
+        // 根据游戏模式决定跳转目标页面
+        if (gameMode === GameMode.HERO) {
+            // Hero 模式过关后跳转到星海页面
+            Taro.switchTab({
+                url: '/pages/starocean/index',
+                fail: (err) => {
+                    console.error('Navigation to starocean failed:', err);
+                    // Fallback to reLaunch if switchTab fails
+                    Taro.reLaunch({ url: '/pages/starocean/index' });
+                }
+            });
+        } else {
+            // 普通模式过关后跳转到星光页面
+            Taro.switchTab({
+                url: '/pages/starlight/index',
+                fail: (err) => {
+                    console.error('Navigation to starlight failed:', err);
+                    // Fallback to reLaunch if switchTab fails
+                    Taro.reLaunch({ url: '/pages/starlight/index' });
+                }
+            });
+        }
     };
 
     const handleTileClick = (tile: TileData) => {

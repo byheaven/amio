@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
+import Taro, { useDidShow } from '@tarojs/taro';
 import StarTrail from '../../components/StarTrail';
 import { loadProgress } from '../../utils/storage';
 import { determineLandingBatch } from '../../utils/energyLogic';
@@ -9,9 +10,20 @@ import './index.scss';
 const Home: React.FC = () => {
   const [progress, setProgress] = useState<GameProgress | null>(null);
 
-  useEffect(() => {
+  // 加载进度的函数
+  const refreshProgress = () => {
     setProgress(loadProgress());
+  };
+
+  // 页面挂载时加载
+  useEffect(() => {
+    refreshProgress();
   }, []);
+
+  // 页面显示时刷新
+  useDidShow(() => {
+    refreshProgress();
+  });
 
   if (!progress) return null;
 

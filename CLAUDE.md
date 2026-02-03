@@ -87,6 +87,38 @@ Taro.switchTab({
 });
 ```
 
+### TabBar Page Data Refresh Pattern (Critical)
+
+**Problem:** `useEffect` with empty dependency array only runs on component mount. When using `Taro.switchTab()` to navigate between tabBar pages, the page component is NOT re-mounted (it remains in memory). This causes stale data to display.
+
+**Solution:** Always use `useDidShow` lifecycle hook to refresh data when tabBar pages become visible:
+
+```typescript
+import { useDidShow } from '@tarojs/taro';
+import { loadProgress } from '../../utils/storage';
+
+const MyTabPage: React.FC = () => {
+  const [progress, setProgress] = useState(null);
+
+  // Load on initial mount
+  useEffect(() => {
+    refreshData();
+  }, []);
+
+  // Refresh when page becomes visible (after switchTab from game page)
+  useDidShow(() => {
+    refreshData();
+  });
+
+  const refreshData = () => {
+    const data = loadProgress();
+    setProgress(data);
+  };
+};
+```
+
+**Rule:** Any tabBar page that displays data modified by other pages MUST use `useDidShow` to refresh.
+
 ### Tab Bar Pages
 - **Starlight** (`pages/starlight/index`): Main hub page
 - **Star Ocean** (`pages/starocean/index`): Star Ocean feature page

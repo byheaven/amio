@@ -325,10 +325,15 @@ export const savePendingChest = (levels: ChestLevel[], isHeroBonus: boolean): vo
     const today = getTodayDateString();
 
     // 检查是否有今天的宝箱（通过earnedAt日期判断）
+    // 注意：使用本地时间字符串比较，避免时区问题
     let isTodayChest = false;
     if (progress.pendingChest) {
         const earnedDate = new Date(progress.pendingChest.earnedAt);
-        const earnedDateStr = `${earnedDate.getFullYear()}-${String(earnedDate.getMonth() + 1).padStart(2, '0')}-${String(earnedDate.getDate()).padStart(2, '0')}`;
+        const earnedDateStr = earnedDate.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).replace(/\//g, '-');
         isTodayChest = (earnedDateStr === today);
     }
 

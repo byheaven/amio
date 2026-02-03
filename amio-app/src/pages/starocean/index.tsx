@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
+import Taro, { useDidShow } from '@tarojs/taro';
 import PlanetView from '../../components/PlanetView';
 import { syncPlanetProgress } from '../../utils/energyLogic';
 import './index.scss';
@@ -8,12 +9,23 @@ const StarOcean: React.FC = () => {
   const [planetProgress, setPlanetProgress] = useState(67.3);
   const [activeUsers, setActiveUsers] = useState(12847);
 
-  useEffect(() => {
+  // 加载数据的函数
+  const refreshData = () => {
     syncPlanetProgress().then(data => {
       setPlanetProgress(data.progress);
       setActiveUsers(data.activeUsers);
     });
+  };
+
+  // 页面挂载时加载
+  useEffect(() => {
+    refreshData();
   }, []);
+
+  // 页面显示时刷新（从游戏页面返回时）
+  useDidShow(() => {
+    refreshData();
+  });
 
   return (
     <View className="star-ocean">
