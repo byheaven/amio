@@ -67,6 +67,12 @@ export interface GameProgress {
 
 const STORAGE_KEY = 'amio_game_progress';
 
+const isChestLevelValue = (value: unknown): value is ChestLevel => {
+    if (typeof value !== 'number') return false;
+    const chestLevels = Object.values(ChestLevel).filter((v) => typeof v === 'number') as unknown as number[];
+    return chestLevels.includes(value);
+};
+
 /**
  * 获取今天的日期字符串
  */
@@ -155,10 +161,22 @@ export const loadProgress = (): GameProgress => {
 
             // 数据迁移：将旧的 level 字段转换为 levels 数组
             if (progress.pendingChest) {
-                const chest = progress.pendingChest as any;
-                if (chest.level !== undefined && chest.levels === undefined) {
-                    chest.levels = [chest.level];
-                    delete chest.level;
+                const pendingChestValue: unknown = progress.pendingChest;
+                if (pendingChestValue && typeof pendingChestValue === 'object') {
+                    const chestRecord = pendingChestValue as Record<string, unknown>;
+                    const legacyLevel = chestRecord.level;
+                    const levels = chestRecord.levels;
+
+                    if (!Array.isArray(levels)) {
+                        if (isChestLevelValue(legacyLevel)) {
+                            progress.pendingChest.levels = [legacyLevel];
+                            delete chestRecord.level;
+                        } else {
+                            progress.pendingChest = null;
+                        }
+                    }
+                } else {
+                    progress.pendingChest = null;
                 }
             }
 

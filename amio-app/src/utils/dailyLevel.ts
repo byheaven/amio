@@ -56,7 +56,7 @@ export const generateDailyLayout = (seed: number, totalTiles: number = 75): Layo
 
 // Assign random tile types to fixed layout (changes on each retry)
 export const assignRandomTileTypes = (layout: LayoutPosition[]): TileData[] => {
-    const types = Object.values(TileType);
+    const types = Object.values(TileType).filter((v): v is TileType => typeof v === 'number');
     const totalTriples = Math.floor(layout.length / 3);
 
     // Generate type assignments (each type appears 3 times)

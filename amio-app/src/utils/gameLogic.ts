@@ -27,7 +27,7 @@ export const updateClickableStatus = (tiles: TileData[]): TileData[] => {
 };
 
 export const generateLevel = (totalTriples: number = 10): TileData[] => {
-    const types = Object.values(TileType);
+    const types = Object.values(TileType).filter((v): v is TileType => typeof v === 'number');
     let tiles: TileData[] = [];
     let idCounter = 0;
 
@@ -56,27 +56,21 @@ export const generateLevel = (totalTriples: number = 10): TileData[] => {
 };
 
 export const checkMatch = (slotTiles: TileData[]): { newSlots: TileData[], matched: boolean } => {
-    // Check if any type has 3 counts
-    const counts: Record<string, number> = {};
-    slotTiles.forEach(t => {
-        counts[t.type] = (counts[t.type] || 0) + 1;
+    const counts = new Map<TileType, number>();
+    slotTiles.forEach((tile) => {
+        counts.set(tile.type, (counts.get(tile.type) || 0) + 1);
     });
 
-    const matchType = Object.keys(counts).find(key => counts[key] >= 3);
+    const matchType = [...counts.entries()].find(([, count]) => count >= 3)?.[0];
+    if (matchType === undefined) return { newSlots: slotTiles, matched: false };
 
-    if (matchType) {
-        // Remove 3 instances of matchType
-        // Find indices or filter. We need to remove exactly 3.
-        let removedCount = 0;
-        const newSlots = slotTiles.filter(t => {
-            if (t.type === matchType && removedCount < 3) {
-                removedCount++;
-                return false;
-            }
-            return true;
-        });
-        return { newSlots, matched: true };
-    }
-
-    return { newSlots: slotTiles, matched: false };
+    let removedCount = 0;
+    const newSlots = slotTiles.filter((tile) => {
+        if (tile.type === matchType && removedCount < 3) {
+            removedCount++;
+            return false;
+        }
+        return true;
+    });
+    return { newSlots, matched: true };
 };

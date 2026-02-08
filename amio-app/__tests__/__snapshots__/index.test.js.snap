@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Test 1`] = `
+"[36m<body>[39m
+  [36m<div[39m
+    [33mid[39m=[32m"app"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"taro_page"[39m
+      [33mid[39m=[32m"/pages/index/index"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m"
+`;

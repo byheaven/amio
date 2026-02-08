@@ -68,7 +68,7 @@ export const generateHeroLayout = (seed: number): HeroLayoutPosition[] => {
  */
 export const assignHeroTileTypes = (layout: HeroLayoutPosition[]): TileData[] => {
     // 合并基础类型和Hero扩展类型
-    const baseTypes = Object.values(TileType);
+    const baseTypes = Object.values(TileType).filter((v): v is TileType => typeof v === 'number');
     // 这里使用全部9种基础类型 + 模拟增加种类复杂度
     const allTypes = [...baseTypes]; // 9种基础类型
 
