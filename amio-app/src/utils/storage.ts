@@ -619,3 +619,24 @@ export function addWisdomCrystal(amount: number): void {
     checkMilestones(progress);
     saveProgress(progress);
 }
+
+// === Theme Preference ===
+// Stored separately from GameProgress to survive daily resets
+
+const THEME_KEY = 'amio_theme';
+
+export const getThemePreference = (): string => {
+  try {
+    return Taro.getStorageSync(THEME_KEY) || 'shark-star';
+  } catch {
+    return 'shark-star';
+  }
+};
+
+export const setThemePreference = (themeId: string): void => {
+  try {
+    Taro.setStorageSync(THEME_KEY, themeId);
+  } catch (error) {
+    console.error('Failed to save theme preference:', error);
+  }
+};

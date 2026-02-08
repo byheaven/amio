@@ -1,0 +1,36 @@
+// src/styles/_reset.scss
+// Global reset and utility classes
+
+page {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 50%, var(--t-bg-app-tertiary) 100%);
+  min-height: 100vh;
+  color: var(--t-text-primary);
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--t-text-muted); border-radius: 2px; }
+
+// Text alignment
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+// Flexbox
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
+
+// Animations
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-slide-up { animation: slideUp 0.4s ease-out; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-glow { animation: glow 2s ease-in-out infinite; }
