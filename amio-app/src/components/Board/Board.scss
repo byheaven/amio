@@ -24,21 +24,21 @@
     background:
       linear-gradient(
         180deg,
-        rgba(144, 205, 244, 0.08) 0%,
-        rgba(99, 179, 237, 0.04) 50%,
-        rgba(66, 153, 225, 0.08) 100%
+        var(--t-game-board-bg-start) 0%,
+        var(--t-game-board-bg-mid) 50%,
+        var(--t-game-board-bg-end) 100%
       ),
-      rgba(255, 255, 255, 0.15);
+      var(--t-bg-glass-full);
 
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--t-glass-blur);
+    -webkit-backdrop-filter: var(--t-glass-blur);
 
     border-radius: var(--radius-xl);
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border: 1.5px solid var(--t-border-light);
 
     box-shadow:
-      inset 0 0 30px rgba(255, 255, 255, 0.1),
-      0 8px 32px rgba(0, 0, 0, 0.08);
+      inset 0 0 30px var(--t-game-board-inner-glow),
+      0 8px 32px var(--t-shadow-soft);
 
     display: flex;
     justify-content: center;
@@ -51,7 +51,7 @@
       position: absolute;
       width: 40px;
       height: 40px;
-      border: 2px solid rgba(99, 179, 237, 0.3);
+      border: 2px solid var(--t-game-board-corner);
       pointer-events: none;
     }
 
