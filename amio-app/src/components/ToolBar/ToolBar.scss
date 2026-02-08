@@ -21,14 +21,14 @@
     // 高级玻璃按钮
     background: linear-gradient(
       165deg,
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(247, 250, 252, 0.95) 100%
+      var(--t-game-tool-bg) 0%,
+      var(--t-game-tool-bg-end) 100%
     );
 
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--t-glass-blur);
+    -webkit-backdrop-filter: var(--t-glass-blur);
 
-    border: 1.5px solid var(--color-ocean-400);
+    border: 1.5px solid var(--t-accent-primary);
     box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.08),
       inset 0 -2px 0 rgba(0, 0, 0, 0.05);
@@ -43,20 +43,20 @@
 
     .tool-icon {
       font-size: 18px;
-      color: var(--color-ocean-600);
+      color: var(--t-accent-primary);
       transition: transform var(--transition-fast);
     }
 
     .tool-name {
       font-size: var(--font-size-xs);
       font-weight: 600;
-      color: var(--color-silver-700);
+      color: var(--t-text-on-surface-secondary);
       font-family: var(--font-body);
     }
 
     .tool-count {
       font-size: 8px;
-      color: var(--color-ocean-500);
+      color: var(--t-accent-primary);
       font-weight: 500;
     }
 
@@ -65,8 +65,8 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       background: linear-gradient(
         165deg,
-        var(--color-ocean-50) 0%,
-        rgba(235, 248, 255, 0.95) 100%
+        var(--t-bg-surface-alt) 0%,
+        var(--t-bg-surface) 100%
       );
 
       .tool-icon {
@@ -75,18 +75,18 @@
     }
 
     &.disabled {
-      border-color: var(--color-silver-300);
-      background: var(--color-silver-100);
+      border-color: var(--t-border-surface);
+      background: var(--t-bg-surface-alt);
       opacity: 0.55;
       box-shadow: none;
 
       .tool-icon {
-        color: var(--color-silver-500);
+        color: var(--t-text-on-surface-secondary);
       }
 
       .tool-name,
       .tool-count {
-        color: var(--color-silver-500);
+        color: var(--t-text-on-surface-secondary);
       }
 
       &:active {

@@ -17,20 +17,20 @@
   // 玻璃效果 + 珊瑚色渐变
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(254, 215, 215, 0.3) 100%
+    var(--t-game-tempslot-bg) 0%,
+    var(--t-game-tempslot-bg-accent) 100%
   );
 
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--t-glass-blur);
+  -webkit-backdrop-filter: var(--t-glass-blur);
 
   border-radius: var(--radius-md);
-  border: 2px dashed var(--color-coral-400);
+  border: 2px dashed var(--t-accent-secondary);
   padding: var(--space-2) var(--space-3);
 
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.08),
-    inset 0 0 20px rgba(245, 101, 101, 0.05);
+    inset 0 0 20px var(--t-game-tempslot-inset);
 
   z-index: calc(var(--z-overlay) + 5);
   gap: var(--space-2);
@@ -59,12 +59,12 @@
     .empty-slot {
       width: 32px;
       height: 36px;
-      border: 2px dashed var(--color-silver-400);
+      border: 2px dashed var(--t-border-subtle);
       border-radius: var(--radius-sm);
       background: linear-gradient(
         135deg,
-        rgba(200, 200, 200, 0.15) 0%,
-        rgba(200, 200, 200, 0.05) 100%
+        var(--t-game-tempslot-empty-bg) 0%,
+        var(--t-game-tempslot-empty-bg-end) 100%
       );
     }
   }

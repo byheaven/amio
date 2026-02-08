@@ -10,16 +10,16 @@
   // 玻璃拟态效果
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(247, 250, 252, 0.95) 100%
+    var(--t-game-slot-bg) 0%,
+    var(--t-game-slot-bg-end) 100%
   );
 
-  backdrop-filter: var(--glass-blur-heavy);
-  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  backdrop-filter: var(--t-glass-blur-heavy);
+  -webkit-backdrop-filter: var(--t-glass-blur-heavy);
 
   border-radius: var(--radius-lg);
-  border: 1.5px solid rgba(255, 255, 255, 0.9);
-  border-bottom: 3px solid var(--color-silver-200);
+  border: 1.5px solid var(--t-game-slot-border);
+  border-bottom: 3px solid var(--t-game-slot-border-bottom);
 
   display: flex;
   align-items: center;
@@ -32,9 +32,7 @@
   left: 50%;
   transform: translateX(-50%);
 
-  box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.1),
-    0 -2px 10px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--t-game-slot-shadow);
 
   box-sizing: border-box;
   z-index: var(--z-overlay);
@@ -46,10 +44,8 @@
 
   // 即将满格时的警告状态 (6+ 牌)
   &.nearly-full {
-    border-color: var(--color-coral-300);
-    box-shadow:
-      0 6px 20px rgba(0, 0, 0, 0.1),
-      0 0 15px rgba(245, 101, 101, 0.3);
+    border-color: var(--t-status-warning-border);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), 0 0 15px var(--t-status-warning);
   }
 
   .slot-cell {
@@ -72,7 +68,7 @@
       background: linear-gradient(
         180deg,
         transparent 0%,
-        var(--color-silver-300) 50%,
+        var(--t-game-slot-divider) 50%,
         transparent 100%
       );
     }
