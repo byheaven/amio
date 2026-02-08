@@ -8,13 +8,26 @@ export interface WorldSceneProps {
 }
 
 const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const onLoadedRef = useRef<WorldSceneProps['onLoaded']>(undefined);
   const joystickRef = useRef({ x: 0, y: 0 });
   const joystickActiveRef = useRef(false);
   const joystickCenterRef = useRef({ x: 0, y: 0 });
-  const joystickKnobRef = useRef<HTMLDivElement>(null);
+  const joystickKnobRef = useRef<HTMLElement | null>(null);
   const keysRef = useRef<Set<string>>(new Set());
   const animFrameRef = useRef<number>(0);
+
+  useEffect(() => {
+    onLoadedRef.current = onLoaded;
+  }, [onLoaded]);
+
+  const handleContainerRef = useCallback((node: unknown) => {
+    containerRef.current = node instanceof HTMLElement ? node : null;
+  }, []);
+
+  const handleJoystickKnobRef = useCallback((node: unknown) => {
+    joystickKnobRef.current = node instanceof HTMLElement ? node : null;
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -113,6 +126,7 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
       color: 0xffffff,
       size: 1.5,
       sizeAttenuation: true,
+      fog: false,
     });
     const stars = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(stars);
@@ -131,12 +145,10 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
       [-10, 0, -15],
       [20, 0, 0],
     ];
-    const markers: THREE.Mesh[] = [];
     markerPositions.forEach(([x, , z]) => {
       const marker = new THREE.Mesh(markerGeometry, markerMaterial);
       marker.position.set(x, 1.5, z);
       scene.add(marker);
-      markers.push(marker);
     });
 
     // --- INPUT ---
@@ -215,7 +227,9 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
 
       // Camera follow
       const targetCamPos = character.position.clone().add(cameraOffset);
-      camera.position.lerp(targetCamPos, 5 * delta);
+      const followStrength = 5;
+      const cameraAlpha = 1 - Math.exp(-followStrength * delta);
+      camera.position.lerp(targetCamPos, cameraAlpha);
       camera.lookAt(
         character.position.x,
         character.position.y + 1,
@@ -229,7 +243,7 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
     };
 
     animate();
-    onLoaded?.();
+    onLoadedRef.current?.();
 
     // --- CLEANUP ---
     return () => {
@@ -252,13 +266,12 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [onLoaded]);
+  }, []);
 
   // --- JOYSTICK HANDLERS ---
-  const handleJoystickTouchStart = useCallback((e: React.TouchEvent) => {
+  const handleJoystickTouchStart = useCallback((e: any) => {
     e.stopPropagation();
-    const touch = e.touches[0];
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
     joystickCenterRef.current = {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height / 2,
@@ -266,7 +279,7 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
     joystickActiveRef.current = true;
   }, []);
 
-  const handleJoystickTouchMove = useCallback((e: React.TouchEvent) => {
+  const handleJoystickTouchMove = useCallback((e: any) => {
     e.stopPropagation();
     if (!joystickActiveRef.current) return;
 
@@ -303,16 +316,17 @@ const WorldScene: React.FC<WorldSceneProps> = ({ onLoaded }) => {
 
   return (
     <View className="world-scene">
-      <View className="world-scene__canvas" ref={containerRef as any} />
+      <View className="world-scene__canvas" ref={handleContainerRef} />
 
       <View
         className="world-scene__joystick"
-        onTouchStart={handleJoystickTouchStart as any}
-        onTouchMove={handleJoystickTouchMove as any}
-        onTouchEnd={handleJoystickTouchEnd as any}
+        onTouchStart={handleJoystickTouchStart}
+        onTouchMove={handleJoystickTouchMove}
+        onTouchEnd={handleJoystickTouchEnd}
+        onTouchCancel={handleJoystickTouchEnd}
       >
         <View className="joystick__base">
-          <View className="joystick__knob" ref={joystickKnobRef as any} />
+          <View className="joystick__knob" ref={handleJoystickKnobRef} />
         </View>
       </View>
     </View>
