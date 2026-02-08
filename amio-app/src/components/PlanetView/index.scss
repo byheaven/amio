@@ -32,7 +32,7 @@
   position: relative;
   border-radius: 50%;
   overflow: visible;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 30px var(--t-planet-shadow);
 
   &__surface {
     width: 100%;
@@ -58,89 +58,89 @@
 // Stage visual variations
 .planet--desolate {
   .planet__surface {
-    background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+    background: linear-gradient(135deg, var(--t-planet-desolate-start) 0%, var(--t-planet-desolate-end) 100%);
   }
   .planet__cracks {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      linear-gradient(45deg, transparent 48%, rgba(0,0,0,0.3) 49%, rgba(0,0,0,0.3) 51%, transparent 52%),
-      linear-gradient(-45deg, transparent 48%, rgba(0,0,0,0.2) 49%, rgba(0,0,0,0.2) 51%, transparent 52%);
+      linear-gradient(45deg, transparent 48%, var(--t-planet-crack-dark) 49%, var(--t-planet-crack-dark) 51%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, var(--t-planet-crack-light) 49%, var(--t-planet-crack-light) 51%, transparent 52%);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(100, 50, 50, 0.5) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-desolate-glow) 0%, transparent 70%);
   }
 }
 
 .planet--sprout {
   .planet__surface {
-    background: linear-gradient(135deg, #4a5a4a 0%, #3a4a3a 100%);
+    background: linear-gradient(135deg, var(--t-planet-sprout-start) 0%, var(--t-planet-sprout-end) 100%);
   }
   .planet__vegetation {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      radial-gradient(circle at 30% 60%, rgba(100, 200, 100, 0.6) 0%, transparent 15%),
-      radial-gradient(circle at 70% 40%, rgba(120, 220, 120, 0.5) 0%, transparent 12%),
-      radial-gradient(circle at 50% 80%, rgba(100, 180, 100, 0.4) 0%, transparent 10%);
+      radial-gradient(circle at 30% 60%, var(--t-planet-sprout-veg-1) 0%, transparent 15%),
+      radial-gradient(circle at 70% 40%, var(--t-planet-sprout-veg-2) 0%, transparent 12%),
+      radial-gradient(circle at 50% 80%, var(--t-planet-sprout-veg-3) 0%, transparent 10%);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(100, 200, 100, 0.4) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-sprout-glow) 0%, transparent 70%);
   }
 }
 
 .planet--construction {
   .planet__surface {
-    background: linear-gradient(135deg, #4a5a6a 0%, #3a4a5a 100%);
+    background: linear-gradient(135deg, var(--t-planet-construction-start) 0%, var(--t-planet-construction-end) 100%);
   }
   .planet__vegetation {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(100, 200, 150, 0.5) 0%, transparent 20%),
-      radial-gradient(circle at 60% 70%, rgba(150, 220, 200, 0.6) 0%, transparent 25%),
-      radial-gradient(circle at 80% 40%, rgba(200, 240, 255, 0.4) 0%, transparent 15%);
+      radial-gradient(circle at 20% 30%, var(--t-planet-construction-veg-1) 0%, transparent 20%),
+      radial-gradient(circle at 60% 70%, var(--t-planet-construction-veg-2) 0%, transparent 25%),
+      radial-gradient(circle at 80% 40%, var(--t-planet-construction-veg-3) 0%, transparent 15%);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(100, 200, 200, 0.5) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-construction-glow) 0%, transparent 70%);
   }
 }
 
 .planet--prosperity {
   .planet__surface {
-    background: linear-gradient(135deg, #2a3a5a 0%, #1a2a4a 100%);
+    background: linear-gradient(135deg, var(--t-planet-prosperity-start) 0%, var(--t-planet-prosperity-end) 100%);
   }
   .planet__cities {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      radial-gradient(circle at 25% 35%, rgba(255, 220, 150, 0.8) 0%, transparent 8%),
-      radial-gradient(circle at 45% 55%, rgba(255, 200, 120, 0.7) 0%, transparent 6%),
-      radial-gradient(circle at 65% 25%, rgba(255, 230, 180, 0.9) 0%, transparent 10%),
-      radial-gradient(circle at 75% 65%, rgba(255, 210, 140, 0.6) 0%, transparent 7%),
-      radial-gradient(circle at 35% 75%, rgba(255, 220, 160, 0.5) 0%, transparent 5%);
+      radial-gradient(circle at 25% 35%, var(--t-planet-prosperity-city-1) 0%, transparent 8%),
+      radial-gradient(circle at 45% 55%, var(--t-planet-prosperity-city-2) 0%, transparent 6%),
+      radial-gradient(circle at 65% 25%, var(--t-planet-prosperity-city-3) 0%, transparent 10%),
+      radial-gradient(circle at 75% 65%, var(--t-planet-prosperity-city-4) 0%, transparent 7%),
+      radial-gradient(circle at 35% 75%, var(--t-planet-prosperity-city-5) 0%, transparent 5%);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(255, 200, 100, 0.5) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-prosperity-glow) 0%, transparent 70%);
   }
 }
 
 .planet--launch {
   .planet__surface {
-    background: linear-gradient(135deg, #3a3a5a 0%, #2a2a4a 100%);
+    background: linear-gradient(135deg, var(--t-planet-launch-start) 0%, var(--t-planet-launch-end) 100%);
   }
   .planet__cities {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      radial-gradient(circle at 30% 40%, rgba(255, 230, 200, 0.9) 0%, transparent 10%),
-      radial-gradient(circle at 50% 60%, rgba(255, 220, 180, 0.8) 0%, transparent 8%),
-      radial-gradient(circle at 70% 30%, rgba(255, 240, 220, 1) 0%, transparent 12%);
+      radial-gradient(circle at 30% 40%, var(--t-planet-launch-city-1) 0%, transparent 10%),
+      radial-gradient(circle at 50% 60%, var(--t-planet-launch-city-2) 0%, transparent 8%),
+      radial-gradient(circle at 70% 30%, var(--t-planet-launch-city-3) 0%, transparent 12%);
   }
   .planet__ring {
     position: absolute;
@@ -149,28 +149,28 @@
     width: 140%;
     height: 30%;
     transform: translate(-50%, -50%) rotate(-15deg);
-    border: 3px solid rgba(255, 220, 150, 0.6);
+    border: 3px solid var(--t-planet-launch-ring);
     border-radius: 50%;
-    box-shadow: 0 0 20px rgba(255, 200, 100, 0.4);
+    box-shadow: 0 0 20px var(--t-planet-launch-ring-glow);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(255, 220, 150, 0.6) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-launch-glow) 0%, transparent 70%);
   }
 }
 
 .planet--landing {
   .planet__surface {
-    background: linear-gradient(135deg, #4a4a6a 0%, #3a3a5a 100%);
+    background: linear-gradient(135deg, var(--t-planet-landing-start) 0%, var(--t-planet-landing-end) 100%);
   }
   .planet__cities {
     position: absolute;
     width: 100%;
     height: 100%;
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(255, 200, 255, 1) 0%, transparent 12%),
-      radial-gradient(circle at 40% 50%, rgba(200, 255, 255, 0.9) 0%, transparent 10%),
-      radial-gradient(circle at 60% 40%, rgba(255, 255, 200, 1) 0%, transparent 14%),
-      radial-gradient(circle at 80% 60%, rgba(255, 220, 255, 0.9) 0%, transparent 11%);
+      radial-gradient(circle at 20% 30%, var(--t-planet-landing-city-1) 0%, transparent 12%),
+      radial-gradient(circle at 40% 50%, var(--t-planet-landing-city-2) 0%, transparent 10%),
+      radial-gradient(circle at 60% 40%, var(--t-planet-landing-city-3) 0%, transparent 14%),
+      radial-gradient(circle at 80% 60%, var(--t-planet-landing-city-4) 0%, transparent 11%);
   }
   .planet__ring {
     position: absolute;
@@ -179,12 +179,12 @@
     width: 160%;
     height: 40%;
     transform: translate(-50%, -50%) rotate(-20deg);
-    border: 4px solid rgba(255, 200, 255, 0.8);
+    border: 4px solid var(--t-planet-landing-ring);
     border-radius: 50%;
-    box-shadow: 0 0 30px rgba(255, 180, 255, 0.6);
+    box-shadow: 0 0 30px var(--t-planet-landing-ring-glow);
   }
   .planet__glow {
-    background: radial-gradient(circle, rgba(255, 200, 255, 0.7) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--t-planet-landing-glow) 0%, transparent 70%);
   }
 }
 
@@ -197,7 +197,7 @@
     right: -20%;
     bottom: -20%;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--t-planet-pulse-border);
     animation: planet-pulse 3s ease-in-out infinite;
   }
 
@@ -211,9 +211,9 @@
       position: absolute;
       width: 8px;
       height: 8px;
-      background: rgba(100, 200, 255, 0.8);
+      background: var(--t-planet-ai-bot);
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(100, 200, 255, 0.6);
+      box-shadow: 0 0 10px var(--t-planet-ai-bot-glow);
 
       &--1 {
         top: 20%;
@@ -267,19 +267,19 @@
 
 // Label styles
 .planet-label {
-  margin-top: 16px;
+  margin-top: var(--space-4);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 
   &__name {
-    font-size: 16px;
+    font-size: var(--font-size-md);
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--t-text-bright);
   }
 
   &__stage {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: var(--font-size-base);
+    color: var(--t-text-subtle);
   }
 }

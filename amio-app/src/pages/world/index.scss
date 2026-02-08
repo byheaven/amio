@@ -1,35 +1,30 @@
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 .world-page {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #000;
+  background: var(--t-world-bg);
 
   &__header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 20;
+    z-index: var(--z-elevated);
     padding: 16PX;
 
     .back-btn {
       display: inline-flex;
       align-items: center;
       padding: 8PX 16PX;
-      background: rgba(0, 0, 0, 0.5);
+      background: var(--t-world-header-bg);
       backdrop-filter: blur(8PX);
       border-radius: 20PX;
       cursor: pointer;
 
       &__text {
         font-size: 14PX;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--t-text-bright);
       }
     }
   }
@@ -44,20 +39,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 100%);
-    z-index: 30;
+    background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 100%);
+    z-index: var(--z-overlay);
 
     .loading-text {
       font-size: 16PX;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--t-text-secondary);
       margin-bottom: 16PX;
     }
 
     .loading-spinner {
       width: 40PX;
       height: 40PX;
-      border: 3PX solid rgba(255, 255, 255, 0.2);
-      border-top-color: #4a9eff;
+      border: 3PX solid var(--t-border-subtle);
+      border-top-color: var(--t-accent-primary);
       border-radius: 50%;
       animation: rotate 1s linear infinite;
     }
@@ -68,16 +63,16 @@
     bottom: 80PX;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 15;
+    z-index: var(--z-elevated);
     padding: 8PX 20PX;
-    background: rgba(255, 200, 50, 0.15);
-    border: 1PX solid rgba(255, 200, 50, 0.3);
+    background: var(--t-world-construction-bg);
+    border: 1PX solid var(--t-world-construction-border);
     border-radius: 20PX;
     white-space: nowrap;
 
     .construction-text {
       font-size: 12PX;
-      color: rgba(255, 220, 150, 0.9);
+      color: var(--t-text-warm-bright);
     }
   }
 }

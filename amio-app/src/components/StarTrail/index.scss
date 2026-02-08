@@ -1,23 +1,23 @@
 .star-trail {
-  padding: 16px;
+  padding: var(--space-4);
 
   &__header {
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--t-border-default);
   }
 
   &__title {
     display: block;
-    font-size: 18px;
+    font-size: var(--font-size-lg);
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 4px;
+    color: var(--t-text-bright);
+    margin-bottom: var(--space-1);
   }
 
   &__subtitle {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: var(--font-size-sm);
+    color: var(--t-text-tertiary);
   }
 
   &__timeline {
@@ -31,15 +31,15 @@
 
   &__item {
     position: relative;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-6);
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: var(--space-4);
 
     &--unlocked {
       .timeline__node {
-        background: linear-gradient(135deg, #4a9eff 0%, #6a5af9 100%);
-        box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
+        box-shadow: 0 0 20px var(--t-accent-primary-glow);
       }
     }
 
@@ -66,17 +66,17 @@
     position: relative;
 
     &--next {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px dashed rgba(255, 255, 255, 0.3);
+      background: var(--t-bg-muted-hover);
+      border: 2px dashed var(--t-text-muted);
     }
 
     &--locked {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--t-bg-muted);
     }
   }
 
   &__icon {
-    font-size: 16px;
+    font-size: var(--font-size-md);
   }
 
   &__glow {
@@ -94,39 +94,39 @@
 
   &__content {
     flex: 1;
-    padding-top: 4px;
+    padding-top: var(--space-1);
   }
 
   &__day {
     display: block;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: var(--font-size-sm);
+    color: var(--t-text-dim);
     margin-bottom: 2px;
   }
 
   &__title {
     display: block;
-    font-size: 15px;
+    font-size: var(--font-size-base);
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 4px;
+    color: var(--t-text-bright);
+    margin-bottom: var(--space-1);
   }
 
   &__desc {
     display: block;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 4px;
+    font-size: var(--font-size-sm);
+    color: var(--t-text-tertiary);
+    margin-bottom: var(--space-1);
   }
 
   &__date {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.3);
+    font-size: var(--font-size-xs);
+    color: var(--t-text-muted);
   }
 
   &__hint {
-    font-size: 12px;
-    color: #4a9eff;
+    font-size: var(--font-size-sm);
+    color: var(--t-accent-primary);
     font-style: italic;
   }
 
@@ -136,14 +136,14 @@
     top: 36px;
     bottom: 0;
     width: 2px;
-    background: linear-gradient(180deg, rgba(74, 158, 255, 0.4) 0%, rgba(74, 158, 255, 0.1) 100%);
+    background: linear-gradient(180deg, var(--t-accent-primary-glow) 0%, rgba(74, 158, 255, 0.1) 100%);
     z-index: 1;
 
     &--dashed {
       background: repeating-linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.2) 0px,
-        rgba(255, 255, 255, 0.2) 4px,
+        var(--t-border-subtle) 0px,
+        var(--t-border-subtle) 4px,
         transparent 4px,
         transparent 8px
       );
