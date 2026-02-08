@@ -10,9 +10,9 @@
   // 普通模式: 柔和海洋渐变
   background: linear-gradient(
     180deg,
-    var(--color-ocean-100) 0%,
-    var(--color-ocean-200) 50%,
-    var(--color-ocean-300) 100%
+    var(--t-bg-surface-alt) 0%,
+    var(--t-bg-surface-dim) 50%,
+    var(--t-bg-surface-alt) 100%
   );
 
   transition: background 0.5s ease;
@@ -21,9 +21,9 @@
   &.hero-mode {
     background: linear-gradient(
       180deg,
-      var(--color-ocean-900) 0%,
-      #0a192f 50%,
-      var(--color-ocean-800) 100%
+      var(--t-bg-app-primary) 0%,
+      var(--t-hero-bg) 50%,
+      var(--t-bg-app-secondary) 100%
     );
   }
 
@@ -34,17 +34,17 @@
     padding: var(--space-4) var(--space-5);
 
     // 玻璃效果头部
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    box-shadow: var(--shadow-soft);
+    background: var(--t-bg-surface-solid);
+    backdrop-filter: var(--t-glass-blur);
+    -webkit-backdrop-filter: var(--t-glass-blur);
+    box-shadow: var(--t-shadow-soft);
     transition: all var(--transition-base);
 
     // Hero模式顶栏
     &.hero-header {
-      background: linear-gradient(135deg, var(--color-coral-500) 0%, var(--color-coral-600) 100%);
+      background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
       border: none;
-      box-shadow: 0 4px 20px rgba(245, 101, 101, 0.4);
+      box-shadow: 0 4px 20px var(--t-accent-secondary-glow);
     }
 
     .stats-row {
@@ -55,7 +55,7 @@
       .day-text {
         font-size: var(--font-size-lg);
         font-weight: 600;
-        color: var(--color-ocean-700);
+        color: var(--t-text-on-surface);
 
         // Hero模式标题
         &.hero-title {
@@ -69,7 +69,7 @@
 
       .attempt-text {
         font-size: var(--font-size-sm);
-        color: var(--color-silver-600);
+        color: var(--t-text-on-surface-secondary);
 
         // Hero模式挑战次数
         &.hero-attempt {
@@ -87,11 +87,11 @@
     .test-win-btn {
       font-size: var(--font-size-sm);
       color: #fff;
-      background: linear-gradient(135deg, var(--color-coral-500) 0%, var(--color-coral-600) 100%);
+      background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
       padding: var(--space-2) var(--space-3);
       border: none;
       border-radius: var(--radius-lg);
-      box-shadow: 0 2px 8px rgba(245, 101, 101, 0.3);
+      box-shadow: 0 2px 8px var(--t-accent-secondary-glow);
       transition: all var(--transition-base);
 
       &:active {
@@ -101,8 +101,8 @@
 
     .tools-status {
       font-size: var(--font-size-sm);
-      color: var(--color-silver-700);
-      background: var(--color-silver-100);
+      color: var(--t-text-on-surface);
+      background: var(--t-bg-surface-alt);
       padding: var(--space-2) var(--space-3);
       border-radius: var(--radius-lg);
     }
@@ -122,9 +122,9 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(13, 33, 55, 0.9);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--t-bg-overlay);
+    backdrop-filter: var(--t-glass-blur);
+    -webkit-backdrop-filter: var(--t-glass-blur);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,11 +137,11 @@
       // 高级卡片样式
       background: linear-gradient(
         145deg,
-        rgba(255, 255, 255, 0.98) 0%,
-        rgba(247, 250, 252, 0.95) 100%
+        var(--t-bg-surface) 0%,
+        var(--t-bg-surface-alt) 100%
       );
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow: var(--shadow-premium);
+      border: 1px solid var(--t-game-tile-border);
+      box-shadow: var(--t-shadow-premium);
       border-radius: var(--radius-xl);
       padding: var(--space-8) var(--space-6);
       display: flex;
@@ -153,19 +153,19 @@
       .lost-title {
         font-size: var(--font-size-xl);
         font-weight: 700;
-        color: var(--color-ocean-700);
+        color: var(--t-text-on-surface);
         margin-bottom: var(--space-3);
       }
 
       .lost-msg {
         font-size: var(--font-size-base);
-        color: var(--color-silver-600);
+        color: var(--t-text-on-surface-secondary);
         margin-bottom: var(--space-2);
       }
 
       .lost-attempt {
         font-size: var(--font-size-base);
-        color: var(--color-silver-500);
+        color: var(--t-text-on-surface-secondary);
         margin-bottom: var(--space-6);
       }
 
@@ -175,10 +175,10 @@
         font-size: var(--font-size-md);
         font-weight: 600;
         color: #fff;
-        background: linear-gradient(135deg, var(--color-ocean-500) 0%, var(--color-ocean-600) 100%);
+        background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
         border: none;
         border-radius: var(--radius-lg);
-        box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        box-shadow: 0 4px 12px var(--t-accent-primary-glow);
         transition: all var(--transition-base);
 
         &:active {
@@ -188,16 +188,16 @@
 
       &.hero-lost {
         .lost-title {
-          color: var(--color-coral-500);
+          color: var(--t-accent-secondary);
         }
 
         .chest-keep {
           font-size: var(--font-size-lg);
           font-weight: 600;
-          color: var(--color-ocean-700);
+          color: var(--t-text-on-surface);
           margin-bottom: var(--space-2);
           padding: var(--space-3) var(--space-6);
-          background: var(--color-silver-100);
+          background: var(--t-bg-surface-alt);
           border-radius: var(--radius-lg);
         }
 
@@ -207,8 +207,8 @@
           margin-top: var(--space-2);
           font-size: var(--font-size-base);
           font-weight: 500;
-          color: var(--color-silver-600);
-          background: var(--color-silver-100);
+          color: var(--t-text-on-surface-secondary);
+          background: var(--t-bg-surface-alt);
           border: none;
           border-radius: var(--radius-lg);
           transition: all var(--transition-base);
