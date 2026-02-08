@@ -1,0 +1,83 @@
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.world-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+
+  &__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    padding: 16PX;
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 8PX 16PX;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8PX);
+      border-radius: 20PX;
+      cursor: pointer;
+
+      &__text {
+        font-size: 14PX;
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+  }
+
+  &__loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 100%);
+    z-index: 30;
+
+    .loading-text {
+      font-size: 16PX;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 16PX;
+    }
+
+    .loading-spinner {
+      width: 40PX;
+      height: 40PX;
+      border: 3PX solid rgba(255, 255, 255, 0.2);
+      border-top-color: #4a9eff;
+      border-radius: 50%;
+      animation: rotate 1s linear infinite;
+    }
+  }
+
+  &__construction {
+    position: absolute;
+    bottom: 80PX;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    padding: 8PX 20PX;
+    background: rgba(255, 200, 50, 0.15);
+    border: 1PX solid rgba(255, 200, 50, 0.3);
+    border-radius: 20PX;
+    white-space: nowrap;
+
+    .construction-text {
+      font-size: 12PX;
+      color: rgba(255, 220, 150, 0.9);
+    }
+  }
+}

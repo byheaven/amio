@@ -1,0 +1,49 @@
+.world-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &__canvas {
+    width: 100%;
+    height: 100%;
+
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__joystick {
+    position: absolute;
+    bottom: 100PX;
+    left: 40PX;
+    width: 120PX;
+    height: 120PX;
+    z-index: 10;
+    touch-action: none;
+
+    .joystick__base {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2PX solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .joystick__knob {
+      width: 50PX;
+      height: 50PX;
+      border-radius: 50%;
+      background: rgba(74, 158, 255, 0.6);
+      border: 2PX solid rgba(74, 158, 255, 0.8);
+      transition: transform 0.05s ease-out;
+      box-shadow: 0 0 10PX rgba(74, 158, 255, 0.4);
+    }
+  }
+}

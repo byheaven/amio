@@ -8,6 +8,7 @@ export interface PlanetViewProps {
   size?: 'small' | 'medium' | 'large';
   showLabel?: boolean;
   animated?: boolean;
+  onClick?: () => void;
 }
 
 const PlanetView: React.FC<PlanetViewProps> = ({
@@ -15,6 +16,7 @@ const PlanetView: React.FC<PlanetViewProps> = ({
   size = 'medium',
   showLabel = true,
   animated = true,
+  onClick,
 }) => {
   const stage = getPlanetStage(progress);
 
@@ -23,7 +25,11 @@ const PlanetView: React.FC<PlanetViewProps> = ({
   const animateClass = animated ? 'planet--animated' : '';
 
   return (
-    <View className={`planet-container ${sizeClass}`}>
+    <View
+      className={`planet-container ${sizeClass}`}
+      onClick={onClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <View className={`planet ${stageClass} ${animateClass}`}>
         <View className="planet__surface">
           {stage === 'desolate' && <View className="planet__cracks" />}
