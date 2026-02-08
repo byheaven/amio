@@ -4,7 +4,8 @@ export default defineAppConfig({
     'pages/starlight/index',
     'pages/starocean/index',
     'pages/home/index',
-    'pages/game/index'
+    'pages/game/index',
+    'pages/world/index'
   ],
   tabBar: {
     list: [

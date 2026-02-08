@@ -53,6 +53,10 @@ const Starlight: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handlePlanetClick = () => {
+    Taro.navigateTo({ url: '/pages/world/index' });
+  };
+
   const handleLightUp = () => {
     if (progress?.todayCompleted) {
       Taro.navigateTo({ url: '/pages/game/index?mode=hero' });
@@ -245,7 +249,8 @@ const Starlight: React.FC = () => {
 
       {/* Planet Visualization */}
       <View className="starlight__planet">
-        <PlanetView progress={planetProgress} size="large" />
+        <PlanetView progress={planetProgress} size="large" onClick={handlePlanetClick} />
+        <Text className="explore-hint">点击探索星球</Text>
       </View>
 
       {/* Chest Area */}
