@@ -1,6 +1,6 @@
 .star-ocean {
   min-height: 100vh;
-  background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 50%, #0f0f2a 100%);
+  background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 50%, var(--t-bg-app-tertiary) 100%);
   display: flex;
   flex-direction: column;
 
@@ -9,13 +9,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--t-border-default);
   }
 
   &__title {
     font-size: 18px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--t-text-primary);
   }
 
   &__notify {
@@ -26,12 +26,12 @@
   &__intro {
     padding: 12px 20px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.02);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--t-bg-muted);
+    border-bottom: 1px solid var(--t-border-default);
 
     .intro-text {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--t-text-secondary);
       line-height: 1.5;
     }
   }
@@ -42,7 +42,7 @@
   }
 
   .planet-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--t-bg-muted);
     border-radius: 16px;
     padding: 20px;
     display: flex;
@@ -56,13 +56,13 @@
       .stat {
         display: block;
         font-size: 13px;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--t-text-secondary);
         margin-bottom: 6px;
 
         &:first-child {
           font-size: 18px;
           font-weight: 600;
-          color: rgba(255, 255, 255, 0.9);
+          color: var(--t-text-primary);
         }
       }
     }
@@ -75,7 +75,7 @@
       display: block;
       font-size: 15px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--t-text-primary);
       margin-bottom: 12px;
     }
   }
@@ -88,14 +88,14 @@
       flex-direction: column;
       align-items: center;
       padding: 16px 20px;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--t-bg-muted);
       border-radius: 12px;
       margin-right: 12px;
       min-width: 100px;
 
       &--current {
         background: linear-gradient(135deg, rgba(74, 158, 255, 0.2) 0%, rgba(106, 90, 249, 0.2) 100%);
-        border: 1px solid rgba(74, 158, 255, 0.3);
+        border: 1px solid var(--t-accent-primary-glow);
       }
 
       &__icon {
@@ -105,21 +105,21 @@
 
       &__rank {
         font-size: 12px;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--t-text-tertiary);
         margin-bottom: 4px;
       }
 
       &__name {
         font-size: 14px;
         font-weight: 500;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--t-text-primary);
         margin-bottom: 4px;
       }
 
       &__progress {
         font-size: 16px;
         font-weight: 600;
-        color: #4a9eff;
+        color: var(--t-accent-primary);
       }
     }
   }
@@ -128,7 +128,7 @@
     display: flex;
     gap: 12px;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--t-bg-muted);
     border-radius: 12px;
     margin-bottom: 12px;
 
@@ -146,21 +146,21 @@
       display: block;
       font-size: 15px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--t-text-primary);
       margin-bottom: 4px;
     }
 
     &__author {
       font-size: 14px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--t-text-primary);
       margin-bottom: 4px;
     }
 
     &__desc,
     &__text {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--t-text-secondary);
       margin-bottom: 8px;
     }
 
@@ -168,7 +168,7 @@
       display: flex;
       gap: 16px;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--t-text-tertiary);
     }
   }
 
@@ -178,12 +178,12 @@
     bottom: 100px;
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, #4a9eff 0%, #6a5af9 100%);
+    background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    box-shadow: 0 4px 20px rgba(74, 158, 255, 0.4);
+    box-shadow: 0 4px 20px var(--t-accent-primary-glow);
   }
 }
