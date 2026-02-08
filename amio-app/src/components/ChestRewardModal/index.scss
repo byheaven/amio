@@ -1,5 +1,5 @@
 // ============================================
-// ChestRewardModal - 海洋主题宝箱奖励弹窗
+// ChestRewardModal - Chest Reward Modal
 // ============================================
 
 @keyframes shake {
@@ -32,11 +32,11 @@
     height: 100vh;
     background: linear-gradient(
         180deg,
-        rgba(13, 33, 55, 0.95) 0%,
-        rgba(26, 54, 93, 0.95) 100%
+        var(--t-bg-overlay) 0%,
+        var(--t-bg-overlay-alt) 100%
     );
-    backdrop-filter: var(--glass-blur-heavy);
-    -webkit-backdrop-filter: var(--glass-blur-heavy);
+    backdrop-filter: var(--t-glass-blur-heavy);
+    -webkit-backdrop-filter: var(--t-glass-blur-heavy);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,15 +54,14 @@
         width: 85%;
         max-width: 360px;
 
-        // 高级卡片 + 海洋主题
         background: linear-gradient(
             165deg,
-            rgba(255, 255, 255, 0.98) 0%,
-            rgba(235, 248, 255, 0.95) 100%
+            var(--t-bg-surface) 0%,
+            var(--t-bg-surface-elevated) 100%
         );
 
         border-radius: var(--radius-2xl);
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--t-modal-card-border);
         padding: var(--space-8);
         display: flex;
         flex-direction: column;
@@ -70,8 +69,8 @@
 
         box-shadow:
             0 20px 60px rgba(0, 0, 0, 0.3),
-            0 0 80px var(--color-aqua-glow),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            0 0 80px var(--t-modal-card-glow),
+            var(--t-modal-card-inset-highlight);
 
         min-height: 380px;
         justify-content: center;
@@ -80,7 +79,6 @@
         position: relative;
         overflow: hidden;
 
-        // 微光叠加层
         &::after {
             content: '';
             position: absolute;
@@ -90,7 +88,7 @@
             height: 50%;
             background: linear-gradient(
                 180deg,
-                rgba(255, 255, 255, 0.3) 0%,
+                var(--t-modal-highlight) 0%,
                 transparent 100%
             );
             pointer-events: none;
@@ -104,7 +102,7 @@
             .chest-icon {
                 font-size: 72px;
                 transition: transform 0.3s;
-                filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+                filter: drop-shadow(0 4px 12px var(--t-modal-icon-shadow));
 
                 &.shaking {
                     animation: shake 0.5s infinite;
@@ -118,7 +116,7 @@
         }
 
         .message {
-            color: var(--color-ocean-700);
+            color: var(--t-modal-title);
             font-size: var(--font-size-xl);
             font-weight: 700;
             font-family: var(--font-display);
@@ -128,12 +126,11 @@
             position: relative;
             z-index: 1;
 
-            // 渐变文字
             background: linear-gradient(
                 90deg,
-                var(--color-ocean-600) 0%,
-                var(--color-ocean-400) 50%,
-                var(--color-ocean-600) 100%
+                var(--t-modal-gradient-start) 0%,
+                var(--t-modal-gradient-mid) 50%,
+                var(--t-modal-gradient-start) 100%
             );
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -143,7 +140,7 @@
         }
 
         .sub-message {
-            color: var(--color-silver-600);
+            color: var(--t-text-on-surface-secondary);
             font-size: var(--font-size-md);
             margin-bottom: var(--space-6);
             min-height: 28px;
@@ -164,44 +161,44 @@
             .reward-item {
                 background: linear-gradient(
                     135deg,
-                    rgba(99, 179, 237, 0.15) 0%,
-                    rgba(144, 205, 244, 0.1) 100%
+                    var(--t-modal-reward-bg-start) 0%,
+                    var(--t-modal-reward-bg-end) 100%
                 );
                 padding: var(--space-3) var(--space-6);
                 border-radius: var(--radius-lg);
-                color: var(--color-ocean-700);
+                color: var(--t-modal-title);
                 font-size: var(--font-size-lg);
                 font-weight: 600;
                 width: 100%;
                 text-align: center;
                 animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                border: 1px solid rgba(99, 179, 237, 0.3);
-                box-shadow: 0 0 20px rgba(99, 179, 237, 0.15);
+                border: 1px solid var(--t-modal-reward-border);
+                box-shadow: 0 0 20px var(--t-modal-reward-glow);
             }
         }
 
         .action-btn {
             background: linear-gradient(
                 135deg,
-                var(--color-ocean-500) 0%,
-                var(--color-ocean-600) 100%
+                var(--t-modal-btn-start) 0%,
+                var(--t-modal-btn-end) 100%
             );
-            color: white;
+            color: var(--t-text-on-primary);
             border: none;
             padding: var(--space-3) var(--space-10);
             border-radius: var(--radius-full);
             font-size: var(--font-size-md);
             font-weight: 600;
             box-shadow:
-                0 4px 16px rgba(49, 130, 206, 0.4),
-                0 0 30px rgba(99, 179, 237, 0.2);
+                0 4px 16px var(--t-modal-btn-glow),
+                0 0 30px var(--t-intro-btn-glow);
             transition: all var(--transition-base);
             position: relative;
             z-index: 1;
 
             &:active {
                 transform: scale(0.98);
-                box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
+                box-shadow: 0 2px 8px var(--t-modal-btn-glow-soft);
             }
         }
     }

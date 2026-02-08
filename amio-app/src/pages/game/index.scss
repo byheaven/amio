@@ -34,7 +34,7 @@
     padding: var(--space-4) var(--space-5);
 
     // 玻璃效果头部
-    background: var(--t-bg-surface-solid);
+    background: var(--t-bg-glass-solid);
     backdrop-filter: var(--t-glass-blur);
     -webkit-backdrop-filter: var(--t-glass-blur);
     box-shadow: var(--t-shadow-soft);
@@ -59,10 +59,10 @@
 
         // Hero模式标题
         &.hero-title {
-          color: #fff;
+          color: var(--t-hero-text);
           font-size: var(--font-size-xl);
           font-weight: 800;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          text-shadow: 0 2px 8px var(--t-planet-shadow);
           letter-spacing: 2px;
         }
       }
@@ -73,7 +73,7 @@
 
         // Hero模式挑战次数
         &.hero-attempt {
-          color: rgba(255, 255, 255, 0.9);
+          color: var(--t-text-bright);
         }
       }
     }
@@ -86,7 +86,7 @@
 
     .test-win-btn {
       font-size: var(--font-size-sm);
-      color: #fff;
+      color: var(--t-text-on-primary);
       background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
       padding: var(--space-2) var(--space-3);
       border: none;
@@ -109,13 +109,13 @@
 
     // Hero模式下的header-right样式
     &.hero-header .test-win-btn {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background: var(--t-border-subtle);
+      box-shadow: 0 2px 8px var(--t-bg-dark-inset);
     }
 
     &.hero-header .tools-status {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      background: var(--t-border-subtle);
+      color: var(--t-text-on-primary);
     }
   }
 
@@ -174,7 +174,7 @@
         padding: var(--space-4);
         font-size: var(--font-size-md);
         font-weight: 600;
-        color: #fff;
+        color: var(--t-text-on-primary);
         background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
         border: none;
         border-radius: var(--radius-lg);

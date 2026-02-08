@@ -1,5 +1,5 @@
 // ============================================
-// ChestModal Component - 海洋主题胜利弹窗
+// ChestModal Component - Victory Modal
 // ============================================
 
 .chest-modal-overlay {
@@ -7,37 +7,36 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(13, 33, 55, 0.95) 0%,
-    rgba(26, 54, 93, 0.95) 100%
+    var(--t-bg-overlay) 0%,
+    var(--t-bg-overlay-alt) 100%
   );
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: var(--z-modal);
   animation: fadeIn 0.4s ease-out;
-  backdrop-filter: var(--glass-blur-heavy);
-  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  backdrop-filter: var(--t-glass-blur-heavy);
+  -webkit-backdrop-filter: var(--t-glass-blur-heavy);
 }
 
 .chest-modal {
   width: 88%;
   max-width: 360px;
 
-  // 高级卡片 + 海洋主题
   background: linear-gradient(
     165deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(235, 248, 255, 0.95) 100%
+    var(--t-bg-surface) 0%,
+    var(--t-bg-surface-elevated) 100%
   );
 
   border-radius: var(--radius-2xl);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--t-modal-card-border);
   padding: var(--space-6);
 
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.3),
-    0 0 80px var(--color-aqua-glow),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 0 80px var(--t-modal-card-glow),
+    var(--t-modal-card-inset-highlight);
 
   display: flex;
   flex-direction: column;
@@ -47,7 +46,6 @@
   position: relative;
   overflow: hidden;
 
-  // 微光叠加层
   &::after {
     content: '';
     position: absolute;
@@ -57,7 +55,7 @@
     height: 60%;
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.3) 0%,
+      var(--t-modal-highlight) 0%,
       transparent 100%
     );
     pointer-events: none;
@@ -67,17 +65,16 @@
     font-size: var(--font-size-xl);
     font-weight: 700;
     font-family: var(--font-display);
-    color: var(--color-ocean-700);
+    color: var(--t-modal-title);
     margin-bottom: var(--space-5);
     position: relative;
     z-index: 1;
 
-    // 渐变文字动画
     background: linear-gradient(
       90deg,
-      var(--color-ocean-600) 0%,
-      var(--color-ocean-400) 50%,
-      var(--color-ocean-600) 100%
+      var(--t-modal-gradient-start) 0%,
+      var(--t-modal-gradient-mid) 50%,
+      var(--t-modal-gradient-start) 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -109,7 +106,6 @@
     position: relative;
     animation: float 3s ease-in-out infinite;
 
-    // 发光环
     &::before {
       content: '';
       position: absolute;
@@ -125,40 +121,40 @@
 
     .chest-emoji {
       font-size: 56px;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+      filter: drop-shadow(0 4px 8px var(--t-modal-icon-shadow));
     }
 
     &.chest-diamond {
-      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
-      box-shadow: 0 0 40px var(--color-diamond-glow);
+      background: var(--t-chest-diamond-gradient);
+      box-shadow: 0 0 40px var(--t-chest-diamond-glow);
     }
 
     &.chest-gold {
-      background: linear-gradient(135deg, #fff8e1 0%, #ffe082 50%, #ffca28 100%);
-      box-shadow: 0 0 40px var(--color-gold-glow);
+      background: var(--t-chest-gold-gradient);
+      box-shadow: 0 0 40px var(--t-chest-gold-glow);
     }
 
     &.chest-silver {
-      background: linear-gradient(135deg, #fafafa 0%, #e0e0e0 50%, #bdbdbd 100%);
-      box-shadow: 0 0 40px var(--color-silver-chest-glow);
+      background: var(--t-chest-silver-gradient);
+      box-shadow: 0 0 40px var(--t-chest-silver-glow);
     }
 
     &.chest-bronze {
-      background: linear-gradient(135deg, #efebe9 0%, #d7ccc8 50%, #bcaaa4 100%);
-      box-shadow: 0 0 40px var(--color-bronze-glow);
+      background: var(--t-chest-bronze-gradient);
+      box-shadow: 0 0 40px var(--t-chest-bronze-glow);
     }
   }
 
   .chest-name {
     font-size: var(--font-size-lg);
     font-weight: 600;
-    color: var(--color-ocean-700);
+    color: var(--t-modal-title);
   }
 
   .hero-bonus {
     margin-top: var(--space-2);
     font-size: var(--font-size-base);
-    color: var(--color-coral-500);
+    color: var(--t-accent-secondary);
     font-weight: 500;
   }
 
@@ -169,8 +165,8 @@
     padding: var(--space-3) var(--space-6);
     background: linear-gradient(
       135deg,
-      var(--color-silver-100) 0%,
-      var(--color-silver-200) 100%
+      var(--t-modal-stats-bg-start) 0%,
+      var(--t-modal-stats-bg-end) 100%
     );
     border-radius: var(--radius-lg);
     position: relative;
@@ -184,13 +180,13 @@
 
     .stat-label {
       font-size: var(--font-size-sm);
-      color: var(--color-silver-600);
+      color: var(--t-text-on-surface-secondary);
     }
 
     .stat-value {
       font-size: var(--font-size-lg);
       font-weight: 700;
-      color: var(--color-ocean-700);
+      color: var(--t-modal-title);
     }
   }
 
@@ -199,10 +195,10 @@
     padding: var(--space-4);
     background: linear-gradient(
       135deg,
-      rgba(245, 101, 101, 0.1) 0%,
-      rgba(252, 129, 129, 0.15) 100%
+      var(--t-hero-section-bg-start) 0%,
+      var(--t-hero-section-bg-end) 100%
     );
-    border: 1px solid var(--color-coral-200);
+    border: 1px solid var(--t-hero-section-border);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-5);
     text-align: center;
@@ -213,21 +209,21 @@
       display: block;
       font-size: var(--font-size-md);
       font-weight: 700;
-      color: var(--color-coral-600);
+      color: var(--t-accent-secondary-end);
       margin-bottom: var(--space-2);
     }
 
     .hero-desc {
       display: block;
       font-size: var(--font-size-base);
-      color: var(--color-coral-500);
+      color: var(--t-accent-secondary);
       margin-bottom: var(--space-1);
     }
 
     .hero-warning {
       display: block;
       font-size: var(--font-size-sm);
-      color: var(--color-silver-600);
+      color: var(--t-text-on-surface-secondary);
     }
   }
 
@@ -244,14 +240,14 @@
     padding: var(--space-3);
     font-size: var(--font-size-base);
     font-weight: 500;
-    color: var(--color-silver-600);
-    background: var(--color-silver-100);
-    border: 1px solid var(--color-silver-300);
+    color: var(--t-text-on-surface-secondary);
+    background: var(--t-modal-stats-bg-start);
+    border: 1px solid var(--t-border-surface);
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
 
     &:active {
-      background: var(--color-silver-200);
+      background: var(--t-modal-stats-bg-end);
       transform: scale(0.98);
     }
   }
@@ -261,11 +257,11 @@
     padding: var(--space-3);
     font-size: var(--font-size-base);
     font-weight: 600;
-    color: #fff;
-    background: linear-gradient(135deg, var(--color-coral-500) 0%, var(--color-coral-600) 100%);
+    color: var(--t-text-on-primary);
+    background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
     border: none;
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 16px rgba(245, 101, 101, 0.35);
+    box-shadow: 0 4px 16px var(--t-accent-secondary-glow);
     transition: all var(--transition-base);
 
     &:active {
@@ -276,8 +272,8 @@
     &.full-width {
       flex: none;
       width: 100%;
-      background: linear-gradient(135deg, var(--color-ocean-500) 0%, var(--color-ocean-600) 100%);
-      box-shadow: 0 4px 16px rgba(49, 130, 206, 0.35);
+      background: linear-gradient(135deg, var(--t-modal-btn-start) 0%, var(--t-modal-btn-end) 100%);
+      box-shadow: 0 4px 16px var(--t-modal-btn-glow);
     }
   }
 }

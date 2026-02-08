@@ -1,5 +1,5 @@
 // ============================================
-// StoryModal Component - 海洋主题故事弹窗
+// StoryModal Component - Story Modal
 // ============================================
 
 .story-modal-overlay {
@@ -7,13 +7,13 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(13, 33, 55, 0.98) 0%,
-    rgba(26, 54, 93, 0.98) 100%
+    var(--t-story-overlay-start) 0%,
+    var(--t-story-overlay-end) 100%
   );
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -22,16 +22,16 @@
   max-width: 400px;
   background: linear-gradient(
     145deg,
-    rgba(26, 54, 93, 0.95) 0%,
-    rgba(13, 33, 55, 0.98) 100%
+    var(--t-story-card-start) 0%,
+    var(--t-story-card-end) 100%
   );
   border-radius: var(--radius-xl);
   padding: var(--space-8) var(--space-6);
-  border: 1px solid rgba(99, 179, 237, 0.3);
+  border: 1px solid var(--t-story-border);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 60px rgba(99, 179, 237, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 0 60px var(--t-story-shadow-glow),
+    inset 0 1px 0 var(--t-border-default);
   animation: slideUp 0.6s ease-out;
 }
 
@@ -44,11 +44,11 @@
   display: inline-block;
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--color-ocean-300);
+  color: var(--t-status-info);
   text-transform: uppercase;
   letter-spacing: 2px;
   padding: var(--space-1) var(--space-3);
-  background: rgba(99, 179, 237, 0.15);
+  background: var(--t-story-day-bg);
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-3);
 }
@@ -57,15 +57,15 @@
   display: block;
   font-size: 28px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--t-text-on-primary);
   margin-bottom: var(--space-2);
-  text-shadow: 0 2px 10px rgba(99, 179, 237, 0.3);
+  text-shadow: 0 2px 10px var(--t-story-title-shadow);
 }
 
 .story-subtitle {
   display: block;
   font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--t-text-tertiary);
   font-style: italic;
   letter-spacing: 1px;
 }
@@ -79,13 +79,13 @@
 .story-text {
   font-size: var(--font-size-md);
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--t-text-bright);
   letter-spacing: 0.5px;
 }
 
 .typing-cursor {
   display: inline;
-  color: var(--color-ocean-300);
+  color: var(--t-status-info);
   animation: blink 0.8s infinite;
   font-weight: 100;
 }
@@ -99,14 +99,14 @@
 .skip-btn {
   padding: var(--space-3) var(--space-6);
   font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--t-text-subtle);
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--t-border-subtle);
   border-radius: var(--radius-full);
   transition: all var(--transition-base);
 
   &:active {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--t-bg-muted-hover);
   }
 }
 
@@ -114,18 +114,18 @@
   padding: var(--space-4) var(--space-10);
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--color-ocean-500) 0%, var(--color-ocean-600) 100%);
+  color: var(--t-text-on-primary);
+  background: linear-gradient(135deg, var(--t-modal-btn-start) 0%, var(--t-modal-btn-end) 100%);
   border: none;
   border-radius: var(--radius-full);
   box-shadow:
-    0 4px 15px rgba(49, 130, 206, 0.4),
-    0 0 20px rgba(99, 179, 237, 0.2);
+    0 4px 15px var(--t-modal-btn-glow),
+    0 0 20px var(--t-intro-btn-glow);
   animation: pulse 2s infinite;
   transition: all var(--transition-base);
 
   &:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 10px rgba(49, 130, 206, 0.3);
+    box-shadow: 0 2px 10px var(--t-modal-btn-glow-soft);
   }
 }
