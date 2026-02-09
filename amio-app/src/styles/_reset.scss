@@ -5,14 +5,17 @@ page {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 50%, var(--t-bg-app-tertiary) 100%);
+  // Hardcoded fallback for the page element, which sits above the
+  // theme wrapper View and cannot resolve --t-* tokens.
+  // Ensures a dark background on all Taro platforms (H5, WeChat, Douyin).
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 50%, #0f0f2a 100%);
   min-height: 100vh;
-  color: var(--t-text-primary);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--t-text-muted); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 2px; }
 
 // Text alignment
 .text-center { text-align: center; }

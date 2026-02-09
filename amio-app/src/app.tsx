@@ -1,12 +1,13 @@
 import { PropsWithChildren, useEffect, useState } from 'react'
 import { View } from '@tarojs/components'
 import Taro, { useLaunch } from '@tarojs/taro'
-import { loadProgress, getThemePreference } from './utils/storage'
+import { loadProgress } from './utils/storage'
+import { useTheme } from './hooks/useTheme'
 import './app.scss'
 
 function App({ children }: PropsWithChildren<any>) {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null)
-  const [themeClass] = useState(() => `theme-${getThemePreference()}`)
+  const { themeClass } = useTheme()
 
   useLaunch(() => {
     console.log('App launched.')

@@ -2,6 +2,11 @@
 // Shark Star (鲨之星) - Default ocean-dark theme
 
 .theme-shark-star {
+  // Root visual styles (applied to the theme wrapper View)
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 50%, var(--t-bg-app-tertiary) 100%);
+  color: var(--t-text-primary);
+
   // === Surface / Background ===
   --t-bg-app-primary: #0a0a1a;
   --t-bg-app-secondary: #1a1a3e;
