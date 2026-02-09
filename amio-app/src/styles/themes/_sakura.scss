@@ -1,0 +1,281 @@
+// src/styles/themes/_sakura.scss
+// Sakura Dream (樱花梦) - Warm rose-pink dark theme
+
+.theme-sakura {
+  // Root visual styles (applied to the theme wrapper View)
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-bg-app-secondary) 50%, var(--t-bg-app-tertiary) 100%);
+  color: var(--t-text-primary);
+
+  // === Surface / Background ===
+  --t-bg-app-primary: #1a0a14;
+  --t-bg-app-secondary: #2e1530;
+  --t-bg-app-tertiary: #150a18;
+  --t-bg-surface: rgba(255, 255, 255, 0.98);
+  --t-bg-surface-alt: rgba(252, 247, 250, 0.95);
+  --t-bg-surface-dim: rgba(247, 237, 242, 0.92);
+  --t-bg-surface-elevated: rgba(255, 240, 248, 0.95);
+  --t-bg-glass: rgba(255, 255, 255, 0.08);
+  --t-bg-glass-light: rgba(255, 255, 255, 0.12);
+  --t-bg-glass-solid: rgba(255, 255, 255, 0.92);
+  --t-bg-glass-full: rgba(255, 255, 255, 0.15);
+  --t-bg-overlay: rgba(40, 15, 30, 0.95);
+  --t-bg-overlay-alt: rgba(60, 25, 50, 0.95);
+  --t-bg-muted: rgba(255, 255, 255, 0.05);
+  --t-bg-muted-hover: rgba(255, 255, 255, 0.1);
+  --t-bg-dark-inset: rgba(0, 0, 0, 0.2);
+
+  // === Text ===
+  --t-text-primary: rgba(255, 255, 255, 0.95);
+  --t-text-secondary: rgba(255, 255, 255, 0.7);
+  --t-text-tertiary: rgba(255, 255, 255, 0.5);
+  --t-text-muted: rgba(255, 255, 255, 0.3);
+  --t-text-on-primary: #ffffff;
+  --t-text-on-surface: #5a4a55;
+  --t-text-on-surface-secondary: #80697a;
+  --t-text-link: #ff6b9d;
+  --t-text-warm: rgba(255, 180, 200, 0.9);
+  --t-text-warm-bright: rgba(255, 200, 220, 0.95);
+  --t-text-dark: #3a2030;
+
+  // === Border ===
+  --t-border-default: rgba(255, 255, 255, 0.1);
+  --t-border-subtle: rgba(255, 255, 255, 0.2);
+  --t-border-glass: rgba(255, 255, 255, 0.18);
+  --t-border-light: rgba(255, 255, 255, 0.25);
+  --t-border-solid: rgba(255, 255, 255, 0.9);
+  --t-border-surface: #e8dce4;
+  --t-border-surface-light: #f2eaf0;
+
+  // === Interactive / Accent ===
+  --t-accent-primary: #ff6b9d;
+  --t-accent-primary-end: #d946a8;
+  --t-accent-primary-glow: rgba(255, 107, 157, 0.4);
+  --t-accent-secondary: #f59e6b;
+  --t-accent-secondary-end: #e57a3e;
+  --t-accent-secondary-glow: rgba(245, 158, 107, 0.35);
+  --t-accent-warm: rgba(255, 150, 180, 0.2);
+  --t-accent-warm-border: rgba(255, 180, 200, 0.3);
+  --t-accent-warm-bg: linear-gradient(135deg, rgba(255, 180, 200, 0.2) 0%, rgba(255, 130, 160, 0.1) 100%);
+  --t-accent-gold: #ffd700;
+  --t-accent-gold-end: #ffaa00;
+  --t-accent-disabled-bg: linear-gradient(135deg, #5a4a55 0%, #4a3a45 100%);
+
+  // === Status / Feedback ===
+  --t-status-success: #48bb78;
+  --t-status-warning: rgba(245, 158, 107, 0.3);
+  --t-status-warning-border: #ffc9a8;
+  --t-status-error: rgba(255, 100, 100, 0.8);
+  --t-status-info: #e091c0;
+  --t-status-expired-bg: rgba(100, 100, 100, 0.1);
+  --t-status-expired-border: rgba(100, 100, 100, 0.3);
+
+  // === Game: Board ===
+  --t-game-board-bg-start: rgba(244, 180, 210, 0.08);
+  --t-game-board-bg-mid: rgba(237, 140, 180, 0.04);
+  --t-game-board-bg-end: rgba(225, 120, 170, 0.08);
+  --t-game-board-border: rgba(255, 255, 255, 0.25);
+  --t-game-board-inner-glow: rgba(255, 255, 255, 0.1);
+  --t-game-board-corner: rgba(255, 140, 180, 0.3);
+
+  // === Game: Tile ===
+  --t-game-tile-bg: rgba(255, 255, 255, 0.98);
+  --t-game-tile-bg-mid: rgba(252, 247, 250, 0.95);
+  --t-game-tile-bg-end: rgba(247, 237, 242, 0.92);
+  --t-game-tile-border: rgba(255, 255, 255, 0.9);
+  --t-game-tile-border-bottom: #e8dce4;
+  --t-game-tile-highlight: rgba(255, 255, 255, 0.6);
+  --t-game-tile-disabled-shadow: inset 0 0 15px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.08);
+  --t-game-tile-icon-shadow: rgba(0, 0, 0, 0.12);
+
+  // === Game: Slot ===
+  --t-game-slot-bg: rgba(255, 255, 255, 0.98);
+  --t-game-slot-bg-end: rgba(252, 247, 250, 0.95);
+  --t-game-slot-border: rgba(255, 255, 255, 0.9);
+  --t-game-slot-border-bottom: #f2eaf0;
+  --t-game-slot-divider: #e8dce4;
+  --t-game-slot-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), 0 -2px 10px rgba(255, 255, 255, 0.5);
+
+  // === Game: Tool ===
+  --t-game-tool-bg: rgba(255, 255, 255, 0.98);
+  --t-game-tool-bg-end: rgba(252, 247, 250, 0.95);
+  --t-game-tool-border: rgba(255, 255, 255, 0.9);
+  --t-game-tool-border-bottom: #e8dce4;
+
+  // === Game: Temp Slot ===
+  --t-game-tempslot-bg: rgba(255, 255, 255, 0.95);
+  --t-game-tempslot-bg-accent: rgba(255, 200, 215, 0.3);
+  --t-game-tempslot-inset: rgba(0, 0, 0, 0.05);
+  --t-game-tempslot-empty-bg: rgba(200, 200, 200, 0.15);
+  --t-game-tempslot-empty-bg-end: rgba(200, 200, 200, 0.05);
+
+  // === Shadow ===
+  --t-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --t-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --t-shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --t-shadow-premium: 0 4px 20px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 180, 210, 0.2);
+  --t-shadow-tile: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --t-shadow-tile-hover: 0 6px 16px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 140, 180, 0.4);
+
+  // === Glass ===
+  --t-glass-blur: blur(12px);
+  --t-glass-blur-heavy: blur(20px);
+
+  // === Chest ===
+  --t-chest-diamond: #00d4ff;
+  --t-chest-diamond-glow: rgba(0, 212, 255, 0.4);
+  --t-chest-gold: #ffd700;
+  --t-chest-gold-glow: rgba(255, 215, 0, 0.4);
+  --t-chest-silver: #c0c0c0;
+  --t-chest-silver-glow: rgba(192, 192, 192, 0.4);
+  --t-chest-bronze: #cd7f32;
+  --t-chest-bronze-glow: rgba(205, 127, 50, 0.4);
+  --t-chest-diamond-gradient: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
+  --t-chest-gold-gradient: linear-gradient(135deg, #fff8e1 0%, #ffe082 50%, #ffca28 100%);
+  --t-chest-silver-gradient: linear-gradient(135deg, #fafafa 0%, #e0e0e0 50%, #bdbdbd 100%);
+  --t-chest-bronze-gradient: linear-gradient(135deg, #efebe9 0%, #d7ccc8 50%, #bcaaa4 100%);
+
+  // === Hero Mode Overrides ===
+  --t-hero-bg: #1a0a1e;
+  --t-hero-header-bg: rgba(255, 255, 255, 0.1);
+  --t-hero-text: #ffffff;
+
+  // === Shimmer ===
+  --t-shimmer: rgba(255, 255, 255, 0.15);
+  --t-shimmer-strong: rgba(255, 255, 255, 0.3);
+
+  // === Extra Text Opacities ===
+  --t-text-bright: rgba(255, 255, 255, 0.9);
+  --t-text-emphasis: rgba(255, 255, 255, 0.8);
+  --t-text-subtle: rgba(255, 255, 255, 0.6);
+  --t-text-dim: rgba(255, 255, 255, 0.4);
+
+  // === Extra Backgrounds ===
+  --t-bg-ultra-muted: rgba(255, 255, 255, 0.03);
+
+  // === Home Page Cards ===
+  --t-home-card-bg-start: rgba(255, 107, 157, 0.15);
+  --t-home-card-bg-end: rgba(217, 70, 168, 0.1);
+  --t-home-card-border: rgba(255, 107, 157, 0.2);
+  --t-home-card-title-bg: rgba(255, 107, 157, 0.15);
+
+  // === Status: Positive ===
+  --t-status-positive: #4ade80;
+
+  // === Modal Cards ===
+  --t-modal-title: #6a3050;
+  --t-modal-gradient-start: #8a3070;
+  --t-modal-gradient-mid: #d946a8;
+  --t-modal-btn-start: #d946a8;
+  --t-modal-btn-end: #8a3070;
+  --t-modal-btn-glow: rgba(217, 70, 168, 0.4);
+  --t-modal-btn-glow-soft: rgba(217, 70, 168, 0.3);
+  --t-modal-card-border: rgba(255, 255, 255, 0.8);
+  --t-modal-card-glow: rgba(255, 140, 180, 0.4);
+  --t-modal-card-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --t-modal-highlight: rgba(255, 255, 255, 0.3);
+  --t-modal-stats-bg-start: #fcf7fa;
+  --t-modal-stats-bg-end: #f2eaf0;
+  --t-modal-icon-shadow: rgba(0, 0, 0, 0.15);
+  --t-modal-reward-bg-start: rgba(255, 140, 180, 0.15);
+  --t-modal-reward-bg-end: rgba(255, 180, 210, 0.1);
+  --t-modal-reward-border: rgba(255, 140, 180, 0.3);
+  --t-modal-reward-glow: rgba(255, 140, 180, 0.15);
+
+  // === Hero Section (in modals) ===
+  --t-hero-section-bg-start: rgba(245, 158, 107, 0.1);
+  --t-hero-section-bg-end: rgba(252, 180, 130, 0.15);
+  --t-hero-section-border: #ffdcc8;
+
+  // === Story Modal ===
+  --t-story-overlay-start: rgba(40, 15, 30, 0.98);
+  --t-story-overlay-end: rgba(60, 25, 50, 0.98);
+  --t-story-card-start: rgba(60, 25, 50, 0.95);
+  --t-story-card-end: rgba(40, 15, 30, 0.98);
+  --t-story-border: rgba(255, 140, 180, 0.3);
+  --t-story-shadow-glow: rgba(255, 140, 180, 0.15);
+  --t-story-day-bg: rgba(255, 140, 180, 0.15);
+  --t-story-title-shadow: rgba(255, 140, 180, 0.3);
+
+  // === Intro Page ===
+  --t-intro-bg-start: #200f18;
+  --t-intro-bg-mid: #1a0a14;
+  --t-intro-bg-end: #35182a;
+  --t-intro-glow-primary: rgba(255, 140, 180, 0.15);
+  --t-intro-glow-secondary: rgba(255, 180, 210, 0.1);
+  --t-intro-text-glow: rgba(255, 140, 180, 0.4);
+  --t-intro-btn-glow: rgba(255, 140, 180, 0.2);
+
+  // === World Page ===
+  --t-world-bg: #000000;
+  --t-world-header-bg: rgba(0, 0, 0, 0.5);
+  --t-world-construction-bg: rgba(255, 200, 50, 0.15);
+  --t-world-construction-border: rgba(255, 200, 50, 0.3);
+
+  // === WorldScene: Joystick ===
+  --t-joystick-base: rgba(255, 255, 255, 0.1);
+  --t-joystick-base-border: rgba(255, 255, 255, 0.2);
+  --t-joystick-knob: rgba(255, 107, 157, 0.6);
+  --t-joystick-knob-border: rgba(255, 107, 157, 0.8);
+  --t-joystick-knob-glow: rgba(255, 107, 157, 0.4);
+
+  // === Planet: Common ===
+  --t-planet-shadow: rgba(0, 0, 0, 0.3);
+  --t-planet-crack-dark: rgba(0, 0, 0, 0.3);
+  --t-planet-crack-light: rgba(0, 0, 0, 0.2);
+  --t-planet-pulse-border: rgba(255, 255, 255, 0.3);
+  --t-planet-ai-bot: rgba(255, 150, 200, 0.8);
+  --t-planet-ai-bot-glow: rgba(255, 150, 200, 0.6);
+
+  // === Planet: Desolate ===
+  --t-planet-desolate-start: #4a4a4a;
+  --t-planet-desolate-end: #2a2a2a;
+  --t-planet-desolate-glow: rgba(100, 50, 50, 0.5);
+
+  // === Planet: Sprout ===
+  --t-planet-sprout-start: #4a5a4a;
+  --t-planet-sprout-end: #3a4a3a;
+  --t-planet-sprout-veg-1: rgba(100, 200, 100, 0.6);
+  --t-planet-sprout-veg-2: rgba(120, 220, 120, 0.5);
+  --t-planet-sprout-veg-3: rgba(100, 180, 100, 0.4);
+  --t-planet-sprout-glow: rgba(100, 200, 100, 0.4);
+
+  // === Planet: Construction ===
+  --t-planet-construction-start: #5a4a5a;
+  --t-planet-construction-end: #4a3a4a;
+  --t-planet-construction-veg-1: rgba(200, 150, 200, 0.5);
+  --t-planet-construction-veg-2: rgba(220, 180, 220, 0.6);
+  --t-planet-construction-veg-3: rgba(240, 200, 255, 0.4);
+  --t-planet-construction-glow: rgba(200, 150, 200, 0.5);
+
+  // === Planet: Prosperity ===
+  --t-planet-prosperity-start: #3a2a4a;
+  --t-planet-prosperity-end: #2a1a3a;
+  --t-planet-prosperity-city-1: rgba(255, 200, 220, 0.8);
+  --t-planet-prosperity-city-2: rgba(255, 180, 200, 0.7);
+  --t-planet-prosperity-city-3: rgba(255, 210, 230, 0.9);
+  --t-planet-prosperity-city-4: rgba(255, 190, 210, 0.6);
+  --t-planet-prosperity-city-5: rgba(255, 200, 220, 0.5);
+  --t-planet-prosperity-glow: rgba(255, 180, 200, 0.5);
+
+  // === Planet: Launch ===
+  --t-planet-launch-start: #3a2a4a;
+  --t-planet-launch-end: #2a1a3a;
+  --t-planet-launch-city-1: rgba(255, 210, 230, 0.9);
+  --t-planet-launch-city-2: rgba(255, 200, 220, 0.8);
+  --t-planet-launch-city-3: rgba(255, 230, 240, 1);
+  --t-planet-launch-ring: rgba(255, 180, 210, 0.6);
+  --t-planet-launch-ring-glow: rgba(255, 150, 180, 0.4);
+  --t-planet-launch-glow: rgba(255, 180, 210, 0.6);
+
+  // === Planet: Landing ===
+  --t-planet-landing-start: #4a3a5a;
+  --t-planet-landing-end: #3a2a4a;
+  --t-planet-landing-city-1: rgba(255, 200, 255, 1);
+  --t-planet-landing-city-2: rgba(255, 220, 240, 0.9);
+  --t-planet-landing-city-3: rgba(255, 240, 220, 1);
+  --t-planet-landing-city-4: rgba(255, 210, 240, 0.9);
+  --t-planet-landing-ring: rgba(255, 200, 255, 0.8);
+  --t-planet-landing-ring-glow: rgba(255, 180, 255, 0.6);
+  --t-planet-landing-glow: rgba(255, 200, 255, 0.7);
+}

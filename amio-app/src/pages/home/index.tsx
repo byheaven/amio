@@ -4,11 +4,14 @@ import Taro, { useDidShow } from '@tarojs/taro';
 import StarTrail from '../../components/StarTrail';
 import { loadProgress } from '../../utils/storage';
 import { determineLandingBatch } from '../../utils/energyLogic';
+import { useTheme } from '../../hooks/useTheme';
+import { THEMES } from '../../constants/themes';
 import type { GameProgress } from '../../utils/storage';
 import './index.scss';
 
 const Home: React.FC = () => {
   const [progress, setProgress] = useState<GameProgress | null>(null);
+  const { themeId, switchTheme } = useTheme();
 
   // 加载进度的函数
   const refreshProgress = () => {
@@ -103,6 +106,29 @@ const Home: React.FC = () => {
             <View className="achievement-badge achievement-badge--more">
               <Text>+3</Text>
             </View>
+          </View>
+        </View>
+
+        {/* Theme Switcher */}
+        <View className="section">
+          <Text className="section__title">🎨 主题切换</Text>
+          <View className="theme-picker">
+            {THEMES.map((theme) => (
+              <View
+                key={theme.id}
+                className={`theme-picker__item${themeId === theme.id ? ' theme-picker__item--active' : ''}`}
+                onClick={() => switchTheme(theme.id)}
+              >
+                <View
+                  className="theme-picker__preview"
+                  style={{ background: `linear-gradient(135deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 60%, ${theme.colors[2]} 100%)` }}
+                >
+                  <Text className="theme-picker__icon">{theme.icon}</Text>
+                </View>
+                <Text className="theme-picker__name">{theme.name}</Text>
+                {themeId === theme.id && <Text className="theme-picker__check">✓</Text>}
+              </View>
+            ))}
           </View>
         </View>
 
