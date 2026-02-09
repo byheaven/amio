@@ -23,8 +23,9 @@ npm run build:weapp     # Build for WeChat Mini Program
 
 # Testing
 npm test                              # Run all tests
-npm test -- --testPathPattern=gameLogic   # Run specific test file
-npm test -- --testNamePattern="checkMatch" # Run specific test by name
+npm run test:bdd                      # Run BDD tests only (*.steps.ts)
+npm run test:unit                     # Run unit tests only (unit/*)
+npm test -- --testPathPattern=chest   # Run specific feature/domain
 npm test -- --watch                   # Watch mode
 npm test -- --coverage                # Coverage report
 ```
@@ -115,12 +116,159 @@ MAX_SLOTS = 7  // Slot capacity before game over
 - **Import order**: React → Taro components → project types/constants → local components → styles
 - **SCSS**: Component-scoped files, BEM-like naming, max 3 levels of nesting
 
-## Testing
+## Testing & BDD
 
-- **Location**: `amio-app/__tests__/` directory
-- **Pattern**: `*.(test|spec).[jt]s?(x)`
-- **Framework**: Jest with `@tarojs/test-utils-react` and jsdom
-- Mock Taro APIs inline: `jest.mock('@tarojs/taro', () => ({ switchTab: jest.fn(), ... }))`
+**Framework**: BDD-first with jest-cucumber + Gherkin feature files. All new development follows the BDD workflow.
+
+### BDD Workflow
+
+```
+1. Write .feature file first  →  describe expected behavior
+2. Create .steps.ts file      →  run tests to see suggested stubs
+3. RED                         →  fill in assertions, tests fail
+4. GREEN                       →  implement production code
+5. REFACTOR                    →  extract helpers, style compliance
+6. VERIFY                      →  run specific feature, then full suite
+```
+
+### Directory Structure
+
+```
+__tests__/
+  features/          # Gherkin .feature files (English keywords)
+    game/            # tile-matching, tile-blocking, game-over
+    chest/           # chest-calculation, chest-hero-upgrade, chest-lifecycle
+    daily-level/     # daily-level-generation, hero-level-generation
+    tools/           # undo-tool, shuffle-tool, pop-tool
+    energy/          # power-core, streak-multiplier, planet-stages
+    storage/         # daily-reset, data-migration, story-progress
+  steps/             # .steps.ts files (mirrors features/)
+    game/
+    chest/
+    daily-level/
+    tools/
+    energy/
+    storage/
+  helpers/           # Shared test utilities
+    bdd-setup.ts           # jest-cucumber global config
+    tile-factory.ts        # TileData fixture creation
+    game-stats-factory.ts  # GameStats fixture creation
+    storage-mock.ts        # Taro storage mock
+    date-mock.ts           # Date mocking for daily-reset tests
+  unit/              # Non-BDD supplemental tests (optional)
+```
+
+### Feature File Conventions
+
+- **Language**: English Gherkin keywords (`Feature`, `Scenario`, `Given`, `When`, `Then`)
+- **Comments**: Chinese allowed only in comments
+- **Naming**: `kebab-case.feature` (e.g., `chest-calculation.feature`)
+- **Scope**: One feature per file, organized by business domain
+- **Tags**: `@unit` (pure functions), `@integration` (requires mocks), domain tags (`@chest`, `@game-logic`, `@energy`, `@tools`, `@storage`)
+
+Example:
+```gherkin
+Feature: Chest Level Calculation
+  As a player
+  I want the game to award me a chest based on my performance
+  So that I am rewarded for playing efficiently
+
+  Scenario Outline: Calculate chest level for normal mode
+    Given the player completed the level in <attempts> attempts
+    And the player used <toolsUsed> tools
+    When the chest level is calculated
+    Then the chest should be <chestLevel>
+
+    Examples:
+      | attempts | toolsUsed | chestLevel |
+      | 1        | 0         | diamond    |
+      | 1        | 1         | gold       |
+```
+
+### Step Definition Pattern
+
+```typescript
+import { defineFeature, loadFeature } from 'jest-cucumber';
+import { functionUnderTest } from '@/utils/someUtil';
+import { createGameStats } from '../../helpers/game-stats-factory';
+import '../../helpers/bdd-setup';  // REQUIRED: Import for error config
+
+const feature = loadFeature('__tests__/features/domain/feature-name.feature');
+
+defineFeature(feature, (test) => {
+  test('Scenario name from feature file', ({ given, and, when, then }) => {
+    let inputVar: Type;
+    let result: Type;
+
+    given(/^step with (\d+) capture group$/, (capturedValue) => {
+      inputVar = parseInt(capturedValue, 10);
+    });
+
+    when('action happens', () => {
+      result = functionUnderTest(inputVar);
+    });
+
+    then(/^result should be (.+)$/, (expected) => {
+      expect(result).toBe(expected);
+    });
+  });
+});
+```
+
+### Test Helpers
+
+| Helper | Purpose |
+|--------|---------|
+| `bdd-setup.ts` | jest-cucumber error configuration (import in every .steps.ts) |
+| `tile-factory.ts` | `createTile()`, `createTilesFromTypes(['BAMBOO', 'SHARK'])` |
+| `game-stats-factory.ts` | `createGameStats({ attempts: 2, toolsUsed: 1 })` |
+| `storage-mock.ts` | In-memory Taro storage mock for `getStorageSync`/`setStorageSync` |
+| `date-mock.ts` | `setMockDate('2024-01-15')`, `advanceDateByDays(1)` |
+
+### Mocking Patterns
+
+**Taro APIs** (use storage-mock helper):
+```typescript
+import { mockTaroStorage } from '../../helpers/storage-mock';
+const { storage } = mockTaroStorage();
+```
+
+**Date** (use date-mock helper):
+```typescript
+import { setMockDate, restoreRealTimers } from '../../helpers/date-mock';
+beforeEach(() => setMockDate('2024-01-15'));
+afterEach(() => restoreRealTimers());
+```
+
+**Math.random** (for seeded RNG tests):
+```typescript
+let mockRandom: jest.SpyInstance;
+beforeEach(() => {
+  mockRandom = jest.spyOn(Math, 'random').mockReturnValue(0.5);
+});
+afterEach(() => mockRandom.mockRestore());
+```
+
+### Testing Principles
+
+1. **Pure utils are primary BDD targets** — functions in `utils/` take inputs → return outputs → easy to test
+2. **Components tested via props/callbacks** — pass test data, verify callbacks fired
+3. **UI snapshot tests are supplemental** — use sparingly, never as primary verification
+4. **Mock at boundaries** — mock Taro APIs and external dependencies, not internal utilities
+5. **One assertion per scenario** — if you need multiple checks, write multiple scenarios
+
+### Tags for Filtering
+
+Run tests by tag using Jest's `--testNamePattern`:
+```bash
+npm test -- --testPathPattern=chest      # All chest-related tests
+npm test -- --testPathPattern=game       # All game logic tests
+npm test -- --testPathPattern=tools      # All tool-related tests
+```
+
+### Reference Implementation
+
+See `__tests__/features/chest/chest-calculation.feature` + `__tests__/steps/chest/chest-calculation.steps.ts` for a complete BDD example using Scenario Outline with Examples table.
 
 ## Product Context
 
