@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import Taro, { useDidShow } from '@tarojs/taro';
+import { useDidShow } from '@tarojs/taro';
 import StarTrail from '../../components/StarTrail';
 import { loadProgress } from '../../utils/storage';
 import { determineLandingBatch } from '../../utils/energyLogic';
-import { useTheme } from '../../hooks/useTheme';
-import { THEMES } from '../../constants/themes';
+import { useThemeContext } from '../../themes/ThemeContext';
+import { getAllThemeConfigs } from '../../themes/registry';
 import type { GameProgress } from '../../utils/storage';
 import './index.scss';
 
 const Home: React.FC = () => {
   const [progress, setProgress] = useState<GameProgress | null>(null);
-  const { themeId, switchTheme } = useTheme();
+  const { id: themeId, switchTheme } = useThemeContext();
+  const themes = getAllThemeConfigs();
 
   // 加载进度的函数
   const refreshProgress = () => {
@@ -113,7 +114,7 @@ const Home: React.FC = () => {
         <View className="section">
           <Text className="section__title">🎨 主题切换</Text>
           <View className="theme-picker">
-            {THEMES.map((theme) => (
+            {themes.map((theme) => (
               <View
                 key={theme.id}
                 className={`theme-picker__item${themeId === theme.id ? ' theme-picker__item--active' : ''}`}
@@ -121,7 +122,7 @@ const Home: React.FC = () => {
               >
                 <View
                   className="theme-picker__preview"
-                  style={{ background: `linear-gradient(135deg, ${theme.colors[0]} 0%, ${theme.colors[1]} 60%, ${theme.colors[2]} 100%)` }}
+                  style={{ background: `linear-gradient(135deg, ${theme.previewColors[0]} 0%, ${theme.previewColors[1]} 60%, ${theme.previewColors[2]} 100%)` }}
                 >
                   <Text className="theme-picker__icon">{theme.icon}</Text>
                 </View>

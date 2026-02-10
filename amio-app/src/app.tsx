@@ -1,14 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from 'react'
-import { View } from '@tarojs/components'
+import { PropsWithChildren, useEffect } from 'react'
 import Taro, { useLaunch } from '@tarojs/taro'
 import { loadProgress } from './utils/storage'
-import { useTheme } from './hooks/useTheme'
+import { ThemeProvider } from './themes/ThemeContext'
 import './app.scss'
 
 function App({ children }: PropsWithChildren<any>) {
-  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null)
-  const { themeClass } = useTheme()
-
   useLaunch(() => {
     console.log('App launched.')
   })
@@ -26,11 +22,13 @@ function App({ children }: PropsWithChildren<any>) {
       console.log('Root access: redirecting to intro')
       Taro.navigateTo({ url: '/pages/intro/index' })
     }
-
-    setIsFirstLaunch(!progress?.hasSeenIntro)
   }, [])
 
-  return <View className={themeClass}>{children}</View>
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  )
 }
 
 export default App

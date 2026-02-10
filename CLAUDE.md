@@ -38,16 +38,22 @@ npm test -- --coverage                # Coverage report
 - **SCSS** for styling (BEM-like: `.tile`, `.tile--disabled`, `.tile__icon`)
 - **Jest** (jsdom) for testing (`amio-app/__tests__/`)
 - **localStorage** for data persistence (single key: `amio_game_progress`)
+- **Theme runtime** in `src/themes/` (typed registry + provider + presets)
 
 ### Path Alias
 `@/*` → `./src/*` (configured in tsconfig.json and Taro config)
 
 ### State Management Pattern
-No Redux or Context. The **Game page** (`pages/game/index.tsx`) is the sole state orchestrator:
+The **Game page** (`pages/game/index.tsx`) remains the sole gameplay state orchestrator:
 - All game state lives in the Game page as React hooks (`useState`, `useRef`)
 - Components (`Board`, `Slot`, `TempSlot`, `ToolBar`) are **presentational only** — they receive props and fire callbacks
 - `useRef` persists daily layout across retries (same positions, new tile types)
 - Pure utility functions in `utils/` take current state and return new state (no side effects)
+
+Theme runtime uses a scoped global context under `src/themes/*`:
+- `ThemeProvider` applies theme class and synchronizes theme switching
+- `registry.ts` resolves known themes with default fallback
+- `useThemeContext` / `useTileIcon` / `useToolIcons` are allowed only for theme concerns, not generic gameplay state
 
 ### Navigation Patterns
 

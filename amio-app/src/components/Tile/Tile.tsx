@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from '@tarojs/components';
 import { TileData } from '../../constants/game';
-import { ICONS } from '../../constants/icons';
+import { useTileIcon } from '../../themes/ThemeContext';
 import './Tile.scss';
 
 interface TileProps {
@@ -20,7 +20,7 @@ const Tile: React.FC<TileProps> = ({ data, onClick, width = 60, height = 66 }) =
         }
     };
 
-    const iconSvg = ICONS[type];
+    const iconSvg = useTileIcon(type);
 
     return (
         <View
