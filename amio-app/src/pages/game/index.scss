@@ -220,4 +220,23 @@
       }
     }
   }
+
+  &.game-page--sudoku {
+    .header {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .stats-row .day-text {
+      font-size: var(--font-size-md);
+    }
+
+    .header-right {
+      gap: var(--space-1);
+    }
+
+    .tools-status {
+      min-width: 76px;
+      text-align: center;
+    }
+  }
 }

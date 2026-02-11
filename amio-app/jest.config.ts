@@ -8,5 +8,6 @@ module.exports = defineJestConfig({
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.(css|scss)$': '<rootDir>/__tests__/helpers/style-mock.js',
   },
 })

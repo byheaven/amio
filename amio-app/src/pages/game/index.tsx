@@ -1,471 +1,412 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Button } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
-import Board from '../../components/Board/Board';
-import Slot from '../../components/Slot/Slot';
-import TempSlot from '../../components/TempSlot/TempSlot';
-import ToolBar from '../../components/ToolBar/ToolBar';
-import ChestModal from '../../components/ChestModal/ChestModal';
-import StoryModal from '../../components/StoryModal/StoryModal';
-import { TileData, MAX_SLOTS, GameStats, ChestLevel, GameMode } from '../../constants/game';
-import { checkMatch, updateClickableStatus } from '../../utils/gameLogic';
-import { getDailyLayoutSeed, generateDailyLayout, assignRandomTileTypes } from '../../utils/dailyLevel';
-import { generateHeroLevel } from '../../utils/heroLevel';
-import { undoLastTile, shuffleBoard, popTilesToTemp, returnTileFromTempStack, TempSlotStacks } from '../../utils/toolsLogic';
-import { calculateChestLevel, createInitialStats, upgradeChestForHero } from '../../utils/chestLogic';
-import { savePendingChest, updateTodayStatus, loadProgress, getNextStoryDay, markStoryViewed, updateEnergyAfterGame } from '../../utils/storage';
-import { getStoryByDay } from '../../constants/storyData';
+import { GameEngine } from '@/engine/game-engine';
+import { FeedbackValue, GameResult, GameState, SettlementPayload } from '@/engine/types';
+import { gameRegistry } from '@/engine/game-registry';
+import { registerBuiltInGames } from '@/games/registry';
+import { GamePlugin } from '@/types/game-plugin';
+import ChestModal from '@/components/ChestModal/ChestModal';
+import StoryModal from '@/components/StoryModal/StoryModal';
+import {
+  getTodayDateString,
+  getNextStoryDay,
+  loadProgress,
+  markStoryViewed,
+  savePendingChest,
+  updateEnergyAfterGame,
+  updateTodayStatus,
+} from '@/utils/storage';
+import { ChestLevel, GameMode, GameStats } from '@/constants/game';
+import { upgradeChestForHero } from '@/utils/chestLogic';
 import './index.scss';
 
-// Layout position type (matches dailyLevel.ts)
-interface LayoutPosition {
-    x: number;
-    y: number;
-    layer: number;
-}
+const mapMode = (mode: 'normal' | 'hero'): GameMode => {
+  return mode === 'hero' ? GameMode.HERO : GameMode.NORMAL;
+};
 
-const Game: React.FC = () => {
-    const router = useRouter();
-    const [boardTiles, setBoardTiles] = useState<TileData[]>([]);
-    const [slotTiles, setSlotTiles] = useState<TileData[]>([]);
-    const [tempStacks, setTempStacks] = useState<TempSlotStacks>([[], [], []]);
-    const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
-    const [gameMode, setGameMode] = useState<GameMode>(GameMode.NORMAL);
-    const [gameStats, setGameStats] = useState<GameStats>(createInitialStats());
-    const [chestLevels, setChestLevels] = useState<ChestLevel[]>([ChestLevel.BRONZE]);
-    const [heroAttempted, setHeroAttempted] = useState<boolean>(false);
-    const [normalCompleted, setNormalCompleted] = useState<boolean>(false);
-    const [showResult, setShowResult] = useState<boolean>(false);
-    const [showStory, setShowStory] = useState<boolean>(false);
-    const [currentStoryDay, setCurrentStoryDay] = useState<number>(0);
+const navigateToStarlight = (): void => {
+  Taro.switchTab({
+    url: '/pages/starlight/index',
+    fail: (error) => {
+      console.error('Navigation to starlight failed:', error);
+      Taro.reLaunch({ url: '/pages/starlight/index' });
+    },
+  });
+};
 
-    // Store daily layout (fixed positions) - persists across retries
-    const dailyLayoutRef = useRef<LayoutPosition[]>([]);
-    const dailySeedRef = useRef<number>(0);
+const toChestEnum = (
+  value: 'diamond' | 'gold' | 'silver' | 'bronze'
+): ChestLevel => {
+  switch (value) {
+    case 'diamond':
+      return ChestLevel.DIAMOND;
+    case 'gold':
+      return ChestLevel.GOLD;
+    case 'silver':
+      return ChestLevel.SILVER;
+    default:
+      return ChestLevel.BRONZE;
+  }
+};
 
-    useEffect(() => {
-        // Generate daily layout once on mount
-        const seed = getDailyLayoutSeed();
-        dailySeedRef.current = seed;
-        dailyLayoutRef.current = generateDailyLayout(seed, 75); // 25 triples = 75 tiles (~3 min gameplay)
+const isThreeTilesState = (
+  state: GameState
+): state is GameState & { undoUsed: boolean; shuffleUsed: boolean; popUsed: boolean } => {
+  return (
+    typeof (state as Record<string, unknown>).undoUsed === 'boolean' &&
+    typeof (state as Record<string, unknown>).shuffleUsed === 'boolean' &&
+    typeof (state as Record<string, unknown>).popUsed === 'boolean'
+  );
+};
 
-        // 检查URL参数决定启动模式
-        const mode = router.params.mode;
-        const autoWin = router.params.autowin === 'true';
+const GamePage: React.FC = () => {
+  const router = useRouter();
+  const modeParam = router.params.mode === 'hero' ? 'hero' : 'normal';
+  const requestedGameId = router.params.gameType;
 
-        if (mode === 'hero') {
-            // 直接启动Hero模式，需要从storage加载已有宝箱等级
-            const progress = loadProgress();
-            const existingChestLevel = progress.pendingChest?.levels?.[0] || ChestLevel.BRONZE;
-            setChestLevels([existingChestLevel]);
+  const engineRef = useRef(new GameEngine());
+  const [plugin, setPlugin] = useState<GamePlugin<GameState> | null>(null);
+  const [state, setState] = useState<GameState | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackValue>('skipped');
+  const [settlement, setSettlement] = useState<SettlementPayload | null>(null);
+  const [showSettlement, setShowSettlement] = useState(false);
+  const [finalized, setFinalized] = useState(false);
+  const [storyDay, setStoryDay] = useState(0);
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const [storyChecked, setStoryChecked] = useState(false);
+  const autoWinHandledRef = useRef(false);
 
-            const heroTiles = generateHeroLevel(seed);
-            setBoardTiles(heroTiles);
-            setSlotTiles([]);
-            setTempStacks([[], [], []]);
-            setStatus('playing');
-            setGameMode(GameMode.HERO);
-            setHeroAttempted(true);
-            setNormalCompleted(true); // 从首页进入Hero说明普通模式已通关
-        } else {
-            startNewGame();
+  const date = useMemo(() => getTodayDateString(), []);
+  const userId = 'local-user';
+
+  useEffect(() => {
+    registerBuiltInGames();
+
+    const engine = engineRef.current;
+    const todayGame = requestedGameId || engine.getTodayGame(userId, date).id;
+
+    try {
+      const selectedPlugin = gameRegistry.get(todayGame);
+      engine.setGame(todayGame);
+      setPlugin(selectedPlugin as unknown as GamePlugin<GameState>);
+      const initialState = engine.startGame({
+        mode: modeParam,
+        date,
+        userId,
+      });
+      setState(initialState as unknown as GameState);
+      setFinalized(false);
+      setSettlement(null);
+      setShowSettlement(false);
+      setFeedback('skipped');
+      setStoryDay(0);
+      setShowStoryModal(false);
+      setStoryChecked(false);
+    } catch (error) {
+      console.error('Failed to start game:', error);
+    }
+  }, [date, modeParam, requestedGameId]);
+
+  useEffect(() => {
+    if (!state || !plugin || state.status !== 'cleared' || storyChecked) {
+      return;
+    }
+
+    if (modeParam !== 'normal') {
+      setStoryChecked(true);
+      return;
+    }
+
+    const nextDay = getNextStoryDay();
+    if (nextDay > 0) {
+      setStoryDay(nextDay);
+      setShowStoryModal(true);
+    }
+    setStoryChecked(true);
+  }, [modeParam, plugin, state, storyChecked]);
+
+  useEffect(() => {
+    if (router.params.autowin !== 'true' || autoWinHandledRef.current || !state) {
+      return;
+    }
+
+    autoWinHandledRef.current = true;
+    const timer = setTimeout(() => {
+      setState((prev) => {
+        if (!prev || prev.status !== 'playing') {
+          return prev;
         }
+        return {
+          ...prev,
+          status: 'cleared',
+          endedAt: Date.now(),
+        };
+      });
+    }, 400);
 
-        // 调试功能：自动获胜
-        if (autoWin) {
-            setTimeout(() => {
-                handleTestWin();
-            }, 500);
-        }
-    }, []);
+    return () => clearTimeout(timer);
+  }, [router.params.autowin, state]);
 
-    // 开始新游戏（重试时保留attempts，完全重开时重置）
-    const startNewGame = (isRetry: boolean = false) => {
-        // Use fixed daily layout, but assign new random tile types
-        const tiles = assignRandomTileTypes(dailyLayoutRef.current);
-        setBoardTiles(tiles);
-        setSlotTiles([]);
-        setTempStacks([[], [], []]);
-        setStatus('playing');
-        setShowResult(false);
+  useEffect(() => {
+    if (!state || !plugin || state.status !== 'playing' || modeParam !== 'hero' || plugin.id !== 'sudoku') {
+      return;
+    }
 
-        if (isRetry) {
-            // 重试时: 保留attempts计数，重置本局道具使用
-            setGameStats(prev => ({
-                ...prev,
-                toolsUsed: 0,
-                undoUsed: false,
-                shuffleUsed: false,
-                popUsed: false,
-            }));
-        } else {
-            // 完全重开: 重置所有统计
-            setGameStats(createInitialStats());
-            setGameMode(GameMode.NORMAL);
-        }
+    const timer = setInterval(() => {
+      const next = engineRef.current.dispatch({ type: 'tick', payload: { deltaSeconds: 1 } });
+      setState(next as unknown as GameState);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [modeParam, plugin, state]);
+
+  useEffect(() => {
+    if (!state || !plugin || state.status !== 'cleared' || settlement) {
+      return;
+    }
+
+    const result: GameResult = {
+      gameId: plugin.id,
+      mode: modeParam,
+      status: 'cleared',
+      attempts: state.attempts,
+      durationSeconds: Math.max(1, Math.floor(((state.endedAt ?? Date.now()) - state.startedAt) / 1000)),
+      toolsUsed: state.toolsUsed,
+      heroAttempted: modeParam === 'hero',
+      heroResult: modeParam === 'hero' ? 'cleared' : undefined,
+      feedback,
     };
 
-    // 开始Hero模式
-    const startHeroMode = () => {
-        // 生成Hero模式关卡
-        const heroTiles = generateHeroLevel(dailySeedRef.current);
-        setBoardTiles(heroTiles);
-        setSlotTiles([]);
-        setTempStacks([[], [], []]);
-        setStatus('playing');
-        setShowResult(false);
-        setGameMode(GameMode.HERO);
-        setHeroAttempted(true);
-        // Hero模式重置道具使用
-        setGameStats(prev => ({
-            ...prev,
-            toolsUsed: 0,
+    const payload = engineRef.current.enterSettlement(result);
+    setSettlement(payload);
+    setShowSettlement(true);
+  }, [feedback, modeParam, plugin, settlement, state]);
+
+  const handleAction = (type: string, payload?: Record<string, unknown>) => {
+    if (!state) {
+      return;
+    }
+
+    try {
+      const next = engineRef.current.dispatch({ type, payload });
+      if (type === 'retry') {
+        setStoryDay(0);
+        setShowStoryModal(false);
+        setStoryChecked(false);
+      }
+      setState(next as unknown as GameState);
+    } catch (error) {
+      console.error('Failed to dispatch action:', error);
+    }
+  };
+
+  const handleUseTool = (toolId: string) => {
+    if (!state) {
+      return;
+    }
+
+    try {
+      const next = engineRef.current.useTool(toolId);
+      setState(next as unknown as GameState);
+    } catch (error) {
+      console.error('Failed to use tool:', error);
+    }
+  };
+
+  const persistCompletion = (payload: SettlementPayload, result: GameResult): void => {
+    const chestLevel = engineRef.current.getChestLevelAsEnum(payload.chestLevel);
+    const progress = loadProgress();
+
+    if (result.mode === 'hero') {
+      const baseLevel = progress.pendingChest?.levels?.[0] || chestLevel;
+      const upgraded = upgradeChestForHero(baseLevel);
+      savePendingChest(upgraded, true);
+      updateTodayStatus(result.attempts, true, upgraded[0], true, result.status === 'cleared');
+      updateEnergyAfterGame(GameMode.HERO, upgraded[0], progress.consecutiveDays);
+      return;
+    }
+
+    savePendingChest([chestLevel], false);
+    updateTodayStatus(result.attempts, true, chestLevel, false, false);
+    updateEnergyAfterGame(mapMode(result.mode), chestLevel, progress.consecutiveDays);
+  };
+
+  const finalizeAndExit = (nextMode: 'exit' | 'hero') => {
+    if (!state || !plugin || finalized || !settlement) {
+      return;
+    }
+
+    const result: GameResult = {
+      gameId: plugin.id,
+      mode: modeParam,
+      status: state.status === 'failed' ? 'failed' : state.status === 'quit' ? 'quit' : 'cleared',
+      attempts: state.attempts,
+      durationSeconds: Math.max(1, Math.floor(((state.endedAt ?? Date.now()) - state.startedAt) / 1000)),
+      toolsUsed: state.toolsUsed,
+      heroAttempted: modeParam === 'hero' || nextMode === 'hero',
+      heroResult: modeParam === 'hero' ? (state.status === 'cleared' ? 'cleared' : 'failed') : undefined,
+      feedback,
+    };
+
+    const payload = engineRef.current.onGameEnd(result);
+    persistCompletion(payload, result);
+    setFinalized(true);
+    setShowSettlement(false);
+
+    if (nextMode === 'hero') {
+      Taro.redirectTo({
+        url: `/pages/game/index?mode=hero&gameType=${plugin.id}`,
+      });
+      return;
+    }
+
+    navigateToStarlight();
+  };
+
+  const handleTestWin = () => {
+    if (!state || state.status !== 'playing') {
+      return;
+    }
+
+    setState({
+      ...state,
+      status: 'cleared',
+      endedAt: Date.now(),
+    });
+  };
+
+  const handleStoryComplete = () => {
+    if (storyDay > 0) {
+      markStoryViewed(storyDay);
+    }
+    setShowStoryModal(false);
+  };
+
+  if (!plugin || !state) {
+    return <View className="game-page" />;
+  }
+
+  const PluginComponent = plugin.GameComponent as React.ComponentType<{
+    state: GameState;
+    onAction: (action: { type: string; payload?: Record<string, unknown> }) => void;
+    onUseTool: (toolId: string) => void;
+    mode: 'normal' | 'hero';
+  }>;
+  const pageClassName = [
+    'game-page',
+    modeParam === 'hero' ? 'hero-mode' : '',
+    plugin.id === 'sudoku' ? 'game-page--sudoku' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <View className={pageClassName}>
+      <View className="header">
+        <View className="stats-row">
+          <Text className="day-text">{plugin.meta.narrativeName}</Text>
+          <Text className="attempt-text">Attempt {state.attempts}</Text>
+        </View>
+        <View className="header-right">
+          <Button className="test-win-btn" onClick={handleTestWin}>
+            🎯 One-Click Win
+          </Button>
+          <View className="tools-status">
+            <Text>Tools: {state.toolsUsed}</Text>
+          </View>
+        </View>
+      </View>
+
+      <PluginComponent
+        state={state}
+        onAction={(action) => handleAction(action.type, action.payload)}
+        onUseTool={handleUseTool}
+        mode={modeParam}
+      />
+
+      {showStoryModal && modeParam === 'normal' && (
+        <StoryModal storyDay={storyDay} onComplete={handleStoryComplete} />
+      )}
+
+      {state.status === 'failed' && (
+        <View className="overlay">
+          <View className="lost-modal">
+            <Text className="lost-title">Challenge failed</Text>
+            <Button className="retry-btn" onClick={() => handleAction('retry')}>Retry</Button>
+            {modeParam === 'hero' && (
+              <Button className="claim-btn-secondary" onClick={() => navigateToStarlight()}>
+                Claim Current Chest
+              </Button>
+            )}
+            <Button className="claim-btn-secondary" onClick={() => navigateToStarlight()}>Exit</Button>
+          </View>
+        </View>
+      )}
+
+      {showSettlement && settlement && plugin.id === '3tiles' && !showStoryModal && (
+        <ChestModal
+          chestLevels={
+            modeParam === 'hero'
+              ? upgradeChestForHero(
+                  loadProgress().pendingChest?.levels?.[0] || toChestEnum(settlement.chestLevel)
+                )
+              : [toChestEnum(settlement.chestLevel)]
+          }
+          stats={
+            isThreeTilesState(state)
+              ? ({
+                  attempts: state.attempts,
+                  toolsUsed: state.toolsUsed,
+                  undoUsed: state.undoUsed,
+                  shuffleUsed: state.shuffleUsed,
+                  popUsed: state.popUsed,
+                } as GameStats)
+              : ({
+                  attempts: state.attempts,
+                  toolsUsed: state.toolsUsed,
+                  undoUsed: false,
+                  shuffleUsed: false,
+                  popUsed: false,
+                } as GameStats)
+          }
+          gameMode={modeParam === 'hero' ? GameMode.HERO : GameMode.NORMAL}
+          canChallengeHero={modeParam === 'normal' && plugin.getHeroConfig().enabled}
+          onClaim={() => finalizeAndExit('exit')}
+          onHeroChallenge={() => finalizeAndExit('hero')}
+          onClose={() => finalizeAndExit('exit')}
+          feedback={feedback}
+          onFeedbackChange={setFeedback}
+        />
+      )}
+
+      {showSettlement && settlement && plugin.id !== '3tiles' && !showStoryModal && (
+        <ChestModal
+          chestLevels={
+            modeParam === 'hero'
+              ? upgradeChestForHero(
+                  loadProgress().pendingChest?.levels?.[0] || toChestEnum(settlement.chestLevel)
+                )
+              : [toChestEnum(settlement.chestLevel)]
+          }
+          stats={{
+            attempts: state.attempts,
+            toolsUsed: state.toolsUsed,
             undoUsed: false,
             shuffleUsed: false,
             popUsed: false,
-        }));
-    };
-
-    // 失败后重试（增加attempts计数）
-    const handleRetry = () => {
-        setGameStats(prev => ({
-            ...prev,
-            attempts: prev.attempts + 1,
-        }));
-        if (gameMode === GameMode.HERO) {
-            // Hero模式重试，重新生成Hero关卡
-            const heroTiles = generateHeroLevel(dailySeedRef.current);
-            setBoardTiles(heroTiles);
-            setSlotTiles([]);
-            setTempStacks([[], [], []]);
-            setStatus('playing');
-            setShowResult(false);
-            // 重置本局道具使用
-            setGameStats(prev => ({
-                ...prev,
-                toolsUsed: 0,
-                undoUsed: false,
-                shuffleUsed: false,
-                popUsed: false,
-            }));
-        } else {
-            startNewGame(true);
-        }
-    };
-
-    // 领取宝箱（保存到待领取并返回首页）
-    const handleClaim = () => {
-        console.log('handleClaim - heroAttempted:', heroAttempted, 'gameMode:', gameMode);
-        // 保存宝箱到待领取
-        savePendingChest(chestLevels, gameMode === GameMode.HERO);
-        // 更新今日状态
-        updateTodayStatus(
-            gameStats.attempts,
-            true,
-            chestLevels[0], // 用第一个宝箱作为今日宝箱等级
-            heroAttempted,
-            gameMode === GameMode.HERO && status === 'won'
-        );
-
-        // 明确关闭结算界面，防止留在当前页且逻辑泄露
-        setShowResult(false);
-        setStatus('won');
-
-        // 根据游戏模式决定跳转目标页面
-        if (gameMode === GameMode.HERO) {
-            // Hero 模式过关后跳转到星海页面
-            Taro.switchTab({
-                url: '/pages/starocean/index',
-                fail: (err) => {
-                    console.error('Navigation to starocean failed:', err);
-                    // Fallback to reLaunch if switchTab fails
-                    Taro.reLaunch({ url: '/pages/starocean/index' });
-                }
-            });
-        } else {
-            // 普通模式过关后跳转到星光页面
-            Taro.switchTab({
-                url: '/pages/starlight/index',
-                fail: (err) => {
-                    console.error('Navigation to starlight failed:', err);
-                    // Fallback to reLaunch if switchTab fails
-                    Taro.reLaunch({ url: '/pages/starlight/index' });
-                }
-            });
-        }
-    };
-
-    const handleTileClick = (tile: TileData) => {
-        if (status !== 'playing') return;
-        if (slotTiles.length >= MAX_SLOTS) return;
-
-        const newBoardTiles = boardTiles.filter(t => t.id !== tile.id);
-        const updatedBoardTiles = updateClickableStatus(newBoardTiles);
-
-        let newSlotTiles = [...slotTiles, tile];
-
-        setBoardTiles(updatedBoardTiles);
-        setSlotTiles(newSlotTiles);
-
-        const { newSlots, matched } = checkMatch(newSlotTiles);
-
-        if (matched) {
-            setSlotTiles(newSlots);
-        } else {
-            if (newSlots.length >= MAX_SLOTS) {
-                setStatus('lost');
-            } else {
-                setSlotTiles(newSlots);
-            }
-        }
-
-        // Check win (no tiles on board, in slot, or in temp stacks)
-        const tempTilesCount = tempStacks.reduce((sum, stack) => sum + stack.length, 0);
-        if (updatedBoardTiles.length === 0 && newSlots.length === 0 && tempTilesCount === 0) {
-            setStatus('won');
-
-            // Calculate chest level first
-            let finalChestLevel: ChestLevel;
-            let finalChestLevels: ChestLevel[];
-
-            if (gameMode === GameMode.HERO) {
-                // Hero模式通关，升级宝箱（可能获得多个）
-                finalChestLevels = upgradeChestForHero(chestLevels[0]);
-                setChestLevels(finalChestLevels);
-                finalChestLevel = finalChestLevels[0];
-                // Hero模式不显示新故事（同一天只有一个故事）
-                setShowResult(true);
-            } else {
-                // 普通模式通关，计算宝箱等级
-                finalChestLevel = calculateChestLevel(gameStats);
-                finalChestLevels = [finalChestLevel];
-                setChestLevels(finalChestLevels);
-                setNormalCompleted(true);
-
-                // 检查是否有新故事需要展示
-                const storyDay = getNextStoryDay();
-                const story = getStoryByDay(storyDay);
-                if (storyDay > 0 && story) {
-                    setCurrentStoryDay(storyDay);
-                    setShowStory(true);
-                } else {
-                    setShowResult(true);
-                }
-            }
-
-            // Update energy after game completion
-            const progress = loadProgress();
-            updateEnergyAfterGame(gameMode, finalChestLevel, progress.consecutiveDays);
-        }
-    };
-
-    const handleTempStackClick = (positionIndex: number) => {
-        if (status !== 'playing') return;
-
-        const { newSlot, newTempStacks, success } = returnTileFromTempStack(
-            positionIndex, slotTiles, tempStacks, MAX_SLOTS
-        );
-
-        if (success) {
-            setTempStacks(newTempStacks);
-
-            const { newSlots, matched } = checkMatch(newSlot);
-            if (matched) {
-                setSlotTiles(newSlots);
-            } else {
-                if (newSlots.length >= MAX_SLOTS) {
-                    setStatus('lost');
-                } else {
-                    setSlotTiles(newSlots);
-                }
-            }
-        }
-    };
-
-    const handleUndo = () => {
-        if (status !== 'playing') return;
-        if (gameStats.undoUsed) return; // 每局只能用一次
-
-        const { newBoard, newSlot, success } = undoLastTile(boardTiles, slotTiles);
-        if (success) {
-            setBoardTiles(newBoard);
-            setSlotTiles(newSlot);
-            // 记录道具使用
-            setGameStats(prev => ({
-                ...prev,
-                toolsUsed: prev.toolsUsed + 1,
-                undoUsed: true,
-            }));
-        }
-    };
-
-    const handleShuffle = () => {
-        if (status !== 'playing') return;
-        if (gameStats.shuffleUsed) return; // 每局只能用一次
-
-        const shuffled = shuffleBoard(boardTiles);
-        setBoardTiles(shuffled);
-        // 记录道具使用
-        setGameStats(prev => ({
-            ...prev,
-            toolsUsed: prev.toolsUsed + 1,
-            shuffleUsed: true,
-        }));
-    };
-
-    const handleRemove = () => {
-        if (status !== 'playing') return;
-        if (slotTiles.length === 0) return;
-        if (gameStats.popUsed) return; // 每局只能用一次
-
-        const { remainSlot, newTempStacks, success } = popTilesToTemp(slotTiles, tempStacks);
-
-        if (success) {
-            setSlotTiles(remainSlot);
-            setTempStacks(newTempStacks);
-            // 记录道具使用
-            setGameStats(prev => ({
-                ...prev,
-                toolsUsed: prev.toolsUsed + 1,
-                popUsed: true,
-            }));
-        }
-    };
-
-    // 一键过关（测试用）
-    const handleTestWin = () => {
-        if (status !== 'playing') return;
-
-        setBoardTiles([]);
-        setSlotTiles([]);
-        setTempStacks([[], [], []]);
-        setStatus('won');
-
-        // Calculate chest level first
-        let finalChestLevel: ChestLevel;
-
-        if (gameMode === GameMode.HERO) {
-            // Hero模式通关，升级宝箱（可能获得多个）
-            const upgradedLevels = upgradeChestForHero(chestLevels[0]);
-            setChestLevels(upgradedLevels);
-            finalChestLevel = upgradedLevels[0];
-            setShowResult(true);
-        } else {
-            // 普通模式通关，计算宝箱等级
-            finalChestLevel = calculateChestLevel(gameStats);
-            setChestLevels([finalChestLevel]);
-            setNormalCompleted(true);
-
-            // 检查是否有新故事需要展示
-            const storyDay = getNextStoryDay();
-            const story = getStoryByDay(storyDay);
-            if (storyDay > 0 && story) {
-                setCurrentStoryDay(storyDay);
-                setShowStory(true);
-            } else {
-                setShowResult(true);
-            }
-        }
-
-        // Update energy after game completion
-        const progress = loadProgress();
-        updateEnergyAfterGame(gameMode, finalChestLevel, progress.consecutiveDays);
-    };
-
-    // 故事观看完成后的回调
-    const handleStoryComplete = () => {
-        markStoryViewed(currentStoryDay);
-        setShowStory(false);
-        setShowResult(true);
-    };
-
-    // 判断是否可以挑战Hero模式
-    const canChallengeHero = normalCompleted && !heroAttempted;
-
-    return (
-        <View className={`game-page ${gameMode === GameMode.HERO ? 'hero-mode' : ''}`}>
-            <View className={`header ${gameMode === GameMode.HERO ? 'hero-header' : ''}`}>
-                <View className="stats-row">
-                    <Text className={`day-text ${gameMode === GameMode.HERO ? 'hero-title' : ''}`}>
-                        {gameMode === GameMode.HERO ? '🔥 HERO MODE' : 'Day 1'}
-                    </Text>
-                    <Text className={`attempt-text ${gameMode === GameMode.HERO ? 'hero-attempt' : ''}`}>
-                        第 {gameStats.attempts} 次挑战
-                    </Text>
-                </View>
-                <View className="header-right">
-                    <Button className="test-win-btn" onClick={handleTestWin}>
-                        🎯 一键过关
-                    </Button>
-                    <View className="tools-status">
-                        <Text>道具: {gameStats.toolsUsed}/3</Text>
-                    </View>
-                </View>
-            </View>
-
-            <Board tiles={boardTiles} onTileClick={handleTileClick} />
-
-            <TempSlot stacks={tempStacks} onStackClick={handleTempStackClick} />
-
-            <Slot tiles={slotTiles} />
-
-            <ToolBar
-                onUndo={handleUndo}
-                onShuffle={handleShuffle}
-                onRemove={handleRemove}
-                undoDisabled={gameStats.undoUsed}
-                shuffleDisabled={gameStats.shuffleUsed}
-                removeDisabled={gameStats.popUsed}
-            />
-
-            {/* 故事弹窗 */}
-            {showStory && (
-                <StoryModal
-                    storyDay={currentStoryDay}
-                    onComplete={handleStoryComplete}
-                />
-            )}
-
-            {/* 通关结算弹窗 */}
-            {showResult && status === 'won' && (
-                <ChestModal
-                    chestLevels={chestLevels}
-                    stats={gameStats}
-                    gameMode={gameMode}
-                    canChallengeHero={canChallengeHero}
-                    onClaim={handleClaim}
-                    onHeroChallenge={startHeroMode}
-                    onClose={handleClaim}
-                />
-            )}
-
-            {/* 普通模式失败弹窗 */}
-            {status === 'lost' && gameMode === GameMode.NORMAL && (
-                <View className="overlay">
-                    <View className="lost-modal">
-                        <Text className="lost-title">挑战失败</Text>
-                        <Text className="lost-msg">槽位已满，无法继续消除</Text>
-                        <Text className="lost-attempt">本次挑战：第 {gameStats.attempts} 次</Text>
-                        <Button className="retry-btn" onClick={handleRetry}>再来一次</Button>
-                    </View>
-                </View>
-            )}
-
-            {/* Hero模式失败弹窗 */}
-            {status === 'lost' && gameMode === GameMode.HERO && (
-                <View className="overlay">
-                    <View className="lost-modal hero-lost">
-                        <Text className="lost-title">Hero挑战失败</Text>
-                        <Text className="lost-msg">再试一次，或领取当前宝箱</Text>
-                        <Text className="chest-keep">当前 {chestLevels[0] === ChestLevel.DIAMOND ? '💎' : chestLevels[0] === ChestLevel.GOLD ? '🥇' : chestLevels[0] === ChestLevel.SILVER ? '🥈' : '🥉'} 宝箱</Text>
-                        <Text className="lost-attempt">本次挑战：第 {gameStats.attempts} 次</Text>
-                        <Button className="retry-btn" onClick={handleRetry}>再来一次</Button>
-                        <Button className="claim-btn-secondary" onClick={handleClaim}>领取宝箱</Button>
-                    </View>
-                </View>
-            )}
-        </View>
-    );
+          }}
+          gameMode={modeParam === 'hero' ? GameMode.HERO : GameMode.NORMAL}
+          canChallengeHero={modeParam === 'normal' && plugin.getHeroConfig().enabled}
+          onClaim={() => finalizeAndExit('exit')}
+          onHeroChallenge={() => finalizeAndExit('hero')}
+          onClose={() => finalizeAndExit('exit')}
+          feedback={feedback}
+          onFeedbackChange={setFeedback}
+        />
+      )}
+    </View>
+  );
 };
 
-export default Game;
+export default GamePage;

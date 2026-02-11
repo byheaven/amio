@@ -1,0 +1,35 @@
+.preference-feedback {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+
+  &__title {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__button {
+    padding: 8px 10px;
+    border: 1px solid #93c5fd;
+    border-radius: 8px;
+    color: #cbd5e1;
+
+    &.is-active {
+      background: #1d4ed8;
+      color: #fff;
+    }
+  }
+
+  &__saved {
+    display: block;
+    margin-top: 8px;
+    color: #bfdbfe;
+    font-size: 12px;
+  }
+}

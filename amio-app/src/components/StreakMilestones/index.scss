@@ -1,0 +1,54 @@
+.streak-milestones {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(2, 6, 23, 0.55);
+
+  &__title {
+    display: block;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  &__scroll {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  &__items {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 4px;
+  }
+
+  &__item {
+    min-width: 98px;
+    text-align: center;
+  }
+
+  &__dot {
+    display: block;
+    color: #64748b;
+
+    &.is-completed {
+      color: #facc15;
+    }
+
+    &.is-next {
+      color: #38bdf8;
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-top: 6px;
+    color: #e2e8f0;
+    font-size: 12px;
+  }
+
+  &__hint {
+    display: block;
+    margin-top: 4px;
+    color: #38bdf8;
+    font-size: 11px;
+  }
+}
