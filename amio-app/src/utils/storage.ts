@@ -66,12 +66,46 @@ export interface GameProgress {
 }
 
 const STORAGE_KEY = 'amio_game_progress';
+const DEBUG_DATE_OFFSET_KEY = 'amio_debug_date_offset_days';
+
+export const getDebugDateOffsetDays = (): number => {
+    try {
+        const raw = Taro.getStorageSync(DEBUG_DATE_OFFSET_KEY);
+        if (raw === '' || raw === undefined || raw === null) {
+            return 0;
+        }
+
+        const parsed = typeof raw === 'number' ? raw : parseInt(String(raw), 10);
+        return Number.isFinite(parsed) ? parsed : 0;
+    } catch (error) {
+        console.error('Failed to load debug date offset:', error);
+        return 0;
+    }
+};
+
+export const setDebugDateOffsetDays = (offsetDays: number): void => {
+    try {
+        Taro.setStorageSync(DEBUG_DATE_OFFSET_KEY, String(offsetDays));
+    } catch (error) {
+        console.error('Failed to save debug date offset:', error);
+    }
+};
+
+export const advanceDebugDateByDays = (days: number = 1): number => {
+    const next = getDebugDateOffsetDays() + days;
+    setDebugDateOffsetDays(next);
+    return next;
+};
 
 /**
  * 获取今天的日期字符串
  */
 export const getTodayDateString = (): string => {
     const today = new Date();
+    const offsetDays = getDebugDateOffsetDays();
+    if (offsetDays !== 0) {
+        today.setDate(today.getDate() + offsetDays);
+    }
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 };
 

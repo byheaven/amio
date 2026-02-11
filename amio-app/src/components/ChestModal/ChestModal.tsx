@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button } from '@tarojs/components';
 import { ChestLevel, GameStats, GameMode } from '../../constants/game';
 import { getChestLevelInfo, upgradeChestForHero } from '../../utils/chestLogic';
+import { FeedbackValue } from '../../engine/types';
 import './ChestModal.scss';
 
 interface ChestModalProps {
@@ -9,6 +10,8 @@ interface ChestModalProps {
     stats: GameStats;
     gameMode: GameMode;
     canChallengeHero: boolean;
+    feedback?: FeedbackValue;
+    onFeedbackChange?: (value: FeedbackValue) => void;
     onClaim: () => void;
     onHeroChallenge: () => void;
     onClose: () => void;
@@ -19,6 +22,8 @@ const ChestModal: React.FC<ChestModalProps> = ({
     stats,
     gameMode,
     canChallengeHero,
+    feedback = 'skipped',
+    onFeedbackChange,
     onClaim,
     onHeroChallenge,
 }) => {
@@ -67,6 +72,24 @@ const ChestModal: React.FC<ChestModalProps> = ({
                     <View className="stat-item">
                         <Text className="stat-label">道具使用</Text>
                         <Text className="stat-value">{stats.toolsUsed}个</Text>
+                    </View>
+                </View>
+
+                <View className="feedback-section">
+                    <Text className="feedback-title">How did this run feel?</Text>
+                    <View className="feedback-options">
+                        <View
+                            className={`feedback-option${feedback === 'liked' ? ' feedback-option--active' : ''}`}
+                            onClick={() => onFeedbackChange?.('liked')}
+                        >
+                            <Text>👍 Like</Text>
+                        </View>
+                        <View
+                            className={`feedback-option${feedback === 'disliked' ? ' feedback-option--active' : ''}`}
+                            onClick={() => onFeedbackChange?.('disliked')}
+                        >
+                            <Text>👎 Dislike</Text>
+                        </View>
                     </View>
                 </View>
 
