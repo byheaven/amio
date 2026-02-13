@@ -62,8 +62,13 @@ const IntroPage: React.FC = () => {
             },
             fail: (err) => {
                 console.error('Navigation failed:', err);
-                // Fallback: try navigateTo if switchTab fails
-                Taro.navigateTo({ url: '/pages/starlight/index' });
+                Taro.navigateTo({
+                    url: '/pages/starlight/index',
+                    fail: (navigateError) => {
+                        console.error('Fallback navigateTo failed:', navigateError);
+                        Taro.reLaunch({ url: '/pages/starlight/index' });
+                    }
+                });
             }
         });
     };

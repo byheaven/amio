@@ -43,7 +43,13 @@ const navigateToStarOcean = (): void => {
     url: '/pages/starocean/index',
     fail: (error) => {
       console.error('Navigation to starocean failed:', error);
-      Taro.reLaunch({ url: '/pages/starocean/index' });
+      Taro.navigateTo({
+        url: '/pages/starocean/index',
+        fail: (navigateError) => {
+          console.error('Fallback navigateTo starocean failed:', navigateError);
+          Taro.reLaunch({ url: '/pages/starocean/index' });
+        },
+      });
     },
   });
 };

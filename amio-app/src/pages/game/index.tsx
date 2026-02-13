@@ -34,7 +34,13 @@ const navigateToStarlight = (): void => {
     url: '/pages/starlight/index',
     fail: (error) => {
       console.error('Navigation to starlight failed:', error);
-      Taro.reLaunch({ url: '/pages/starlight/index' });
+      Taro.navigateTo({
+        url: '/pages/starlight/index',
+        fail: (navigateError) => {
+          console.error('Fallback navigateTo starlight failed:', navigateError);
+          Taro.reLaunch({ url: '/pages/starlight/index' });
+        },
+      });
     },
   });
 };
