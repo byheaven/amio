@@ -8,7 +8,19 @@ const World: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const handleBack = () => {
-    Taro.switchTab({ url: '/pages/starlight/index' });
+    Taro.switchTab({
+      url: '/pages/starlight/index',
+      fail: (error) => {
+        console.error('Navigation back to starlight failed:', error);
+        Taro.navigateTo({
+          url: '/pages/starlight/index',
+          fail: (navigateError) => {
+            console.error('Fallback navigateTo starlight failed:', navigateError);
+            Taro.reLaunch({ url: '/pages/starlight/index' });
+          },
+        });
+      },
+    });
   };
 
   const handleLoaded = () => {

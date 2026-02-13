@@ -80,3 +80,9 @@
   50% { transform: scale(0.92); }
   100% { transform: scale(1); }
 }
+
+@keyframes planetAwaken {
+  0% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.02); filter: brightness(1.08); }
+  100% { transform: scale(1); filter: brightness(1); }
+}

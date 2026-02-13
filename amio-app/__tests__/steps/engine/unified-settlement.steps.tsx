@@ -48,9 +48,9 @@ defineFeature(feature, (test) => {
     });
 
     then('it should show chest, feedback, and hero action when enabled', () => {
-      expect(tree?.container.textContent).toContain('gold');
-      expect(tree?.container.textContent).toContain('How do you like this game mode?');
-      expect(tree?.container.textContent).toContain('Challenge Hero');
+      expect(tree?.container.textContent).toContain('宝箱：黄金');
+      expect(tree?.container.textContent).toContain('你觉得这个模式怎么样？');
+      expect(tree?.container.textContent).toContain('挑战英雄模式');
     });
   });
 });

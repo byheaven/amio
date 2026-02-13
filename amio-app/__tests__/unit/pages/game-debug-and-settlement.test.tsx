@@ -138,10 +138,16 @@ jest.mock('@/utils/storage', () => ({
 import GamePage from '@/pages/game/index';
 
 describe('pages/game debug and settlement regressions', () => {
-  test('renders one-click win debug button and shows chest modal after clear', async () => {
+  beforeEach(() => {
+    mockSwitchTab.mockReset();
+    mockReLaunch.mockReset();
+    mockRedirectTo.mockReset();
+  });
+
+  test('renders instant clear debug button and shows chest modal after clear', async () => {
     const tree = render(<GamePage />, {});
 
-    expect(tree.container.textContent).toContain('One-Click Win');
+    expect(tree.container.textContent).toContain('秒通调试');
 
     await act(async () => {
       const button = tree.container.querySelector('.test-win-btn') as HTMLElement;
@@ -150,5 +156,29 @@ describe('pages/game debug and settlement regressions', () => {
     });
 
     expect(tree.container.textContent).toContain('领取宝箱');
+  });
+
+  test('does not reopen settlement modal after claim action', async () => {
+    const tree = render(<GamePage />, {});
+
+    await act(async () => {
+      const debugButton = tree.container.querySelector('.test-win-btn') as HTMLElement;
+      debugButton.click();
+      await Promise.resolve();
+    });
+
+    expect(tree.container.textContent).toContain('领取宝箱');
+
+    await act(async () => {
+      const claimButton = tree.container.querySelector('.btn-secondary') as HTMLElement | null;
+      if (!claimButton) {
+        throw new Error('Claim button not found');
+      }
+      claimButton.click();
+      await Promise.resolve();
+    });
+
+    expect(mockSwitchTab).toHaveBeenCalledTimes(1);
+    expect(tree.container.textContent).not.toContain('领取宝箱');
   });
 });

@@ -24,7 +24,7 @@
 
   transition: all var(--transition-base);
   user-select: none;
-  animation: popIn 0.35s var(--transition-smooth);
+  animation: none;
 
   // 内部高光层 - 产生立体感
   &::before {

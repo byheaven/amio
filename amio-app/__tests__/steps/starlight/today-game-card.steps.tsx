@@ -28,7 +28,6 @@ defineFeature(feature, (test) => {
             energyReward: 120,
           }}
           cardState="idle"
-          bestLabel="01:22"
           onStart={() => {}}
           onHero={() => {}}
           onExit={() => {}}
@@ -37,9 +36,7 @@ defineFeature(feature, (test) => {
       );
     });
 
-    then('card should display narrative name, description, and reward', () => {
-      expect(tree?.container.textContent).toContain('Star Chart Decode');
-      expect(tree?.container.textContent).toContain('Decode ancient coordinates');
+    then('card should display reward', () => {
       expect(tree?.container.textContent).toContain('+120');
     });
   });

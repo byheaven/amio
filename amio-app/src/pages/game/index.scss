@@ -1,30 +1,56 @@
-// ============================================
-// Game Page - 海洋主题游戏页
-// ============================================
+@import '../../styles/themes/mixins';
 
 .game-page {
+  position: relative;
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--t-bg-surface-alt) 0%, var(--t-bg-surface-dim) 50%, var(--t-bg-surface-alt) 100%);
+  transition: background var(--transition-base);
 
-  // 普通模式: 柔和海洋渐变
-  background: linear-gradient(
-    180deg,
-    var(--t-bg-surface-alt) 0%,
-    var(--t-bg-surface-dim) 50%,
-    var(--t-bg-surface-alt) 100%
-  );
-
-  transition: background 0.5s ease;
-
-  // Hero模式: 深海暗色主题
   &.hero-mode {
-    background: linear-gradient(
-      180deg,
-      var(--t-bg-app-primary) 0%,
-      var(--t-hero-bg) 50%,
-      var(--t-bg-app-secondary) 100%
-    );
+    background: linear-gradient(180deg, var(--t-bg-app-primary) 0%, var(--t-hero-bg) 54%, var(--t-bg-app-secondary) 100%);
+  }
+
+  &__ambient {
+    position: fixed;
+    width: 48vw;
+    max-width: 360px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.24;
+    animation: none;
+
+    &--one {
+      left: -12vw;
+      top: 20vh;
+      background: radial-gradient(circle, var(--t-accent-primary-glow) 0%, transparent 68%);
+    }
+
+    &--two {
+      right: -10vw;
+      bottom: 16vh;
+      background: radial-gradient(circle, var(--t-accent-secondary-glow) 0%, transparent 70%);
+      animation-delay: 1.1s;
+    }
+  }
+
+  .header,
+  .overlay {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
   }
 
   .header {
@@ -32,19 +58,16 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--space-4) var(--space-5);
-
-    // 玻璃效果头部
     background: var(--t-bg-glass-solid);
     backdrop-filter: var(--t-glass-blur);
     -webkit-backdrop-filter: var(--t-glass-blur);
+    border-bottom: 1px solid var(--t-border-glass);
     box-shadow: var(--t-shadow-soft);
-    transition: all var(--transition-base);
 
-    // Hero模式顶栏
     &.hero-header {
       background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
-      border: none;
-      box-shadow: 0 4px 20px var(--t-accent-secondary-glow);
+      border-bottom-color: transparent;
+      box-shadow: 0 8px 24px var(--t-accent-secondary-glow);
     }
 
     .stats-row {
@@ -54,27 +77,22 @@
 
       .day-text {
         font-size: var(--font-size-lg);
-        font-weight: 600;
+        font-weight: 700;
         color: var(--t-text-on-surface);
+        font-family: var(--font-display);
+      }
 
-        // Hero模式标题
-        &.hero-title {
-          color: var(--t-hero-text);
-          font-size: var(--font-size-xl);
-          font-weight: 800;
-          text-shadow: 0 2px 8px var(--t-planet-shadow);
-          letter-spacing: 2px;
-        }
+      .day-text.hero-title {
+        color: var(--t-hero-text);
       }
 
       .attempt-text {
         font-size: var(--font-size-sm);
         color: var(--t-text-on-surface-secondary);
+      }
 
-        // Hero模式挑战次数
-        &.hero-attempt {
-          color: var(--t-text-bright);
-        }
+      .attempt-text.hero-attempt {
+        color: var(--t-text-on-primary);
       }
     }
 
@@ -85,36 +103,50 @@
     }
 
     .test-win-btn {
-      font-size: var(--font-size-sm);
-      color: var(--t-text-on-primary);
-      background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
-      padding: var(--space-2) var(--space-3);
+      min-height: 34px;
+      line-height: 34px;
+      padding: 0 var(--space-3);
       border: none;
       border-radius: var(--radius-lg);
-      box-shadow: 0 2px 8px var(--t-accent-secondary-glow);
-      transition: all var(--transition-base);
+      color: var(--t-text-on-primary);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--t-accent-secondary) 0%, var(--t-accent-secondary-end) 100%);
+      box-shadow: 0 4px 12px var(--t-accent-secondary-glow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+
+      &__icon {
+        line-height: 1;
+      }
+
+      &__label {
+        line-height: 1;
+      }
 
       &:active {
-        transform: scale(0.95);
+        transform: scale(0.97);
       }
     }
 
     .tools-status {
-      font-size: var(--font-size-sm);
-      color: var(--t-text-on-surface);
-      background: var(--t-bg-surface-alt);
-      padding: var(--space-2) var(--space-3);
+      min-height: 34px;
+      padding: 0 var(--space-3);
+      display: flex;
+      align-items: center;
       border-radius: var(--radius-lg);
-    }
-
-    // Hero模式下的header-right样式
-    &.hero-header .test-win-btn {
-      background: var(--t-border-subtle);
-      box-shadow: 0 2px 8px var(--t-bg-dark-inset);
+      border: 1px solid var(--t-border-surface-light);
+      background: var(--t-bg-surface);
+      color: var(--t-text-on-surface);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
     }
 
     &.hero-header .tools-status {
-      background: var(--t-border-subtle);
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.12);
       color: var(--t-text-on-primary);
     }
   }
@@ -122,121 +154,144 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: var(--t-bg-overlay);
-    backdrop-filter: var(--t-glass-blur);
-    -webkit-backdrop-filter: var(--t-glass-blur);
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--t-bg-overlay);
+    backdrop-filter: var(--t-glass-blur);
+    -webkit-backdrop-filter: var(--t-glass-blur);
     z-index: var(--z-modal);
 
     .lost-modal {
-      width: 85%;
-      max-width: 320px;
-
-      // 高级卡片样式
-      background: linear-gradient(
-        145deg,
-        var(--t-bg-surface) 0%,
-        var(--t-bg-surface-alt) 100%
-      );
-      border: 1px solid var(--t-game-tile-border);
-      box-shadow: var(--t-shadow-premium);
+      width: 86%;
+      max-width: 330px;
       border-radius: var(--radius-xl);
+      border: 1px solid var(--t-border-surface);
+      background: linear-gradient(165deg, var(--t-bg-surface) 0%, var(--t-bg-surface-alt) 100%);
+      box-shadow: var(--t-shadow-premium);
       padding: var(--space-8) var(--space-6);
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: var(--space-2);
       text-align: center;
-      animation: slideUp 0.4s ease-out;
+      animation: slideUp 0.36s ease-out;
+
+      .lost-symbol {
+        font-size: var(--font-size-lg);
+        color: var(--t-accent-primary);
+        animation: float 2.2s ease-in-out infinite;
+      }
 
       .lost-title {
-        font-size: var(--font-size-xl);
+        font-size: var(--font-size-lg);
         font-weight: 700;
         color: var(--t-text-on-surface);
-        margin-bottom: var(--space-3);
       }
 
       .lost-msg {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-sm);
         color: var(--t-text-on-surface-secondary);
         margin-bottom: var(--space-2);
       }
 
-      .lost-attempt {
-        font-size: var(--font-size-base);
-        color: var(--t-text-on-surface-secondary);
-        margin-bottom: var(--space-6);
-      }
-
       .retry-btn {
+        @include btn-primary;
         width: 100%;
-        padding: var(--space-4);
-        font-size: var(--font-size-md);
-        font-weight: 600;
-        color: var(--t-text-on-primary);
-        background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
+        min-height: 42px;
+        line-height: 42px;
         border: none;
         border-radius: var(--radius-lg);
-        box-shadow: 0 4px 12px var(--t-accent-primary-glow);
-        transition: all var(--transition-base);
+        font-size: var(--font-size-md);
+        font-weight: 700;
+      }
 
-        &:active {
-          transform: scale(0.98);
-        }
+      .claim-btn-secondary {
+        width: 100%;
+        min-height: 38px;
+        line-height: 38px;
+        border: 1px solid var(--t-border-surface);
+        border-radius: var(--radius-lg);
+        background: var(--t-bg-surface-alt);
+        color: var(--t-text-on-surface-secondary);
+        font-size: var(--font-size-sm);
       }
 
       &.hero-lost {
+        .lost-symbol,
         .lost-title {
           color: var(--t-accent-secondary);
-        }
-
-        .chest-keep {
-          font-size: var(--font-size-lg);
-          font-weight: 600;
-          color: var(--t-text-on-surface);
-          margin-bottom: var(--space-2);
-          padding: var(--space-3) var(--space-6);
-          background: var(--t-bg-surface-alt);
-          border-radius: var(--radius-lg);
-        }
-
-        .claim-btn-secondary {
-          width: 100%;
-          padding: var(--space-3);
-          margin-top: var(--space-2);
-          font-size: var(--font-size-base);
-          font-weight: 500;
-          color: var(--t-text-on-surface-secondary);
-          background: var(--t-bg-surface-alt);
-          border: none;
-          border-radius: var(--radius-lg);
-          transition: all var(--transition-base);
-
-          &:active {
-            transform: scale(0.98);
-          }
         }
       }
     }
   }
 
+  &.game-page--three-tiles {
+    transition: none;
+
+    .header {
+      background: var(--t-bg-glass);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
   &.game-page--sudoku {
+    background: linear-gradient(180deg, var(--t-bg-surface) 0%, var(--t-bg-surface-elevated) 100%);
+
     .header {
       padding: var(--space-3) var(--space-4);
+      box-shadow: 0 1px 0 var(--t-border-surface-light);
     }
 
     .stats-row .day-text {
       font-size: var(--font-size-md);
-    }
-
-    .header-right {
-      gap: var(--space-1);
+      font-family: var(--font-body);
     }
 
     .tools-status {
-      min-width: 76px;
-      text-align: center;
+      min-width: 114px;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 520PX) {
+  .game-page {
+    .header {
+      padding: var(--space-3);
+
+      .header-right {
+        gap: 6px;
+      }
+
+      .tools-status {
+        padding: 0 var(--space-2);
+        font-size: var(--font-size-xs);
+      }
+
+      .test-win-btn {
+        padding: 0 var(--space-2);
+      }
+    }
+
+    .overlay .lost-modal {
+      padding: var(--space-6) var(--space-4);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-page {
+    &__ambient,
+    .overlay .lost-modal .lost-symbol {
+      animation: none;
+    }
+
+    .header,
+    .overlay .lost-modal,
+    .test-win-btn {
+      transition: none;
     }
   }
 }

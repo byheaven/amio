@@ -28,7 +28,6 @@ defineFeature(feature, (test) => {
             energyReward: 120,
           }}
           cardState="completed"
-          bestLabel="01:10"
           onStart={() => {}}
           onHero={() => {}}
           onExit={() => {}}
@@ -38,8 +37,8 @@ defineFeature(feature, (test) => {
     });
 
     then('it should expose hero challenge and done controls', () => {
-      expect(tree?.container.textContent).toContain('Challenge Hero');
-      expect(tree?.container.textContent).toContain('Done for today');
+      expect(tree?.container.textContent).toContain('挑战英雄模式');
+      expect(tree?.container.textContent).toContain('去星海看看');
     });
   });
 });

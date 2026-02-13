@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Button } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import PlanetView from '@/components/PlanetView';
-import TodayGameCard, { TodayCardState } from '@/components/TodayGameCard';
-import PreferenceFeedback from '@/components/PreferenceFeedback';
+import TodayGameCard, { TodayCardState, TodayGameCardDisplayContext } from '@/components/TodayGameCard';
 import StreakMilestones from '@/components/StreakMilestones';
 import { GameEngine } from '@/engine/game-engine';
-import { gameLogger } from '@/services/game-logger';
-import { preferenceStore } from '@/services/preference-store';
+import { uiEventLogger } from '@/services/ui-event-logger';
 import { registerBuiltInGames } from '@/games/registry';
 import {
   advanceDebugDateByDays,
@@ -22,8 +20,10 @@ import { getChestLevelInfo, getChestRewardDetails } from '@/utils/chestLogic';
 import { syncPlanetProgress } from '@/utils/energyLogic';
 import type { GameProgress } from '@/utils/storage';
 import { ChestLevel } from '@/constants/game';
-import { FeedbackValue } from '@/engine/types';
 import './index.scss';
+
+const USER_ID = 'local-user';
+const isDebugUiEnabled = process.env.NODE_ENV !== 'production';
 
 const deriveCardState = (progress: GameProgress): TodayCardState => {
   if (!progress.todayCompleted) {
@@ -38,13 +38,75 @@ const deriveCardState = (progress: GameProgress): TodayCardState => {
   return 'done';
 };
 
-const formatBestTime = (seconds: number | null): string => {
-  if (!seconds || seconds <= 0) {
-    return '--:--';
+const navigateToStarOcean = (): void => {
+  Taro.switchTab({
+    url: '/pages/starocean/index',
+    fail: (error) => {
+      console.error('Navigation to starocean failed:', error);
+      Taro.navigateTo({
+        url: '/pages/starocean/index',
+        fail: (navigateError) => {
+          console.error('Fallback navigateTo starocean failed:', navigateError);
+          Taro.reLaunch({ url: '/pages/starocean/index' });
+        },
+      });
+    },
+  });
+};
+
+const getCardDisplayContext = (
+  cardState: TodayCardState,
+  energyReward: number,
+  chestLabel?: string
+): TodayGameCardDisplayContext => {
+  const defaultContext: TodayGameCardDisplayContext = {
+    badgeText: '今日任务',
+    energyLabel: `+${energyReward} 星能`,
+    chestStatLabel: chestLabel ? `宝箱 ${chestLabel}` : undefined,
+    journeyHint: '每天玩一局，都会给星球补充一点光。',
+    startActionLabel: '开始今日挑战',
+    heroActionLabel: '挑战英雄模式',
+    doneActionLabel: '前往星海继续探索',
+    closeActionLabel: '前往星海继续探索',
+  };
+
+  if (cardState === 'playing') {
+    return {
+      ...defaultContext,
+      badgeText: '进行中',
+      journeyHint: '进度已保存，继续这一局吧。',
+      startActionLabel: '继续挑战',
+    };
   }
-  const minute = String(Math.floor(seconds / 60)).padStart(2, '0');
-  const second = String(seconds % 60).padStart(2, '0');
-  return `${minute}:${second}`;
+
+  if (cardState === 'completed') {
+    return {
+      ...defaultContext,
+      badgeText: '已通关',
+      chestStatLabel: undefined,
+      journeyHint: '可继续挑战英雄模式，或先去星海逛逛。',
+    };
+  }
+
+  if (cardState === 'hero') {
+    return {
+      ...defaultContext,
+      badgeText: '英雄模式进行中',
+      chestStatLabel: undefined,
+      journeyHint: '英雄模式失败不会扣掉基础宝箱，请放心挑战。',
+    };
+  }
+
+  if (cardState === 'done') {
+    return {
+      ...defaultContext,
+      badgeText: '今日完成',
+      chestStatLabel: undefined,
+      journeyHint: '今天的星光已点亮，去星海看看新的变化吧。',
+    };
+  }
+
+  return defaultContext;
 };
 
 const Starlight: React.FC = () => {
@@ -54,9 +116,8 @@ const Starlight: React.FC = () => {
   const [countdown, setCountdown] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState<number | null>(null);
   const [cardState, setCardState] = useState<TodayCardState>('idle');
-  const [bestTimeLabel, setBestTimeLabel] = useState('--:--');
-  const [feedback, setFeedback] = useState<FeedbackValue>('skipped');
   const [todayDate, setTodayDate] = useState(getTodayDateString());
+  const ctaExposeKeyRef = useRef('');
 
   const engine = useMemo(() => {
     registerBuiltInGames();
@@ -64,35 +125,17 @@ const Starlight: React.FC = () => {
   }, []);
 
   const todayGame = useMemo(() => {
-    return engine.getTodayGame('local-user', todayDate);
+    return engine.getTodayGame(USER_ID, todayDate);
   }, [engine, todayDate]);
 
   const refreshProgress = () => {
     const effectiveDate = getTodayDateString();
-    const effectiveGame = engine.getTodayGame('local-user', effectiveDate);
     setTodayDate(effectiveDate);
 
     const loaded = loadProgress();
     setProgress(loaded);
     setChestStatus(getChestStatus());
     setCardState(deriveCardState(loaded));
-
-    const logs = gameLogger
-      .listByUser('local-user')
-      .filter((item) => item.gameType === effectiveGame.id && item.result === 'cleared');
-    const best = logs.reduce<number | null>((acc, item) => {
-      if (acc === null || item.durationSeconds < acc) {
-        return item.durationSeconds;
-      }
-      return acc;
-    }, null);
-    setBestTimeLabel(formatBestTime(best));
-
-    const preferences = preferenceStore
-      .listByUser('local-user')
-      .filter((item) => item.date === effectiveDate && item.gameType === effectiveGame.id);
-    const latest = preferences[preferences.length - 1];
-    setFeedback(latest?.feedback || 'skipped');
 
     syncPlanetProgress()
       .then((data) => {
@@ -125,32 +168,97 @@ const Starlight: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const ctaType = cardState === 'completed' ? 'hero' : cardState === 'idle' || cardState === 'playing' ? 'start' : null;
+    if (!ctaType) {
+      return;
+    }
+
+    const exposeKey = `${todayDate}:${todayGame.id}:${cardState}:${ctaType}`;
+    if (ctaExposeKeyRef.current === exposeKey) {
+      return;
+    }
+
+    ctaExposeKeyRef.current = exposeKey;
+    uiEventLogger.append({
+      userId: USER_ID,
+      date: todayDate,
+      event: 'starlight_cta_exposed',
+      metadata: {
+        cardState,
+        ctaType,
+        gameType: todayGame.id,
+      },
+    });
+
+    if (cardState === 'completed') {
+      uiEventLogger.append({
+        userId: USER_ID,
+        date: todayDate,
+        event: 'hero_prompt_shown',
+        metadata: {
+          gameType: todayGame.id,
+        },
+      });
+    }
+  }, [cardState, todayDate, todayGame.id]);
+
   const handlePlanetClick = () => {
     Taro.navigateTo({ url: '/pages/world/index' });
   };
 
   const handleStart = () => {
+    uiEventLogger.append({
+      userId: USER_ID,
+      date: todayDate,
+      event: 'starlight_cta_clicked',
+      metadata: {
+        cardState,
+        ctaType: 'start',
+        gameType: todayGame.id,
+      },
+    });
+
     setCardState('playing');
     Taro.navigateTo({ url: `/pages/game/index?mode=normal&gameType=${todayGame.id}` });
   };
 
   const handleHero = () => {
+    uiEventLogger.append({
+      userId: USER_ID,
+      date: todayDate,
+      event: 'starlight_cta_clicked',
+      metadata: {
+        cardState,
+        ctaType: 'hero',
+        gameType: todayGame.id,
+      },
+    });
+    uiEventLogger.append({
+      userId: USER_ID,
+      date: todayDate,
+      event: 'hero_prompt_clicked',
+      metadata: {
+        gameType: todayGame.id,
+      },
+    });
+
     setCardState('hero');
     Taro.navigateTo({ url: `/pages/game/index?mode=hero&gameType=${todayGame.id}` });
   };
 
-  const handleCardDone = () => {
-    setCardState('done');
-  };
-
-  const handleFeedbackChange = (value: FeedbackValue) => {
-    setFeedback(value);
-    preferenceStore.save({
-      userId: 'local-user',
+  const handleGoToStarOcean = () => {
+    uiEventLogger.append({
+      userId: USER_ID,
       date: todayDate,
-      gameType: todayGame.id,
-      feedback: value,
+      event: 'starlight_cta_clicked',
+      metadata: {
+        cardState,
+        ctaType: 'starocean',
+        gameType: todayGame.id,
+      },
     });
+    navigateToStarOcean();
   };
 
   const handleChestClick = () => {
@@ -161,12 +269,12 @@ const Starlight: React.FC = () => {
     const status = getChestStatus();
 
     if (status.status === 'locked') {
-      alert(`Chest unlock in: ${countdown}`);
+      alert(`宝箱解锁倒计时：${countdown}`);
       return;
     }
 
     if (status.status === 'expired') {
-      alert('Chest expired. Come back tomorrow.');
+      alert('这个宝箱已过期，完成今日挑战可获得新的宝箱。');
       const updated = { ...progress, pendingChest: null };
       saveProgress(updated);
       refreshProgress();
@@ -180,9 +288,9 @@ const Starlight: React.FC = () => {
       }
       const infos = chest.levels.map((level) => getChestLevelInfo(level));
       const title = chest.levels.length > 1
-        ? `Received ${infos.map((item) => item.emoji).join(' + ')}`
-        : `Received ${infos[0].emoji} ${infos[0].name}`;
-      alert(`${title}`);
+        ? `已领取：${infos.map((item) => item.emoji).join(' + ')}`
+        : `已领取：${infos[0].emoji} ${infos[0].name}`;
+      alert(title);
       refreshProgress();
     }
   };
@@ -193,13 +301,13 @@ const Starlight: React.FC = () => {
   };
 
   const handleReset = () => {
-    const confirmed = confirm('Clear all local data?');
+    const confirmed = confirm('确认清空本地数据吗？');
     if (!confirmed) {
       return;
     }
     Taro.clearStorageSync();
     refreshProgress();
-    alert('Data reset completed.');
+    alert('本地数据已清空。');
   };
 
   const handleTestWin = () => {
@@ -210,28 +318,28 @@ const Starlight: React.FC = () => {
 
   const handleShowStatus = () => {
     alert(
-      `Today Date: ${todayDate}\n` +
-      `Today Game: ${todayGame.id}\n` +
-      `Today Completed: ${progress?.todayCompleted ? 'Yes' : 'No'}\n` +
-      `Hero Completed: ${progress?.heroCompleted ? 'Yes' : 'No'}\n` +
-      `Consecutive Days: ${progress?.consecutiveDays ?? 0}\n` +
-      `Pending Chest: ${progress?.pendingChest ? progress.pendingChest.levels.join(', ') : 'None'}`
+      `今日日期：${todayDate}\n` +
+      `今日游戏：${todayGame.id}\n` +
+      `今日是否通关：${progress?.todayCompleted ? '是' : '否'}\n` +
+      `英雄模式是否通关：${progress?.heroCompleted ? '是' : '否'}\n` +
+      `连续天数：${progress?.consecutiveDays ?? 0}\n` +
+      `待领取宝箱：${progress?.pendingChest ? progress.pendingChest.levels.join(', ') : '无'}`
     );
   };
 
   const handleNextDay = () => {
-    const confirmed = confirm('Move to next day simulation?');
+    const confirmed = confirm('确认切换到下一天调试吗？');
     if (!confirmed) {
       return;
     }
     advanceDebugDateByDays(1);
     refreshProgress();
-    alert(`Moved to next day: ${getTodayDateString()}`);
+    alert(`已切换到下一天：${getTodayDateString()}`);
   };
 
   const handleSkipCountdown = () => {
     if (!progress?.pendingChest) {
-      alert('No pending chest.');
+      alert('当前没有待领取宝箱。');
       return;
     }
     const now = new Date();
@@ -245,7 +353,7 @@ const Starlight: React.FC = () => {
     };
     saveProgress(updated);
     refreshProgress();
-    alert('Chest countdown skipped.');
+    alert('已跳过宝箱倒计时。');
   };
 
   const renderTooltip = (level: ChestLevel) => {
@@ -255,10 +363,10 @@ const Starlight: React.FC = () => {
       <View className="chest-tooltip" onClick={(e) => e.stopPropagation()}>
         <Text className="tooltip-title">{info.emoji} {info.name}:</Text>
         <View className="tooltip-rewards">
-          <Text className="tooltip-item">💰 {rewards.coins}</Text>
-          <Text className="tooltip-item">🧰 {rewards.props}</Text>
-          {rewards.lottery && <Text className="tooltip-item">🎫 {rewards.lottery}</Text>}
-          {rewards.physical && <Text className="tooltip-item">🎁 {rewards.physical}</Text>}
+          <Text className="tooltip-item">金币：{rewards.coins}</Text>
+          <Text className="tooltip-item">道具：{rewards.props}</Text>
+          {rewards.lottery && <Text className="tooltip-item">抽奖券：{rewards.lottery}</Text>}
+          {rewards.physical && <Text className="tooltip-item">实物：{rewards.physical}</Text>}
         </View>
       </View>
     );
@@ -270,54 +378,73 @@ const Starlight: React.FC = () => {
 
   const chestInfos = chestStatus.chest ? chestStatus.chest.levels.map((level) => getChestLevelInfo(level)) : null;
   const chestLevels = chestStatus.chest ? chestStatus.chest.levels : [];
-  const showFeedback = cardState === 'completed' || cardState === 'done';
+  const cardDisplay = getCardDisplayContext(
+    cardState,
+    todayGame.meta.energyReward,
+    progress.todayChestLevel || undefined
+  );
 
   return (
-    <View className="starlight">
+    <View className={`starlight starlight--${cardState}`}>
       <View className="starlight__header">
         <View className="streak-badge">
           <Text className="streak-badge__icon">🔥</Text>
           <Text className="streak-badge__count">{progress.consecutiveDays}</Text>
         </View>
-        <View className="debug-buttons">
-          <Text className="debug-btn" onClick={handleReset}>🔄</Text>
-          <Text className="debug-btn" onClick={handleTestWin}>🎯</Text>
-          <Text className="debug-btn" onClick={handleSkipCountdown}>⏭️</Text>
-          <Text className="debug-btn" onClick={handleNextDay}>📅</Text>
-          <Text className="debug-btn" onClick={handleShowStatus}>📊</Text>
-        </View>
+        {isDebugUiEnabled && (
+          <View className="debug-buttons">
+            <View className="debug-btn" onClick={handleReset}>
+              <Text className="debug-btn__icon">🔄</Text>
+              <Text className="debug-btn__label">清空数据</Text>
+            </View>
+            <View className="debug-btn" onClick={handleTestWin}>
+              <Text className="debug-btn__icon">🎯</Text>
+              <Text className="debug-btn__label">秒通调试</Text>
+            </View>
+            <View className="debug-btn" onClick={handleSkipCountdown}>
+              <Text className="debug-btn__icon">⏭️</Text>
+              <Text className="debug-btn__label">跳过倒计时</Text>
+            </View>
+            <View className="debug-btn" onClick={handleNextDay}>
+              <Text className="debug-btn__icon">📅</Text>
+              <Text className="debug-btn__label">切到明天</Text>
+            </View>
+            <View className="debug-btn" onClick={handleShowStatus}>
+              <Text className="debug-btn__icon">📊</Text>
+              <Text className="debug-btn__label">状态快照</Text>
+            </View>
+          </View>
+        )}
       </View>
 
       <View className="starlight__planet">
         <PlanetView progress={planetProgress} size="large" onClick={handlePlanetClick} />
-        <Text className="explore-hint">Tap planet to explore</Text>
+        <Text className="explore-hint">点击星球可进入探索</Text>
       </View>
-
-      <TodayGameCard
-        meta={todayGame.meta}
-        cardState={cardState}
-        bestLabel={bestTimeLabel}
-        chestLabel={progress.todayChestLevel || undefined}
-        onStart={handleStart}
-        onHero={handleHero}
-        onExit={handleCardDone}
-        feedbackSlot={
-          showFeedback ? (
-            <PreferenceFeedback value={feedback} onChange={handleFeedbackChange} />
-          ) : null
-        }
-      />
 
       <View className="starlight__chest">
         {chestStatus.status === 'none' && (
           <View className="chest-empty">
-            <Text className="empty-text">No chest available today</Text>
+            <Text className="empty-title">暂无宝箱</Text>
+            <Text className="empty-text">完成今日挑战后，将获得下一阶段奖励宝箱。</Text>
+          </View>
+        )}
+
+        {chestStatus.status === 'expired' && (
+          <View className="chest-empty chest-empty--expired" onClick={handleChestClick}>
+            <Text className="empty-title">宝箱已过期</Text>
+            <Text className="empty-text">该宝箱的领取时间已结束。</Text>
           </View>
         )}
 
         {(chestStatus.status === 'locked' || chestStatus.status === 'unlocked') && chestInfos && (
-          <View className={`chest-card ${chestStatus.status === 'locked' ? 'chest-locked' : 'chest-unlocked'}`} onClick={handleChestClick}>
-            <Text className="chest-card__label">Star reward chest</Text>
+          <View
+            className={`chest-card ${chestStatus.status === 'locked' ? 'chest-card--locked' : 'chest-card--unlocked'}`}
+            onClick={handleChestClick}
+          >
+            <Text className="chest-card__label">
+              {chestStatus.status === 'locked' ? '补给宝箱运输中' : '星光宝箱已就绪'}
+            </Text>
             <View className="chest-card__icons">
               {chestInfos.map((info, index) => (
                 <View key={index} className="chest-icon-wrapper" onClick={(e) => handleChestTooltip(index, e)}>
@@ -329,20 +456,34 @@ const Starlight: React.FC = () => {
             <Text className="chest-name">
               {chestInfos.length > 1 ? chestInfos.map((item) => item.name).join(' + ') : chestInfos[0].name}
             </Text>
-            <Text className="expire-hint">⏰ {countdown}</Text>
-            {chestStatus.status === 'unlocked' && <Button className="claim-btn" onClick={handleChestClick}>Claim</Button>}
+            <Text className="expire-hint">
+              {chestStatus.status === 'locked' ? `解锁倒计时 ${countdown}` : '点击领取奖励'}
+            </Text>
+            {chestStatus.status === 'unlocked' && <Button className="claim-btn" onClick={handleChestClick}>领取</Button>}
           </View>
         )}
+      </View>
+
+      <View className="starlight__mission">
+        <TodayGameCard
+          meta={todayGame.meta}
+          cardState={cardState}
+          display={cardDisplay}
+          onStart={handleStart}
+          onHero={handleHero}
+          onExit={handleGoToStarOcean}
+          feedbackSlot={null}
+        />
       </View>
 
       <View className="starlight__milestones">
         <StreakMilestones
           currentDays={progress.consecutiveDays}
           milestones={[
-            { days: 7, label: '7d reward' },
-            { days: 14, label: '14d sticker' },
-            { days: 30, label: '30d charm' },
-            { days: 60, label: '60d gift box' },
+            { days: 7, label: '7天奖励' },
+            { days: 14, label: '14天贴纸' },
+            { days: 30, label: '30天挂件' },
+            { days: 60, label: '60天礼盒' },
           ]}
         />
       </View>

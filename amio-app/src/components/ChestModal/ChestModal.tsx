@@ -30,7 +30,7 @@ const ChestModal: React.FC<ChestModalProps> = ({
     const isHeroMode = gameMode === GameMode.HERO;
     const chestInfos = chestLevels.map(level => getChestLevelInfo(level));
 
-    // 计算Hero模式可能升级到的等级（用于预览）
+    // Preview chest upgrade path for Hero challenge.
     const upgradedLevels = upgradeChestForHero(chestLevels[0]);
     const upgradedInfos = upgradedLevels.map(level => getChestLevelInfo(level));
 
@@ -38,7 +38,7 @@ const ChestModal: React.FC<ChestModalProps> = ({
         <View className="chest-modal-overlay">
             <View className="chest-modal">
                 <Text className="victory-text">
-                    {isHeroMode ? '🏆 Hero通关！' : '🎉 恭喜通关！'}
+                    {isHeroMode ? '🏆 英雄模式通关！' : '🎉 恭喜通关！'}
                 </Text>
 
                 <View className="chest-container">
@@ -60,7 +60,7 @@ const ChestModal: React.FC<ChestModalProps> = ({
                         }
                     </Text>
                     {isHeroMode && (
-                        <Text className="hero-bonus">🔥 Hero加成生效！</Text>
+                        <Text className="hero-bonus">🔥 英雄模式加成生效！</Text>
                     )}
                 </View>
 
@@ -76,27 +76,27 @@ const ChestModal: React.FC<ChestModalProps> = ({
                 </View>
 
                 <View className="feedback-section">
-                    <Text className="feedback-title">How did this run feel?</Text>
+                    <Text className="feedback-title">这局体验怎么样？</Text>
                     <View className="feedback-options">
                         <View
                             className={`feedback-option${feedback === 'liked' ? ' feedback-option--active' : ''}`}
                             onClick={() => onFeedbackChange?.('liked')}
                         >
-                            <Text>👍 Like</Text>
+                            <Text>👍 喜欢</Text>
                         </View>
                         <View
                             className={`feedback-option${feedback === 'disliked' ? ' feedback-option--active' : ''}`}
                             onClick={() => onFeedbackChange?.('disliked')}
                         >
-                            <Text>👎 Dislike</Text>
+                            <Text>👎 不喜欢</Text>
                         </View>
                     </View>
                 </View>
 
-                {/* 只在普通模式通关且可以挑战Hero时显示Hero区域 */}
+                {/* Hero prompt only appears after a normal clear when Hero mode is enabled. */}
                 {canChallengeHero && (
                     <View className="hero-section">
-                        <Text className="hero-title">🔥 挑战Hero模式？</Text>
+                        <Text className="hero-title">🔥 挑战英雄模式？</Text>
                         <Text className="hero-desc">
                             通关可升级为 {upgradedInfos.map(i => `${i.emoji} ${i.name}`).join(' + ')}
                         </Text>
@@ -111,7 +111,7 @@ const ChestModal: React.FC<ChestModalProps> = ({
                                 领取宝箱
                             </Button>
                             <Button className="btn-primary" onClick={onHeroChallenge}>
-                                挑战Hero！
+                                挑战英雄！
                             </Button>
                         </>
                     ) : (
