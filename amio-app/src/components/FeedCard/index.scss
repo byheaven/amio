@@ -1,0 +1,260 @@
+.feed-card {
+  background: var(--t-bg-muted);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+
+  &__body {
+    padding: 16px;
+  }
+
+  // === AI Aggregated Card ===
+  &--ai {
+    .feed-card__ai-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .feed-card__ai-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feed-card__ai-quote {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--t-text-secondary);
+      line-height: 1.5;
+    }
+
+    .feed-card__ai-content {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .feed-card__ai-thumb {
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: var(--t-bg-dark-inset);
+    }
+
+    .feed-card__ai-info {
+      flex: 1;
+    }
+
+    .feed-card__ai-title {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--t-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .feed-card__ai-source {
+      font-size: 12px;
+      color: var(--t-text-tertiary);
+    }
+  }
+
+  // === Image Text Post Card ===
+  &--post {
+    .feed-card__post-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .feed-card__post-avatar {
+      font-size: 24px;
+    }
+
+    .feed-card__post-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--t-text-primary);
+    }
+
+    .feed-card__post-content {
+      display: block;
+      font-size: 14px;
+      color: var(--t-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .feed-card__image-grid {
+      display: grid;
+      gap: 4px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .image-grid--1 {
+      grid-template-columns: 1fr;
+    }
+
+    .image-grid--2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .image-grid--3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .image-grid--4 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .image-grid--6 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .image-grid--9 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .feed-card__image-item {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--t-bg-dark-inset);
+      object-fit: cover;
+    }
+  }
+
+  // === Milestone Card ===
+  &--milestone {
+    text-align: center;
+    background: linear-gradient(
+      135deg,
+      rgba(74, 158, 255, 0.1) 0%,
+      rgba(106, 90, 249, 0.1) 100%
+    );
+    border: 1px solid var(--t-accent-primary-glow);
+    border-radius: 12px;
+
+    .feed-card__milestone-emoji {
+      display: block;
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .feed-card__milestone-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--t-accent-primary);
+      margin-bottom: 6px;
+    }
+
+    .feed-card__milestone-text {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--t-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .feed-card__milestone-participants {
+      font-size: 13px;
+      color: var(--t-text-secondary);
+    }
+  }
+
+  // === Star Express Card ===
+  &--express {
+    border-left: 3px solid var(--t-accent-secondary);
+
+    .feed-card__express-headline {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--t-accent-secondary);
+      margin-bottom: 8px;
+    }
+
+    .feed-card__express-text {
+      display: block;
+      font-size: 14px;
+      color: var(--t-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .feed-card__express-cta {
+      display: inline-flex;
+      padding: 8px 20px;
+      background: linear-gradient(
+        135deg,
+        var(--t-accent-secondary) 0%,
+        var(--t-accent-secondary-end) 100%
+      );
+      border-radius: 20px;
+    }
+
+    .feed-card__express-cta-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--t-text-on-primary);
+    }
+  }
+
+  // === Official Content Card ===
+  &--official {
+    .feed-card__official-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .feed-card__official-badge {
+      font-size: 20px;
+    }
+
+    .feed-card__official-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--t-text-primary);
+    }
+
+    .feed-card__official-summary {
+      display: block;
+      font-size: 14px;
+      color: var(--t-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .feed-card__official-cover {
+      width: 100%;
+      height: 160px;
+      border-radius: 8px;
+      background: var(--t-bg-dark-inset);
+      object-fit: cover;
+    }
+  }
+}
+
+// === Card Actions (shared) ===
+.card-actions {
+  display: flex;
+  gap: 24px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--t-border-default);
+
+  &__item {
+    font-size: 12px;
+    color: var(--t-text-tertiary);
+    cursor: pointer;
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}

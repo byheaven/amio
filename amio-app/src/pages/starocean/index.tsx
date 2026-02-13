@@ -1,107 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { View, ScrollView } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
-import PlanetView from '../../components/PlanetView';
+import { ContentTab, FeedItem, PlanetPulseData } from '../../constants/starOcean';
 import { syncPlanetProgress } from '../../utils/energyLogic';
+import { MOCK_PLANET_PULSE, AI_TAGLINES, getMockFeedByTab } from '../../mocks/starOceanMock';
+import PlanetPulse from '../../components/PlanetPulse';
+import ContentTabBar from '../../components/ContentTabBar';
+import ContentFeed from '../../components/ContentFeed';
+import FloatingPostButton from '../../components/FloatingPostButton';
 import './index.scss';
 
+const ALL_TABS = [
+  ContentTab.RECOMMEND,
+  ContentTab.HOT,
+  ContentTab.PLANET_UPDATE,
+  ContentTab.CREATION,
+  ContentTab.COMPETITION,
+];
+
 const StarOcean: React.FC = () => {
-  const [planetProgress, setPlanetProgress] = useState(67.3);
-  const [activeUsers, setActiveUsers] = useState(12847);
+  const [planetPulse, setPlanetPulse] = useState<PlanetPulseData>(MOCK_PLANET_PULSE);
+  const [activeTab, setActiveTab] = useState<ContentTab>(ContentTab.RECOMMEND);
+  const [feedItems, setFeedItems] = useState<FeedItem[]>(getMockFeedByTab(ContentTab.RECOMMEND));
+  const [currentTagline, setCurrentTagline] = useState<string>(AI_TAGLINES[0]);
+  const taglineIndexRef = useRef(0);
 
-  // 加载数据的函数
-  const refreshData = () => {
-    syncPlanetProgress().then(data => {
-      setPlanetProgress(data.progress);
-      setActiveUsers(data.activeUsers);
-    });
-  };
-
-  // 页面挂载时加载
+  // Rotate AI tagline every 8 seconds
   useEffect(() => {
-    refreshData();
+    const timer = setInterval(() => {
+      taglineIndexRef.current = (taglineIndexRef.current + 1) % AI_TAGLINES.length;
+      setCurrentTagline(AI_TAGLINES[taglineIndexRef.current]);
+    }, 8000);
+    return () => clearInterval(timer);
   }, []);
 
-  // 页面显示时刷新（从游戏页面返回时）
+  // Refresh planet data
+  const refreshData = useCallback(() => {
+    syncPlanetProgress().then((data) => {
+      setPlanetPulse({
+        progress: data.progress,
+        dailyChange: MOCK_PLANET_PULSE.dailyChange,
+        onlineCount: data.activeUsers,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  // Refresh on tab show (tab bar pages stay in memory)
   useDidShow(() => {
     refreshData();
   });
 
+  const handleTabChange = useCallback((tab: ContentTab) => {
+    setActiveTab(tab);
+    setFeedItems(getMockFeedByTab(tab));
+  }, []);
+
+  const handleLike = useCallback((id: string) => {
+    console.log('Like:', id);
+  }, []);
+
+  const handleComment = useCallback((id: string) => {
+    console.log('Comment:', id);
+  }, []);
+
+  const handleShare = useCallback((id: string) => {
+    console.log('Share:', id);
+  }, []);
+
+  const handlePostTap = useCallback(() => {
+    Taro.showToast({ title: '即将开放', icon: 'none' });
+  }, []);
+
   return (
     <View className="star-ocean">
-      {/* Header */}
-      <View className="star-ocean__header">
-        <Text className="star-ocean__title">🌊 星海</Text>
-        <Text className="star-ocean__notify">🔔</Text>
-      </View>
-
-      {/* Introduction */}
-      <View className="star-ocean__intro">
-        <Text className="intro-text">分享你的故事，为鲨之星贡献💡智慧能量，留下属于你的星际记忆</Text>
-      </View>
-
-      <ScrollView className="star-ocean__content" scrollY>
-        {/* Planet Card */}
-        <View className="planet-card">
-          <PlanetView progress={planetProgress} size="small" showLabel={false} />
-          <View className="planet-card__stats">
-            <Text className="stat">已苏醒 {planetProgress.toFixed(1)}%</Text>
-            <Text className="stat">今日 {activeUsers.toLocaleString()} 人在线</Text>
-            <Text className="stat">今日全服 +0.12%</Text>
-          </View>
-        </View>
-
-        {/* Planet Ranking */}
-        <View className="section">
-          <Text className="section__title">星际开发进度榜</Text>
-          <ScrollView className="planet-rankings" scrollX>
-            <View className="ranking-card ranking-card--current">
-              <Text className="ranking-card__icon">🦈</Text>
-              <Text className="ranking-card__rank">#1</Text>
-              <Text className="ranking-card__name">鲨之星</Text>
-              <Text className="ranking-card__progress">67.3%</Text>
-            </View>
-            <View className="ranking-card">
-              <Text className="ranking-card__icon">🐟</Text>
-              <Text className="ranking-card__rank">#2</Text>
-              <Text className="ranking-card__name">鳗鱼星</Text>
-              <Text className="ranking-card__progress">61.8%</Text>
-            </View>
-            <View className="ranking-card">
-              <Text className="ranking-card__icon">🌙</Text>
-              <Text className="ranking-card__rank">#3</Text>
-              <Text className="ranking-card__name">月光星</Text>
-              <Text className="ranking-card__progress">58.2%</Text>
-            </View>
-          </ScrollView>
-        </View>
-
-        {/* Community Feed */}
-        <View className="section">
-          <Text className="section__title">社区动态</Text>
-          <View className="feed-item">
-            <Text className="feed-item__badge">📢</Text>
-            <View className="feed-item__content">
-              <Text className="feed-item__title">鲨之星今日突破67%！</Text>
-              <Text className="feed-item__desc">距离下一个里程碑"飞船就绪"还需12.7%</Text>
-            </View>
-          </View>
-          <View className="feed-item">
-            <Text className="feed-item__avatar">🦈</Text>
-            <View className="feed-item__content">
-              <Text className="feed-item__author">鲨鱼小明</Text>
-              <Text className="feed-item__text">今天Hero模式一把过！太爽了 🎉</Text>
-              <View className="feed-item__actions">
-                <Text>❤️ 234</Text>
-                <Text>💬 56</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+      <PlanetPulse
+        progress={planetPulse.progress}
+        dailyChange={planetPulse.dailyChange}
+        onlineCount={planetPulse.onlineCount}
+        aiTagline={currentTagline}
+      />
+      <ScrollView scrollY className="star-ocean__body">
+        <ContentTabBar
+          tabs={ALL_TABS}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
+        <ContentFeed
+          items={feedItems}
+          onLike={handleLike}
+          onComment={handleComment}
+          onShare={handleShare}
+        />
       </ScrollView>
-
-      {/* Floating Post Button */}
-      <View className="post-button">✏️</View>
+      <FloatingPostButton onTap={handlePostTap} />
     </View>
   );
 };
