@@ -9,7 +9,7 @@ interface MockState extends GameState {
 
 const MockComponent: React.FC = () => (
   <View>
-    <Text>Mock Game</Text>
+    <Text>演示游戏</Text>
   </View>
 );
 
@@ -26,8 +26,8 @@ const mockPlugin: GamePlugin<MockState> = {
   id: 'mock',
   meta: {
     id: 'mock',
-    narrativeName: 'Mock Game',
-    narrativeDesc: 'Smoke test plugin.',
+    narrativeName: '演示游戏',
+    narrativeDesc: '用于冒烟验证的示例插件。',
     icon: '🧪',
     thumbnailComponent: MockComponent,
     energyReward: 1,
@@ -47,7 +47,7 @@ const mockPlugin: GamePlugin<MockState> = {
   }),
   getTools: () => [],
   useTool: (state) => state,
-  getHeroConfig: () => ({ enabled: false, mode: 'hero', description: 'Not supported.' }),
+  getHeroConfig: () => ({ enabled: false, mode: 'hero', description: '暂不支持。' }),
   GameComponent: MockComponent,
 };
 

@@ -17,7 +17,6 @@ describe('starlight/today-game-card', () => {
           energyReward: 120,
         }}
         cardState="idle"
-        bestLabel="01:22"
         onStart={() => {}}
         onHero={() => {}}
         onExit={() => {}}
@@ -25,7 +24,6 @@ describe('starlight/today-game-card', () => {
       {}
     );
 
-    expect(tree.container.textContent).toContain('Star Chart Decode');
-    expect(tree.container.textContent).toContain('01:22');
+    expect(tree.container.textContent).toContain('+120');
   });
 });

@@ -30,9 +30,6 @@
       ),
       var(--t-bg-glass-full);
 
-    backdrop-filter: var(--t-glass-blur);
-    -webkit-backdrop-filter: var(--t-glass-blur);
-
     border-radius: var(--radius-xl);
     border: 1.5px solid var(--t-border-light);
 

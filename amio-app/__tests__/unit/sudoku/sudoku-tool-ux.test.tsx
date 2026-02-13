@@ -24,7 +24,7 @@ describe('sudoku/tool-ux', () => {
       {}
     );
 
-    expect(tree.container.textContent).toContain('Select an editable cell first.');
+    expect(tree.container.textContent).toContain('请先选择可填写的格子。');
     expect(tree.container.querySelector('.icon-selector--disabled')).not.toBeNull();
   });
 
@@ -36,7 +36,7 @@ describe('sudoku/tool-ux', () => {
 
     expect(next.grid).toEqual(before);
     expect(next.lastUnavailableAction).toBe('check');
-    expect(next.uiMessage).toBe('Check is unavailable in MVP.');
+    expect(next.uiMessage).toBe('MVP 阶段暂不开放校验功能。');
   });
 
   test('hint consumes exactly one use and then becomes unavailable', () => {
@@ -44,11 +44,11 @@ describe('sudoku/tool-ux', () => {
 
     state = sudokuPlugin.useTool(state, 'hint');
     expect(state.hintUsed).toBe(1);
-    expect(state.uiMessage).toBe('Hint filled one cell.');
+    expect(state.uiMessage).toBe('已自动填写一个格子。');
 
     const second = sudokuPlugin.useTool(state, 'hint');
     expect(second.hintUsed).toBe(1);
     expect(second.lastUnavailableAction).toBe('hint');
-    expect(second.uiMessage).toBe('Hint has already been used.');
+    expect(second.uiMessage).toBe('提示次数已用完。');
   });
 });

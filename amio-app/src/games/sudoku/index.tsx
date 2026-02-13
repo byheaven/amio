@@ -86,7 +86,7 @@ const evaluateSudokuState = (state: SudokuState): SudokuState => {
   return {
     ...state,
     errorCells: errors,
-    uiMessage: 'There are incorrect cells. Fix the highlighted cells.',
+    uiMessage: '存在错误格子，请修正高亮位置。',
   };
 };
 
@@ -124,7 +124,7 @@ const setCellValue = (state: SudokuState, value: string | null): SudokuState => 
   if (!state.selectedCell) {
     return {
       ...state,
-      uiMessage: 'Select an editable cell first.',
+      uiMessage: '请先选择可填写的格子。',
     };
   }
 
@@ -132,7 +132,7 @@ const setCellValue = (state: SudokuState, value: string | null): SudokuState => 
   if (!canEditCell(state, row, col)) {
     return {
       ...state,
-      uiMessage: 'This cell is fixed and cannot be changed.',
+      uiMessage: '该格子为固定数字，无法修改。',
     };
   }
 
@@ -162,12 +162,12 @@ const findHintCell = (state: SudokuState): { row: number; col: number } | null =
 
 const getSelectorDisabledReason = (state: SudokuState): string | null => {
   if (!state.selectedCell) {
-    return 'Select an editable cell first.';
+    return '请先选择可填写的格子。';
   }
 
   const { row, col } = state.selectedCell;
   if (!canEditCell(state, row, col)) {
-    return 'This cell is fixed and cannot be changed.';
+    return '该格子为固定数字，无法修改。';
   }
 
   return null;
@@ -202,8 +202,8 @@ const SudokuGameComponent: React.FC<GameComponentProps<SudokuState>> = ({ state,
   const checkUnavailable = remainingCheck <= 0;
 
   return (
-    <View className="sudoku-game">
-      <Text className="sudoku-game__title">Sudoku</Text>
+    <View className={`sudoku-game ${mode === 'hero' ? 'sudoku-game--hero' : ''}`}>
+      <Text className="sudoku-game__title">星图解码</Text>
       {mode === 'hero' && <HeroTimer remainingSeconds={state.remainingSeconds} totalSeconds={180} />}
       <SudokuBoard
         size={state.puzzle.size}
@@ -224,13 +224,13 @@ const SudokuGameComponent: React.FC<GameComponentProps<SudokuState>> = ({ state,
       />
       <View className="sudoku-tools">
         <View className={`sudoku-tools__item${remainingHint <= 0 ? ' sudoku-tools__item--disabled' : ''}`} onClick={() => onUseTool('hint')}>
-          <Text>💡 Hint {remainingHint}/{state.maxHint}</Text>
+          <Text>💡 提示 {remainingHint}/{state.maxHint}</Text>
         </View>
         <View
           className={`sudoku-tools__item${checkUnavailable ? ' sudoku-tools__item--disabled' : ''}`}
           onClick={() => onUseTool('check')}
         >
-          <Text>✅ Check {remainingCheck}/{state.maxCheck}</Text>
+          <Text>✅ 校验 {remainingCheck}/{state.maxCheck}</Text>
         </View>
       </View>
       {state.uiMessage && <Text className="sudoku-message">{state.uiMessage}</Text>}
@@ -242,8 +242,8 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
   id: 'sudoku',
   meta: {
     id: 'sudoku',
-    narrativeName: 'Star Chart Decode',
-    narrativeDesc: 'Decode ancient coordinates by solving icon Sudoku.',
+    narrativeName: '星图解码',
+    narrativeDesc: '',
     icon: '🔮',
     thumbnailComponent: SudokuThumbnail,
     energyReward: 120,
@@ -262,13 +262,13 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
         if (typeof row !== 'number' || typeof col !== 'number') {
           return {
             ...state,
-            uiMessage: 'Invalid cell selection.',
+            uiMessage: '无效的格子选择。',
           };
         }
         if (!isInBounds(state, row, col)) {
           return {
             ...state,
-            uiMessage: 'Invalid cell selection.',
+            uiMessage: '无效的格子选择。',
           };
         }
 
@@ -276,7 +276,7 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
           return {
             ...state,
             selectedCell: { row, col },
-            uiMessage: 'This cell is fixed and cannot be changed.',
+            uiMessage: '该格子为固定数字，无法修改。',
           };
         }
 
@@ -291,13 +291,13 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
         if (typeof symbol !== 'string') {
           return {
             ...state,
-            uiMessage: 'Invalid symbol selection.',
+            uiMessage: '无效的符号选择。',
           };
         }
         if (!state.puzzle.symbols.includes(symbol)) {
           return {
             ...state,
-            uiMessage: 'Invalid symbol selection.',
+            uiMessage: '无效的符号选择。',
           };
         }
         return setCellValue(state, symbol);
@@ -343,8 +343,8 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
     },
   }),
   getTools: () => [
-    { id: 'hint', name: 'Hint', description: 'Fill one cell with a correct symbol.', freeUses: 1 },
-    { id: 'check', name: 'Check', description: 'Unavailable in MVP. Paid flow will be added later.', freeUses: 0 },
+    { id: 'hint', name: '提示', description: '自动填写一个正确格子。', freeUses: 1 },
+    { id: 'check', name: '校验', description: 'MVP 阶段暂未开放，后续版本补充。', freeUses: 0 },
   ],
   useTool: (state: SudokuState, toolId: string): SudokuState => {
     if (state.status !== 'playing') {
@@ -356,7 +356,7 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
         return {
           ...state,
           lastUnavailableAction: 'hint',
-          uiMessage: 'Hint has already been used.',
+          uiMessage: '提示次数已用完。',
         };
       }
 
@@ -364,7 +364,7 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
       if (!target) {
         return {
           ...state,
-          uiMessage: 'No available cell for hint.',
+          uiMessage: '当前没有可提示的格子。',
         };
       }
 
@@ -376,7 +376,7 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
         hintUsed: state.hintUsed + 1,
         toolsUsed: state.toolsUsed + 1,
         lastUnavailableAction: null,
-        uiMessage: 'Hint filled one cell.',
+        uiMessage: '已自动填写一个格子。',
       });
     }
 
@@ -385,7 +385,7 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
         return {
           ...state,
           lastUnavailableAction: 'check',
-          uiMessage: 'Check is unavailable in MVP.',
+          uiMessage: 'MVP 阶段暂不开放校验功能。',
         };
       }
 
@@ -400,14 +400,14 @@ const sudokuPlugin: GamePlugin<SudokuState> = {
 
     return {
       ...state,
-      uiMessage: 'Unknown tool action.',
+      uiMessage: '未知的道具操作。',
     };
   },
   getHeroConfig: () => ({
     enabled: true,
     mode: 'hero',
     timeLimitSeconds: 180,
-    description: '6x6 Sudoku with a 3-minute countdown.',
+    description: '6x6 图标数独，限时 3 分钟。',
   }),
   GameComponent: SudokuGameComponent,
 };

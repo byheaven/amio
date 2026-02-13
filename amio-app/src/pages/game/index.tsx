@@ -8,6 +8,7 @@ import { registerBuiltInGames } from '@/games/registry';
 import { GamePlugin } from '@/types/game-plugin';
 import ChestModal from '@/components/ChestModal/ChestModal';
 import StoryModal from '@/components/StoryModal/StoryModal';
+import { uiEventLogger } from '@/services/ui-event-logger';
 import {
   getTodayDateString,
   getNextStoryDay,
@@ -20,6 +21,9 @@ import {
 import { ChestLevel, GameMode, GameStats } from '@/constants/game';
 import { upgradeChestForHero } from '@/utils/chestLogic';
 import './index.scss';
+
+const USER_ID = 'local-user';
+const isDebugUiEnabled = process.env.NODE_ENV !== 'production';
 
 const mapMode = (mode: 'normal' | 'hero'): GameMode => {
   return mode === 'hero' ? GameMode.HERO : GameMode.NORMAL;
@@ -76,15 +80,15 @@ const GamePage: React.FC = () => {
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [storyChecked, setStoryChecked] = useState(false);
   const autoWinHandledRef = useRef(false);
+  const loggedResultRef = useRef('');
 
   const date = useMemo(() => getTodayDateString(), []);
-  const userId = 'local-user';
 
   useEffect(() => {
     registerBuiltInGames();
 
     const engine = engineRef.current;
-    const todayGame = requestedGameId || engine.getTodayGame(userId, date).id;
+    const todayGame = requestedGameId || engine.getTodayGame(USER_ID, date).id;
 
     try {
       const selectedPlugin = gameRegistry.get(todayGame);
@@ -93,7 +97,7 @@ const GamePage: React.FC = () => {
       const initialState = engine.startGame({
         mode: modeParam,
         date,
-        userId,
+        userId: USER_ID,
       });
       setState(initialState as unknown as GameState);
       setFinalized(false);
@@ -103,10 +107,35 @@ const GamePage: React.FC = () => {
       setStoryDay(0);
       setShowStoryModal(false);
       setStoryChecked(false);
+      loggedResultRef.current = '';
+
+      uiEventLogger.append({
+        userId: USER_ID,
+        date,
+        event: 'game_started',
+        metadata: {
+          gameType: selectedPlugin.id,
+          mode: modeParam,
+          source: router.params.autowin === 'true' ? 'debug_autowin' : 'starlight',
+        },
+      });
     } catch (error) {
       console.error('Failed to start game:', error);
     }
-  }, [date, modeParam, requestedGameId]);
+  }, [date, modeParam, requestedGameId, router.params.autowin]);
+
+  useEffect(() => {
+    if (!state || !plugin || state.status !== 'playing' || modeParam !== 'hero' || plugin.id !== 'sudoku') {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      const next = engineRef.current.dispatch({ type: 'tick', payload: { deltaSeconds: 1 } });
+      setState(next as unknown as GameState);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [modeParam, plugin, state]);
 
   useEffect(() => {
     if (!state || !plugin || state.status !== 'cleared' || storyChecked) {
@@ -149,17 +178,33 @@ const GamePage: React.FC = () => {
   }, [router.params.autowin, state]);
 
   useEffect(() => {
-    if (!state || !plugin || state.status !== 'playing' || modeParam !== 'hero' || plugin.id !== 'sudoku') {
+    if (!state || !plugin) {
       return;
     }
 
-    const timer = setInterval(() => {
-      const next = engineRef.current.dispatch({ type: 'tick', payload: { deltaSeconds: 1 } });
-      setState(next as unknown as GameState);
-    }, 1000);
+    const eventName = state.status === 'cleared' ? 'game_cleared' : state.status === 'failed' ? 'game_failed' : null;
+    if (!eventName) {
+      return;
+    }
 
-    return () => clearInterval(timer);
-  }, [modeParam, plugin, state]);
+    const logKey = `${plugin.id}:${modeParam}:${state.startedAt}:${state.status}`;
+    if (loggedResultRef.current === logKey) {
+      return;
+    }
+    loggedResultRef.current = logKey;
+
+    uiEventLogger.append({
+      userId: USER_ID,
+      date,
+      event: eventName,
+      metadata: {
+        gameType: plugin.id,
+        mode: modeParam,
+        attempts: state.attempts,
+        toolsUsed: state.toolsUsed,
+      },
+    });
+  }, [date, modeParam, plugin, state]);
 
   useEffect(() => {
     if (!state || !plugin || state.status !== 'cleared' || settlement) {
@@ -180,8 +225,14 @@ const GamePage: React.FC = () => {
 
     const payload = engineRef.current.enterSettlement(result);
     setSettlement(payload);
-    setShowSettlement(true);
   }, [feedback, modeParam, plugin, settlement, state]);
+
+  useEffect(() => {
+    if (!settlement || showStoryModal || showSettlement || finalized) {
+      return;
+    }
+    setShowSettlement(true);
+  }, [finalized, settlement, showSettlement, showStoryModal]);
 
   const handleAction = (type: string, payload?: Record<string, unknown>) => {
     if (!state) {
@@ -297,33 +348,46 @@ const GamePage: React.FC = () => {
     'game-page',
     modeParam === 'hero' ? 'hero-mode' : '',
     plugin.id === 'sudoku' ? 'game-page--sudoku' : '',
+    plugin.id === '3tiles' ? 'game-page--three-tiles' : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
     <View className={pageClassName}>
-      <View className="header">
+      {plugin.id === '3tiles' && (
+        <>
+          <View className="game-page__ambient game-page__ambient--one" />
+          <View className="game-page__ambient game-page__ambient--two" />
+        </>
+      )}
+
+      <View className={`header ${modeParam === 'hero' ? 'hero-header' : ''}`}>
         <View className="stats-row">
-          <Text className="day-text">{plugin.meta.narrativeName}</Text>
-          <Text className="attempt-text">Attempt {state.attempts}</Text>
+          <Text className={`day-text ${modeParam === 'hero' ? 'hero-title' : ''}`}>{plugin.meta.narrativeName}</Text>
+          <Text className={`attempt-text ${modeParam === 'hero' ? 'hero-attempt' : ''}`}>第 {state.attempts} 局</Text>
         </View>
         <View className="header-right">
-          <Button className="test-win-btn" onClick={handleTestWin}>
-            🎯 One-Click Win
-          </Button>
+          {isDebugUiEnabled && (
+            <Button className="test-win-btn" onClick={handleTestWin}>
+              <Text className="test-win-btn__icon">🎯</Text>
+              <Text className="test-win-btn__label">秒通调试</Text>
+            </Button>
+          )}
           <View className="tools-status">
-            <Text>Tools: {state.toolsUsed}</Text>
+            <Text>已用道具：{state.toolsUsed}</Text>
           </View>
         </View>
       </View>
 
-      <PluginComponent
-        state={state}
-        onAction={(action) => handleAction(action.type, action.payload)}
-        onUseTool={handleUseTool}
-        mode={modeParam}
-      />
+      <View className="game-page__content">
+        <PluginComponent
+          state={state}
+          onAction={(action) => handleAction(action.type, action.payload)}
+          onUseTool={handleUseTool}
+          mode={modeParam}
+        />
+      </View>
 
       {showStoryModal && modeParam === 'normal' && (
         <StoryModal storyDay={storyDay} onComplete={handleStoryComplete} />
@@ -331,15 +395,17 @@ const GamePage: React.FC = () => {
 
       {state.status === 'failed' && (
         <View className="overlay">
-          <View className="lost-modal">
-            <Text className="lost-title">Challenge failed</Text>
-            <Button className="retry-btn" onClick={() => handleAction('retry')}>Retry</Button>
+          <View className={`lost-modal ${modeParam === 'hero' ? 'hero-lost' : ''}`}>
+            <Text className="lost-symbol">✦</Text>
+            <Text className="lost-title">这局差一点</Text>
+            <Text className="lost-msg">先喘口气，再来一次。</Text>
+            <Button className="retry-btn" onClick={() => handleAction('retry')}>再试一次</Button>
             {modeParam === 'hero' && (
               <Button className="claim-btn-secondary" onClick={() => navigateToStarlight()}>
-                Claim Current Chest
+                保留当前宝箱
               </Button>
             )}
-            <Button className="claim-btn-secondary" onClick={() => navigateToStarlight()}>Exit</Button>
+            <Button className="claim-btn-secondary" onClick={() => navigateToStarlight()}>返回星光页</Button>
           </View>
         </View>
       )}

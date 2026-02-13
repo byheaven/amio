@@ -62,7 +62,7 @@ defineFeature(feature, (test) => {
     then('the board should remain unchanged and unavailable reason should be visible', () => {
       expect(state.grid).toEqual(beforeGrid);
       expect(state.lastUnavailableAction).toBe('check');
-      expect((state as SudokuState & { uiMessage?: string | null }).uiMessage).toBe('Check is unavailable in MVP.');
+      expect((state as SudokuState & { uiMessage?: string | null }).uiMessage).toBe('MVP 阶段暂不开放校验功能。');
     });
   });
 });

@@ -4,7 +4,12 @@
 
 .chest-modal-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: linear-gradient(
     180deg,
     var(--t-bg-overlay) 0%,
@@ -13,10 +18,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: var(--z-modal);
-  animation: fadeIn 0.4s ease-out;
-  backdrop-filter: var(--t-glass-blur-heavy);
-  -webkit-backdrop-filter: var(--t-glass-blur-heavy);
+  z-index: 9999;
+  animation: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .chest-modal {
@@ -41,7 +46,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: slideUp 0.5s var(--transition-bounce);
+  animation: none;
 
   position: relative;
   overflow: hidden;
@@ -59,7 +64,7 @@
       transparent 100%
     );
     pointer-events: none;
-  }
+}
 
   .victory-text {
     font-size: var(--font-size-xl);
@@ -80,7 +85,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 3s linear infinite;
+    animation: none;
   }
 
   .chest-container {
@@ -104,7 +109,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
 
     &::before {
       content: '';
@@ -116,7 +121,7 @@
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      animation: rotate 3s linear infinite;
+      animation: none;
     }
 
     .chest-emoji {

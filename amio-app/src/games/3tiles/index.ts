@@ -22,8 +22,8 @@ const threeTilesPlugin: GamePlugin<ThreeTilesState> = {
   id: '3tiles',
   meta: {
     id: '3tiles',
-    narrativeName: 'Three Tiles',
-    narrativeDesc: 'Match three tiles and clear all stacks.',
+    narrativeName: '星潮同调',
+    narrativeDesc: '',
     icon: '🀄️',
     thumbnailComponent: ThreeTilesThumbnail,
     energyReward: 120,
@@ -34,9 +34,9 @@ const threeTilesPlugin: GamePlugin<ThreeTilesState> = {
   getStatus: getThreeTilesStatus,
   getPerformance: getThreeTilesPerformance,
   getTools: () => [
-    { id: 'undo', name: 'Undo', description: 'Move last slot tile back to board.', freeUses: 1 },
-    { id: 'pop', name: 'Pop', description: 'Move front slot tiles to temp stacks.', freeUses: 1 },
-    { id: 'shuffle', name: 'Shuffle', description: 'Shuffle board positions.', freeUses: 1 },
+    { id: 'undo', name: '回退', description: '将槽位最后一个图块退回棋盘。', freeUses: 1 },
+    { id: 'pop', name: '抽离', description: '把槽位前面的图块临时移出。', freeUses: 1 },
+    { id: 'shuffle', name: '洗牌', description: '重新打乱棋盘图块位置。', freeUses: 1 },
   ],
   useTool: useThreeTilesTool,
   getHeroConfig: () => threeTilesHeroConfig,

@@ -14,9 +14,6 @@
     var(--t-game-slot-bg-end) 100%
   );
 
-  backdrop-filter: var(--t-glass-blur-heavy);
-  -webkit-backdrop-filter: var(--t-glass-blur-heavy);
-
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--t-game-slot-border);
   border-bottom: 3px solid var(--t-game-slot-border-bottom);

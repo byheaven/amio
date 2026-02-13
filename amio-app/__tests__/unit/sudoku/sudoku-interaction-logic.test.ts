@@ -31,7 +31,7 @@ describe('sudoku/interaction-logic', () => {
     });
 
     expect(next.selectedCell).toBeNull();
-    expect(next.uiMessage).toBe('Invalid cell selection.');
+    expect(next.uiMessage).toBe('无效的格子选择。');
   });
 
   test('given cell stays immutable with lock feedback', () => {
@@ -46,7 +46,7 @@ describe('sudoku/interaction-logic', () => {
     });
 
     expect(state.grid[given.row][given.col]).toBe(before);
-    expect(state.uiMessage).toBe('This cell is fixed and cannot be changed.');
+    expect(state.uiMessage).toBe('该格子为固定数字，无法修改。');
   });
 
   test('invalid symbol payload is ignored safely', () => {
@@ -60,7 +60,7 @@ describe('sudoku/interaction-logic', () => {
     });
 
     expect(state.grid[editable.row][editable.col]).toBeNull();
-    expect(state.uiMessage).toBe('Invalid symbol selection.');
+    expect(state.uiMessage).toBe('无效的符号选择。');
   });
 
   test('fill with wrong values keeps playing and correcting all editable cells clears', () => {
@@ -103,7 +103,7 @@ describe('sudoku/interaction-logic', () => {
 
     state = sudokuPlugin.handleAction(state, { type: 'select_cell', payload: editable });
     state = sudokuPlugin.handleAction(state, { type: 'input_symbol', payload: { symbol: 'invalid' } });
-    expect(state.uiMessage).toBe('Invalid symbol selection.');
+    expect(state.uiMessage).toBe('无效的符号选择。');
 
     const retried = sudokuPlugin.handleAction(state, { type: 'retry' });
     expect(retried.uiMessage).toBeNull();

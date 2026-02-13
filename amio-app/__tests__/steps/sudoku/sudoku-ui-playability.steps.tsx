@@ -156,7 +156,7 @@ defineFeature(feature, (test) => {
         throw new Error('Given cell not found');
       }
       expect(state.grid[givenCell.row][givenCell.col]).toBe(originalValue);
-      expect((state as SudokuState & { uiMessage?: string | null }).uiMessage).toBe('This cell is fixed and cannot be changed.');
+      expect((state as SudokuState & { uiMessage?: string | null }).uiMessage).toBe('该格子为固定数字，无法修改。');
     });
   });
 

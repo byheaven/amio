@@ -35,7 +35,7 @@ describe('components/GameSettlement', () => {
       {}
     );
 
-    expect(tree.container.textContent).toContain('Challenge Hero');
-    expect(tree.container.textContent).toContain('diamond');
+    expect(tree.container.textContent).toContain('挑战英雄模式');
+    expect(tree.container.textContent).toContain('宝箱：钻石');
   });
 });

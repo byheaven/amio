@@ -1,0 +1,42 @@
+.three-tiles-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--space-3);
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 20% 18%, var(--t-accent-primary-glow) 0%, transparent 45%),
+    linear-gradient(160deg, rgba(6, 14, 28, 0.46) 0%, rgba(6, 14, 28, 0.1) 100%);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 14, 28, 0.15) 0%, rgba(7, 14, 28, 0.5) 100%);
+    pointer-events: none;
+  }
+
+  &__title {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(34px, 10vw, 50px);
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: 0.06em;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.48);
+  }
+
+  &__subtitle {
+    position: relative;
+    z-index: 1;
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: 0.18em;
+  }
+}

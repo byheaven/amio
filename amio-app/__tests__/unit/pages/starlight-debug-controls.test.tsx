@@ -93,12 +93,12 @@ describe('pages/starlight debug controls regressions', () => {
   test('renders debug buttons and next-day button calls date advance', async () => {
     const tree = render(<StarlightPage />, {});
 
-    expect(tree.container.textContent).toContain('📅');
-    expect(tree.container.textContent).toContain('🎯');
+    expect(tree.container.textContent).toContain('切到明天');
+    expect(tree.container.textContent).toContain('秒通调试');
 
     await act(async () => {
       const buttons = Array.from(tree.container.querySelectorAll('.debug-btn')) as HTMLElement[];
-      const nextDayButton = buttons.find((item) => item.textContent === '📅');
+      const nextDayButton = buttons.find((item) => item.textContent?.includes('切到明天'));
       if (!nextDayButton) {
         throw new Error('Next-day debug button not found');
       }

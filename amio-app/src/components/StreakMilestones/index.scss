@@ -1,12 +1,16 @@
+@import '../../styles/themes/mixins';
+
 .streak-milestones {
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(2, 6, 23, 0.55);
+  @include glass-card;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
 
   &__title {
     display: block;
-    color: #fff;
-    margin-bottom: 10px;
+    color: var(--t-text-primary);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
   }
 
   &__scroll {
@@ -16,39 +20,44 @@
 
   &__items {
     display: flex;
-    gap: 16px;
-    padding-bottom: 4px;
+    gap: var(--space-3);
+    padding-bottom: var(--space-1);
   }
 
   &__item {
     min-width: 98px;
     text-align: center;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--t-border-default);
+    background: var(--t-bg-ultra-muted);
   }
 
   &__dot {
     display: block;
-    color: #64748b;
+    color: var(--t-text-muted);
+    font-size: var(--font-size-lg);
 
     &.is-completed {
-      color: #facc15;
+      color: var(--t-accent-gold);
     }
 
     &.is-next {
-      color: #38bdf8;
+      color: var(--t-accent-primary);
     }
   }
 
   &__label {
     display: block;
-    margin-top: 6px;
-    color: #e2e8f0;
-    font-size: 12px;
+    margin-top: var(--space-1);
+    color: var(--t-text-secondary);
+    font-size: var(--font-size-xs);
   }
 
   &__hint {
     display: block;
-    margin-top: 4px;
-    color: #38bdf8;
-    font-size: 11px;
+    margin-top: 2px;
+    color: var(--t-accent-primary);
+    font-size: var(--font-size-xs);
   }
 }

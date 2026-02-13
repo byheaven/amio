@@ -4,7 +4,7 @@ import ChestModal from '@/components/ChestModal/ChestModal';
 import { ChestLevel, GameMode } from '@/constants/game';
 
 describe('components/chest-modal-feedback', () => {
-  test('renders like/dislike options and emits feedback change', () => {
+  test('renders feedback options and emits feedback change', () => {
     const onFeedbackChange = jest.fn();
 
     const tree = render(
@@ -28,8 +28,8 @@ describe('components/chest-modal-feedback', () => {
       {}
     );
 
-    expect(tree.container.textContent).toContain('Like');
-    expect(tree.container.textContent).toContain('Dislike');
+    expect(tree.container.textContent).toContain('喜欢');
+    expect(tree.container.textContent).toContain('不喜欢');
 
     const options = Array.from(tree.container.querySelectorAll('.feedback-option')) as HTMLElement[];
     if (options.length < 2) {

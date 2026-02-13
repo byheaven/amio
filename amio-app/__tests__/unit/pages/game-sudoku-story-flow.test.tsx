@@ -157,7 +157,7 @@ describe('pages/game sudoku story flow regression', () => {
 
     expect(mockMarkStoryViewed).toHaveBeenCalledWith(1);
     expect(tree.container.textContent).toContain('领取宝箱');
-    expect(tree.container.textContent).toContain('Like');
-    expect(tree.container.textContent).toContain('Dislike');
+    expect(tree.container.textContent).toContain('喜欢');
+    expect(tree.container.textContent).toContain('不喜欢');
   });
 });
