@@ -1,0 +1,27 @@
+.floating-post-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 100px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--t-accent-primary) 0%, var(--t-accent-primary-end) 100%);
+  box-shadow: 0 4px 20px var(--t-accent-primary-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+
+  &:active {
+    transform: scale(0.92);
+    transition: transform 0.1s ease;
+  }
+
+  &__icon {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--t-text-on-primary);
+    line-height: 1;
+  }
+}

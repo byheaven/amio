@@ -1,0 +1,168 @@
+import {
+  ContentTab,
+  FeedCardType,
+  PlanetPulseData,
+  FeedItem,
+} from '../constants/starOcean';
+
+export const MOCK_PLANET_PULSE: PlanetPulseData = {
+  progress: 67.3,
+  dailyChange: 0.15,
+  onlineCount: 12847,
+};
+
+export const AI_TAGLINES: string[] = [
+  '过去1小时有238位鲨鱼发出了星光',
+  '世乒赛决赛中，鲨鱼们的能量贡献暴涨300%',
+  '距离下一个里程碑只差0.7%，冲！',
+  '鳗鱼星正在追赶，差距缩小到2.1%',
+  '今日新增127位鲨鱼加入星球建设',
+  'AI先遣队截获3条来自地球的趣味信号',
+  '星球繁荣度持续攀升，保持冲刺！',
+  '鲨之星在星际排行榜稳居第一',
+];
+
+export const MOCK_FEED_ITEMS: FeedItem[] = [
+  {
+    id: 'feed-1',
+    type: FeedCardType.AI_AGGREGATED,
+    tab: ContentTab.RECOMMEND,
+    aiQuote: '这场比赛的第四局值得反复看',
+    title: '世乒赛决赛精彩回顾',
+    thumbnail: 'https://placeholder.com/match-review.jpg',
+    source: '微博体育',
+    interactions: { likes: 234, comments: 56, shares: 12 },
+    timestamp: '2024-01-15T10:30:00Z',
+  },
+  {
+    id: 'feed-2',
+    type: FeedCardType.IMAGE_TEXT_POST,
+    tab: ContentTab.CREATION,
+    userName: '鲨鱼小明',
+    userAvatar: '🦈',
+    content: '今天现场看比赛，氛围太好了！分享几张图给大家～',
+    images: [
+      'https://placeholder.com/photo1.jpg',
+      'https://placeholder.com/photo2.jpg',
+      'https://placeholder.com/photo3.jpg',
+    ],
+    interactions: { likes: 89, comments: 23, shares: 5 },
+    timestamp: '2024-01-15T09:15:00Z',
+  },
+  {
+    id: 'feed-3',
+    type: FeedCardType.MILESTONE,
+    tab: ContentTab.PLANET_UPDATE,
+    milestoneText: '鲨之星进度突破 67%！',
+    participantCount: 3847,
+    emoji: '🎉',
+    interactions: { likes: 1200, comments: 328, shares: 89 },
+    timestamp: '2024-01-15T08:00:00Z',
+  },
+  {
+    id: 'feed-4',
+    type: FeedCardType.STAR_EXPRESS,
+    tab: ContentTab.COMPETITION,
+    headline: '紧急星报：鳗鱼星发起冲刺！',
+    urgencyText: '鳗鱼星在过去6小时进度飙升0.8%，与鲨之星的差距缩小到5.5%！',
+    ctaLabel: '立即贡献能量',
+    interactions: { likes: 456, comments: 128, shares: 67 },
+    timestamp: '2024-01-15T11:00:00Z',
+  },
+  {
+    id: 'feed-5',
+    type: FeedCardType.OFFICIAL_CONTENT,
+    tab: ContentTab.PLANET_UPDATE,
+    badge: '📢',
+    title: '鲨之星一月活动预告',
+    summary: '全新赛季即将开启，丰厚奖励等你来拿！连续参与7天可解锁限定称号。',
+    coverImage: 'https://placeholder.com/event-banner.jpg',
+    interactions: { likes: 567, comments: 89, shares: 34 },
+    timestamp: '2024-01-14T20:00:00Z',
+  },
+  {
+    id: 'feed-6',
+    type: FeedCardType.AI_AGGREGATED,
+    tab: ContentTab.HOT,
+    aiQuote: '来自地球的趣味信号：今天的互联网被这只猫统治了',
+    title: '网红猫咪的一天：全网播放量破亿',
+    thumbnail: 'https://placeholder.com/cat-viral.jpg',
+    source: '抖音热搜',
+    interactions: { likes: 1890, comments: 432, shares: 210 },
+    timestamp: '2024-01-15T07:45:00Z',
+  },
+  {
+    id: 'feed-7',
+    type: FeedCardType.IMAGE_TEXT_POST,
+    tab: ContentTab.CREATION,
+    userName: '星际画师Luna',
+    userAvatar: '🎨',
+    content: '画了一张鲨之星的概念图，想象中繁荣期的样子～大家觉得怎么样？',
+    images: ['https://placeholder.com/fanart1.jpg'],
+    interactions: { likes: 345, comments: 67, shares: 28 },
+    timestamp: '2024-01-15T06:30:00Z',
+  },
+  {
+    id: 'feed-8',
+    type: FeedCardType.OFFICIAL_CONTENT,
+    tab: ContentTab.COMPETITION,
+    badge: '🏓',
+    title: 'WTT新加坡站赛程公布',
+    summary: '1月20日起为期五天，鲨之星将全程追踪赛况并发放观赛能量加成。',
+    coverImage: 'https://placeholder.com/wtt-schedule.jpg',
+    interactions: { likes: 289, comments: 45, shares: 22 },
+    timestamp: '2024-01-14T18:00:00Z',
+  },
+  {
+    id: 'feed-9',
+    type: FeedCardType.MILESTONE,
+    tab: ContentTab.PLANET_UPDATE,
+    milestoneText: '星球活跃鲨鱼数突破10,000！',
+    participantCount: 10247,
+    emoji: '🚀',
+    interactions: { likes: 2100, comments: 512, shares: 156 },
+    timestamp: '2024-01-13T12:00:00Z',
+  },
+  {
+    id: 'feed-10',
+    type: FeedCardType.AI_AGGREGATED,
+    tab: ContentTab.HOT,
+    aiQuote: '训练日常曝光，注意看第三张图的细节',
+    title: '国乒队员训练花絮合集',
+    thumbnail: 'https://placeholder.com/training.jpg',
+    source: '微博',
+    interactions: { likes: 678, comments: 123, shares: 45 },
+    timestamp: '2024-01-15T05:00:00Z',
+  },
+  {
+    id: 'feed-11',
+    type: FeedCardType.STAR_EXPRESS,
+    tab: ContentTab.PLANET_UPDATE,
+    headline: '星球建设周报出炉',
+    urgencyText: '本周全服累计贡献动力核心8,234,567，创历史新高！鲨之星稳居排行榜第一。',
+    ctaLabel: '查看详情',
+    interactions: { likes: 334, comments: 78, shares: 41 },
+    timestamp: '2024-01-14T10:00:00Z',
+  },
+  {
+    id: 'feed-12',
+    type: FeedCardType.IMAGE_TEXT_POST,
+    tab: ContentTab.RECOMMEND,
+    userName: '乒乓小达人',
+    userAvatar: '🏓',
+    content: 'Hero模式终于一把过了！分享我的通关截图，太不容易了😭',
+    images: [
+      'https://placeholder.com/hero-win1.jpg',
+      'https://placeholder.com/hero-win2.jpg',
+    ],
+    interactions: { likes: 156, comments: 34, shares: 8 },
+    timestamp: '2024-01-15T04:20:00Z',
+  },
+];
+
+export function getMockFeedByTab(tab: ContentTab): FeedItem[] {
+  if (tab === ContentTab.RECOMMEND) {
+    return MOCK_FEED_ITEMS;
+  }
+  return MOCK_FEED_ITEMS.filter((item) => item.tab === tab);
+}

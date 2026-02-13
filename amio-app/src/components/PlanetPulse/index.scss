@@ -1,0 +1,55 @@
+.planet-pulse {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--t-bg-muted);
+  border-radius: 16px;
+  margin: 12px 16px;
+
+  &--tappable {
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  }
+
+  &__planet {
+    flex-shrink: 0;
+  }
+
+  &__stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__progress {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--t-text-primary);
+    display: inline;
+  }
+
+  &__change {
+    display: inline;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--t-status-positive);
+    margin-left: 6px;
+  }
+
+  &__online {
+    font-size: 13px;
+    color: var(--t-text-secondary);
+  }
+
+  &__tagline {
+    font-size: 12px;
+    color: var(--t-text-tertiary);
+    line-height: 1.4;
+  }
+}
