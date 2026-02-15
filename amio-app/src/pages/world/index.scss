@@ -57,22 +57,4 @@
       animation: rotate 1s linear infinite;
     }
   }
-
-  &__construction {
-    position: absolute;
-    bottom: 80PX;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: var(--z-elevated);
-    padding: 8PX 20PX;
-    background: var(--t-world-construction-bg);
-    border: 1PX solid var(--t-world-construction-border);
-    border-radius: 20PX;
-    white-space: nowrap;
-
-    .construction-text {
-      font-size: 12PX;
-      color: var(--t-text-warm-bright);
-    }
-  }
 }

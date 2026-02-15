@@ -32,7 +32,9 @@
     "dev:harmony-hybrid": "npm run build:harmony-hybrid -- --watch",
     "test": "jest",
     "test:bdd": "jest --testPathPattern=steps",
-    "test:unit": "jest --testPathPattern=unit"
+    "test:unit": "jest --testPathPattern=unit",
+    "test:e2e": "playwright test",
+    "test:e2e:world": "playwright test e2e/world-entry.spec.ts --project=chromium"
   },
   "browserslist": [
     "last 3 versions",
@@ -42,6 +44,7 @@
   "author": "",
   "dependencies": {
     "@babel/runtime": "^7.21.5",
+    "@babylonjs/core": "^7.54.3",
     "@tarojs/components": "3.6.32",
     "@tarojs/helper": "3.6.32",
     "@tarojs/plugin-framework-react": "3.6.32",
@@ -58,11 +61,11 @@
     "@tarojs/shared": "3.6.32",
     "@tarojs/taro": "3.6.32",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "three": "^0.182.0"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
+    "@playwright/test": "^1.58.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "@tarojs/cli": "3.6.32",
     "@tarojs/taro-loader": "3.6.32",
@@ -71,7 +74,6 @@
     "@types/jest": "^29.3.1",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.0",
-    "@types/three": "^0.182.0",
     "@types/webpack-env": "^1.13.6",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
