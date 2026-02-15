@@ -1,0 +1,30 @@
+.virtual-joystick {
+  position: absolute;
+  bottom: 100PX;
+  left: 40PX;
+  width: 120PX;
+  height: 120PX;
+  z-index: var(--z-elevated);
+  touch-action: none;
+
+  &__base {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--t-joystick-base);
+    border: 2PX solid var(--t-joystick-base-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__knob {
+    width: 50PX;
+    height: 50PX;
+    border-radius: 50%;
+    background: var(--t-joystick-knob);
+    border: 2PX solid var(--t-joystick-knob-border);
+    transition: transform 0.05s ease-out;
+    box-shadow: 0 0 10PX var(--t-joystick-knob-glow);
+  }
+}
