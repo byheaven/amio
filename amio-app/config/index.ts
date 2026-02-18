@@ -58,6 +58,12 @@ export default defineConfig(async (merge) => {
       }
     },
     h5: {
+      entry: {
+        app: ['./src/app.config']
+      },
+      prebundle: {
+        enable: false
+      },
       publicPath: '/',
       staticDirectory: 'static',
       output: {
