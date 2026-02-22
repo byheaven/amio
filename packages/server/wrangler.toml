@@ -19,5 +19,5 @@ OPENROUTER_MODEL = "deepseek/deepseek-chat"
 # After running `wrangler kv namespace create WORLD_KV`, replace the id values below.
 [[kv_namespaces]]
 binding = "WORLD_KV"
-id = "placeholder-replace-after-wrangler-kv-namespace-create"
-preview_id = "placeholder-replace-after-wrangler-kv-namespace-create-preview"
+id = "bb33b8f0f5c049398dd5a2727762558b"
+preview_id = "d05484d36b88440dbc3f1ee4c4fcc570"
