@@ -7,7 +7,7 @@ export interface BuildTask {
   name: string;
   position: Vector3;
   rotationY?: number;
-  requestedBy?: 'system';
+  requestedBy?: string;
 }
 
 export type BuilderAgentMode = 'idle' | 'patrol' | 'building';

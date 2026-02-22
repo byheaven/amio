@@ -146,6 +146,22 @@ export class WorldRuntime {
     this.joystickActive = active;
   }
 
+  public getPlayerPosition(): Vector3 | null {
+    return this.player ? this.player.position.clone() : null;
+  }
+
+  public getScene(): Scene | null {
+    return this.scene;
+  }
+
+  public getAgentManager(): AgentManager | null {
+    return this.agentManager;
+  }
+
+  public getBuildingManager(): BuildingManager | null {
+    return this.buildingManager;
+  }
+
   private readonly resizeEngineToContainer = (): void => {
     if (!this.engine) {
       return;

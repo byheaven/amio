@@ -27,7 +27,7 @@ export interface BuildingStateJSON {
   progress: number;
   status: 'building' | 'complete';
   createdAtMs: number;
-  requestedBy: 'system';
+  requestedBy: string;
 }
 
 export interface WorldStateJSON {

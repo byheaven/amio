@@ -13,6 +13,7 @@ import { BuildTask, BuilderAgentMode, BuilderAgentSnapshot, BuilderAgentTickCont
 const AGENT_MOVE_SPEED = 2.8;
 const AGENT_STOP_DISTANCE = 1.2;
 const BUILD_PROGRESS_PER_SECOND = 0.22;
+const FACE_PLAYER_SPEED = 4;
 
 interface BuilderAgentOptions {
   id: string;
@@ -39,6 +40,9 @@ export class BuilderAgent {
   private currentBuildingId: string | null = null;
   private buildProgress = 0;
 
+  private conversationWith: string | null = null;
+  private conversationPlayerPosition: Vector3 | null = null;
+
   public constructor(options: BuilderAgentOptions) {
     this.id = options.id;
     this.name = options.name;
@@ -54,6 +58,11 @@ export class BuilderAgent {
   }
 
   public frameUpdate(deltaSeconds: number): void {
+    if (this.conversationWith && this.conversationPlayerPosition) {
+      this.facePosition(this.conversationPlayerPosition, deltaSeconds);
+      return;
+    }
+
     if (!this.movementTarget) {
       return;
     }
@@ -96,6 +105,41 @@ export class BuilderAgent {
     return this.currentTask === null;
   }
 
+  public isInConversation(): boolean {
+    return this.conversationWith !== null;
+  }
+
+  public startConversation(userId: string, playerPosition: Vector3): void {
+    this.conversationWith = userId;
+    this.conversationPlayerPosition = playerPosition.clone();
+    this.movementTarget = null;
+    this.statusText = '对话中...';
+    this.mode = 'idle';
+  }
+
+  public updateConversationPlayerPosition(playerPosition: Vector3): void {
+    if (this.conversationWith) {
+      this.conversationPlayerPosition = playerPosition.clone();
+    }
+  }
+
+  public endConversation(): void {
+    this.conversationWith = null;
+    this.conversationPlayerPosition = null;
+  }
+
+  public getConversationUserId(): string | null {
+    return this.conversationWith;
+  }
+
+  public getPosition(): Vector3 {
+    return this.mesh.position.clone();
+  }
+
+  public getMeshName(): string {
+    return this.mesh.name;
+  }
+
   public getStatusText(): string {
     return this.statusText;
   }
@@ -130,22 +174,51 @@ export class BuilderAgent {
     this.mesh.dispose();
   }
 
+  private facePosition(target: Vector3, deltaSeconds: number): void {
+    const dx = target.x - this.mesh.position.x;
+    const dz = target.z - this.mesh.position.z;
+    if (Math.abs(dx) < 0.01 && Math.abs(dz) < 0.01) {
+      return;
+    }
+    const targetAngle = Math.atan2(dx, dz);
+    const currentAngle = this.mesh.rotation.y;
+    let diff = targetAngle - currentAngle;
+    while (diff > Math.PI) diff -= 2 * Math.PI;
+    while (diff < -Math.PI) diff += 2 * Math.PI;
+    const maxStep = FACE_PLAYER_SPEED * deltaSeconds;
+    this.mesh.rotation.y += Math.sign(diff) * Math.min(Math.abs(diff), maxStep);
+  }
+
   private createBehaviorTree(): BehaviorTree<BuilderAgentTickContext> {
     const root = new SelectorNode<BuilderAgentTickContext>([
+      // Priority 1: In conversation — stop and face player
+      new SequenceNode<BuilderAgentTickContext>([
+        new ConditionNode<BuilderAgentTickContext>(() => this.conversationWith !== null),
+        new ActionNode<BuilderAgentTickContext>(() => this.tickConversation()),
+      ]),
+      // Priority 2: Has a build task (from user dialog or system)
       new SequenceNode<BuilderAgentTickContext>([
         new ConditionNode<BuilderAgentTickContext>(() => this.currentTask !== null),
         new ActionNode<BuilderAgentTickContext>(() => this.moveToBuildTarget()),
         new ActionNode<BuilderAgentTickContext>((context) => this.progressBuild(context.deltaSeconds)),
       ]),
+      // Priority 3: Patrol
       new SequenceNode<BuilderAgentTickContext>([
         new ConditionNode<BuilderAgentTickContext>(() => this.patrolRoute.length > 0),
         new ActionNode<BuilderAgentTickContext>(() => this.moveToPatrolTarget()),
         new ActionNode<BuilderAgentTickContext>(() => this.advancePatrolIndex()),
       ]),
+      // Default: Idle
       new ActionNode<BuilderAgentTickContext>(() => this.tickIdle()),
     ]);
 
     return new BehaviorTree(root);
+  }
+
+  private tickConversation(): NodeStatus {
+    this.mode = 'idle';
+    this.movementTarget = null;
+    return NodeStatus.Running;
   }
 
   private moveToBuildTarget(): NodeStatus {

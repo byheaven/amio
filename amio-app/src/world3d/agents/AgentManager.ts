@@ -86,7 +86,7 @@ export class AgentManager {
       }
       entry.wasBusy = busyNow;
 
-      if (!busyNow && nowMs >= entry.nextTaskAtMs) {
+      if (!busyNow && !entry.agent.isInConversation() && nowMs >= entry.nextTaskAtMs) {
         this.assignNextAvailableTask(entry, nowMs);
       }
     });
@@ -100,6 +100,37 @@ export class AgentManager {
 
   public getSnapshots(): BuilderAgentSnapshot[] {
     return this.agents.map((entry) => entry.agent.getSnapshot());
+  }
+
+  public getAgentById(agentId: string): BuilderAgent | null {
+    const entry = this.agents.find((e) => e.agent.getSnapshot().id === agentId);
+    return entry?.agent ?? null;
+  }
+
+  public findAgentByMeshName(meshName: string): BuilderAgent | null {
+    const entry = this.agents.find((e) => e.agent.getMeshName() === meshName);
+    return entry?.agent ?? null;
+  }
+
+  public isAgentInConversation(agentId: string): boolean {
+    const agent = this.getAgentById(agentId);
+    return agent?.isInConversation() ?? false;
+  }
+
+  public assignUserBuildTask(agentId: string, task: BuildTask): boolean {
+    const agent = this.getAgentById(agentId);
+    if (!agent) {
+      return false;
+    }
+    agent.endConversation();
+    agent.assignBuildTask(task);
+    const entry = this.agents.find((e) => e.agent === agent);
+    if (entry) {
+      entry.wasBusy = true;
+      entry.nextTaskAtMs = Number.POSITIVE_INFINITY;
+      this.updateAgentLabel(entry);
+    }
+    return true;
   }
 
   public dispose(): void {
