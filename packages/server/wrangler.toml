@@ -3,9 +3,16 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Custom domain: api.amio.love (requires amio.love to be on Cloudflare)
+# After deploying, add a DNS record in Cloudflare: CNAME api -> amio-world-api.workers.dev
+routes = [
+  { pattern = "api.amio.love/*", custom_domain = true }
+]
+
 [vars]
 # Non-secret config. Secrets (OPENROUTER_API_KEY) are set via:
 #   wrangler secret put OPENROUTER_API_KEY
+# or via GitHub Actions secret OPENROUTER_API_KEY
 OPENROUTER_MODEL = "deepseek/deepseek-chat"
 
 # KV namespace for world state persistence.

@@ -67,18 +67,39 @@ npm run dev
 # Proxied from amio-app dev server via config/dev.ts
 ```
 
-## Deployment
+## Deployment (Automated via GitHub Actions)
+
+Push to `main` — GitHub Actions automatically:
+1. Deploys the Worker to `api.amio.love`
+2. Builds the frontend with `TARO_APP_API_URL=https://api.amio.love`
+3. Deploys the frontend to `game.amio.love`
+
+**Required GitHub Secrets** (set in repo Settings → Secrets → Actions):
+
+| Secret | How to get it |
+|--------|--------------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare Dashboard → My Profile → API Tokens → Create Token (Workers permissions) |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Dashboard → right sidebar on any page |
+| `OPENROUTER_API_KEY` | OpenRouter Dashboard |
+
+**One-time manual setup** (only needed on first deploy):
+
+```bash
+# 1. Create KV namespace
+wrangler kv namespace create WORLD_KV
+wrangler kv namespace create WORLD_KV --preview
+# Paste the ids into wrangler.toml
+
+# 2. The custom domain api.amio.love is configured in wrangler.toml via:
+#    routes = [{ pattern = "api.amio.love/*", custom_domain = true }]
+# Cloudflare handles DNS automatically when the domain is already on Cloudflare.
+```
+
+## Manual Deployment
 
 ```bash
 npm run deploy
-# Deploys to https://amio-world-api.<your-subdomain>.workers.dev
-```
-
-After deploying, set the frontend API URL:
-
-```bash
-# When building the frontend for production:
-TARO_APP_API_URL=https://amio-world-api.<your-subdomain>.workers.dev npm run build:h5
+# Deploys to https://api.amio.love (and fallback https://amio-world-api.<subdomain>.workers.dev)
 ```
 
 ## Environment Variables / Secrets
