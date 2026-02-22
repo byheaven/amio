@@ -1,6 +1,9 @@
 import { ChatMessage, ChatApiRequest, ChatApiResponse, WorldContextForPrompt } from './types';
 
-const SERVER_BASE_URL = process.env.TARO_APP_API_URL ?? 'http://localhost:3001';
+// Use relative path in production (proxied); fall back to localhost for dev
+const SERVER_BASE_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost')
+  ? ''
+  : 'http://localhost:3001';
 const MAX_HISTORY_ROUNDS = 8;
 const MAX_DAILY_BUILDS = 3;
 

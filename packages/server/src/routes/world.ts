@@ -19,7 +19,10 @@ const getDb = async (): Promise<Db> => {
     throw new Error('MONGODB_URI is not set');
   }
 
-  dbClient = new MongoClient(mongoUri);
+  dbClient = new MongoClient(mongoUri, {
+    connectTimeoutMS: 5000,
+    serverSelectionTimeoutMS: 5000,
+  });
   await dbClient.connect();
   db = dbClient.db();
   console.log('[world] MongoDB connected');

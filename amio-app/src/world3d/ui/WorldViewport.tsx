@@ -280,8 +280,9 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
     }
 
     const runtime = new WorldRuntime(container, { onLoaded: handleLoaded });
-    runtime.start();
+    // Set ref BEFORE start() so handleLoaded can access it when called synchronously
     runtimeRef.current = runtime;
+    runtime.start();
 
     return () => {
       pickerRef.current?.dispose();
