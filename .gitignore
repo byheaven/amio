@@ -1,3 +1,7 @@
 .claude/
 .DS_Store
 docs/references/
+
+# Secrets - never commit
+**/.env
+packages/server/.env

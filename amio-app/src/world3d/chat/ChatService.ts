@@ -1,9 +1,13 @@
 import { ChatMessage, ChatApiRequest, ChatApiResponse, WorldContextForPrompt } from './types';
 
-// Use relative path in production (proxied); fall back to localhost for dev
-const SERVER_BASE_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost')
-  ? ''
-  : 'http://localhost:3001';
+// TARO_APP_API_URL is injected at build time via Taro's defineConstants.
+// - Dev: proxied automatically (empty string, see config/dev.ts proxy)
+// - Production: set TARO_APP_API_URL=https://your-api-server.com at build time
+// The key itself NEVER lives in frontend code — it stays on the backend server.
+declare const TARO_APP_API_URL: string | undefined;
+const SERVER_BASE_URL: string = (typeof TARO_APP_API_URL !== 'undefined' && TARO_APP_API_URL)
+  ? TARO_APP_API_URL
+  : '';
 const MAX_HISTORY_ROUNDS = 8;
 const MAX_DAILY_BUILDS = 3;
 

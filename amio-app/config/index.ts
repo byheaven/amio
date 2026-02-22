@@ -19,6 +19,12 @@ export default defineConfig(async (merge) => {
     outputRoot: 'dist',
     plugins: [],
     defineConstants: {
+      // Backend API URL - injected at build time, NOT a secret.
+      // Dev: empty string (proxied via devServer.proxy in config/dev.ts)
+      // Production: set TARO_APP_API_URL env var before building, e.g.:
+      //   TARO_APP_API_URL=https://api.yourserver.com npm run build:h5
+      // The actual API key (OPENROUTER_API_KEY) lives ONLY on the backend server.
+      TARO_APP_API_URL: JSON.stringify(process.env.TARO_APP_API_URL ?? ''),
     },
     copy: {
       patterns: [
