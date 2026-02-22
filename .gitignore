@@ -5,3 +5,4 @@ docs/references/
 # Secrets - never commit
 **/.env
 packages/server/.env
+packages/server/.dev.vars

@@ -19,26 +19,20 @@ const buildMessages = (
   userMessage: string,
 ): LlmMessage[] => {
   const messages: LlmMessage[] = [{ role: 'system', content: systemPrompt }];
-
   for (const msg of history) {
     messages.push({ role: msg.role, content: msg.content });
   }
-
   messages.push({ role: 'user', content: userMessage });
   return messages;
 };
 
 export const callLlm = async (
+  apiKey: string,
+  model: string,
   systemPrompt: string,
   history: ChatMessage[],
   userMessage: string,
 ): Promise<LlmResponse> => {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error('OPENROUTER_API_KEY is not set');
-  }
-
-  const model = process.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-chat';
   const messages = buildMessages(systemPrompt, history, userMessage);
 
   const controller = new AbortController();

@@ -1,28 +1,21 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import { chatRouter } from './routes/chat';
-import { worldRouter } from './routes/world';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { chatRoute } from './routes/chat';
+import { worldRoute } from './routes/world';
 
-const app = express();
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
-const clientOrigin = process.env.CLIENT_ORIGIN ?? 'http://localhost:10086';
+export type Env = {
+  OPENROUTER_API_KEY: string;
+  OPENROUTER_MODEL: string;
+  WORLD_KV: KVNamespace;
+};
 
-app.use(cors({
-  origin: [clientOrigin, 'http://localhost:10086', 'http://localhost:3000'],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-}));
+const app = new Hono<{ Bindings: Env }>();
 
-app.use(express.json({ limit: '1mb' }));
+app.use('/api/*', cors());
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+app.get('/health', (c) => c.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
-app.use('/api', chatRouter);
-app.use('/api', worldRouter);
+app.route('/api', chatRoute);
+app.route('/api', worldRoute);
 
-app.listen(port, () => {
-  console.log(`[server] listening on http://localhost:${port}`);
-});
+export default app;

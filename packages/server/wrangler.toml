@@ -1,0 +1,16 @@
+name = "amio-world-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Non-secret config. Secrets (OPENROUTER_API_KEY) are set via:
+#   wrangler secret put OPENROUTER_API_KEY
+OPENROUTER_MODEL = "deepseek/deepseek-chat"
+
+# KV namespace for world state persistence.
+# After running `wrangler kv namespace create WORLD_KV`, replace the id values below.
+[[kv_namespaces]]
+binding = "WORLD_KV"
+id = "placeholder-replace-after-wrangler-kv-namespace-create"
+preview_id = "placeholder-replace-after-wrangler-kv-namespace-create-preview"

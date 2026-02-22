@@ -1,24 +1,18 @@
 {
   "name": "@amio/server",
   "version": "0.1.0",
-  "description": "AMIO 3D World backend API server",
-  "main": "dist/index.js",
+  "description": "AMIO 3D World backend API — Cloudflare Workers",
+  "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "mongodb": "^6.11.0"
+    "hono": "^4.12.1"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.7.2"
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "wrangler": "^4.0.0"
   }
 }

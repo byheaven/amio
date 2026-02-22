@@ -1,30 +1,31 @@
-import { Router, Request, Response } from 'express';
+import { Hono } from 'hono';
+import type { Env } from '../index';
 import { ChatRequest, ChatResponse } from '../types/world';
 import { callLlm } from '../services/llm';
 import { buildSystemPrompt } from '../services/promptBuilder';
 import { parseLlmResponse, validateAction } from '../services/actionValidator';
 
-export const chatRouter = Router();
+export const chatRoute = new Hono<{ Bindings: Env }>();
 
-chatRouter.post('/chat', async (req: Request, res: Response): Promise<void> => {
-  const body = req.body as Partial<ChatRequest>;
+chatRoute.post('/chat', async (c) => {
+  const body = await c.req.json<Partial<ChatRequest>>().catch(() => null);
 
-  if (!body.agentId || !body.message || !body.worldContext) {
-    res.status(400).json({ error: 'Missing required fields: agentId, message, worldContext' });
-    return;
+  if (!body || !body.agentId || !body.message || !body.worldContext) {
+    return c.json({ error: 'Missing required fields: agentId, message, worldContext' }, 400);
   }
 
   const { agentId, message, worldContext, history = [] } = body as ChatRequest;
 
-  // Validate worldContext has required fields
   if (!worldContext.userId || !worldContext.agentName) {
-    res.status(400).json({ error: 'worldContext must include userId and agentName' });
-    return;
+    return c.json({ error: 'worldContext must include userId and agentName' }, 400);
   }
+
+  const apiKey = c.env.OPENROUTER_API_KEY;
+  const model = c.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-chat';
 
   try {
     const systemPrompt = buildSystemPrompt({ ...worldContext, agentId });
-    const llmResult = await callLlm(systemPrompt, history, message);
+    const llmResult = await callLlm(apiKey, model, systemPrompt, history, message);
     const { reply: rawReply, action: rawAction } = parseLlmResponse(llmResult.rawContent);
 
     const validation = validateAction(rawAction, worldContext);
@@ -34,7 +35,7 @@ chatRouter.post('/chat', async (req: Request, res: Response): Promise<void> => {
       action: validation.action,
     };
 
-    res.json(response);
+    return c.json(response);
   } catch (error) {
     const isAbortError = error instanceof Error && error.name === 'AbortError';
     const errorMessage = isAbortError
@@ -47,6 +48,6 @@ chatRouter.post('/chat', async (req: Request, res: Response): Promise<void> => {
       reply: '抱歉，我现在有点忙，待会再聊吧~ (Sorry, I\'m a bit busy right now, let\'s chat later!)',
       action: null,
     };
-    res.json(fallbackResponse);
+    return c.json(fallbackResponse);
   }
 });

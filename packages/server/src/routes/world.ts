@@ -1,85 +1,24 @@
-import { Router, Request, Response } from 'express';
-import { MongoClient, Db } from 'mongodb';
+import { Hono } from 'hono';
+import type { Env } from '../index';
 import { WorldStateJSON } from '../types/world';
 
-export const worldRouter = Router();
+export const worldRoute = new Hono<{ Bindings: Env }>();
 
-const DEFAULT_WORLD_ID = 'default';
+const WORLD_KV_KEY = 'world:default';
 
-let dbClient: MongoClient | null = null;
-let db: Db | null = null;
+worldRoute.post('/save-world', async (c) => {
+  const body = await c.req.json<Partial<WorldStateJSON>>().catch(() => null);
 
-const getDb = async (): Promise<Db> => {
-  if (db) {
-    return db;
+  if (!body || body.version !== 1) {
+    return c.json({ error: 'Invalid world state format' }, 400);
   }
 
-  const mongoUri = process.env.MONGODB_URI;
-  if (!mongoUri) {
-    throw new Error('MONGODB_URI is not set');
-  }
-
-  dbClient = new MongoClient(mongoUri, {
-    connectTimeoutMS: 5000,
-    serverSelectionTimeoutMS: 5000,
-  });
-  await dbClient.connect();
-  db = dbClient.db();
-  console.log('[world] MongoDB connected');
-  return db;
-};
-
-worldRouter.post('/save-world', async (req: Request, res: Response): Promise<void> => {
-  const worldState = req.body as Partial<WorldStateJSON>;
-
-  if (!worldState || worldState.version !== 1) {
-    res.status(400).json({ error: 'Invalid world state format' });
-    return;
-  }
-
-  try {
-    const database = await getDb();
-    const collection = database.collection('worlds');
-
-    await collection.updateOne(
-      { worldId: DEFAULT_WORLD_ID },
-      {
-        $set: {
-          worldId: DEFAULT_WORLD_ID,
-          ...worldState,
-          updatedAt: new Date(),
-        },
-      },
-      { upsert: true },
-    );
-
-    res.json({ success: true });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[world] save error:', message);
-    res.status(500).json({ error: 'Failed to save world state' });
-  }
+  await c.env.WORLD_KV.put(WORLD_KV_KEY, JSON.stringify(body));
+  return c.json({ success: true });
 });
 
-worldRouter.get('/load-world', async (_req: Request, res: Response): Promise<void> => {
-  try {
-    const database = await getDb();
-    const collection = database.collection('worlds');
-
-    const doc = await collection.findOne(
-      { worldId: DEFAULT_WORLD_ID },
-      { projection: { _id: 0, worldId: 0, updatedAt: 0 } },
-    );
-
-    if (!doc) {
-      res.json({ worldState: null });
-      return;
-    }
-
-    res.json({ worldState: doc as unknown as WorldStateJSON });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[world] load error:', message);
-    res.status(500).json({ error: 'Failed to load world state' });
-  }
+worldRoute.get('/load-world', async (c) => {
+  const raw = await c.env.WORLD_KV.get(WORLD_KV_KEY);
+  const worldState = raw ? JSON.parse(raw) as WorldStateJSON : null;
+  return c.json({ worldState });
 });
