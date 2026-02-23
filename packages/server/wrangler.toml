@@ -13,7 +13,7 @@ routes = [
 # Non-secret config. Secrets (OPENROUTER_API_KEY) are set via:
 #   wrangler secret put OPENROUTER_API_KEY
 # or via GitHub Actions secret OPENROUTER_API_KEY
-OPENROUTER_MODEL = "deepseek/deepseek-chat"
+OPENROUTER_MODEL = "openrouter/free"
 
 # KV namespace for world state persistence.
 # After running `wrangler kv namespace create WORLD_KV`, replace the id values below.
