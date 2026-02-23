@@ -11,7 +11,7 @@ export interface BuildingInstance {
   progress: number;
   status: 'building' | 'complete';
   createdAtMs: number;
-  requestedBy: 'system';
+  requestedBy: string;
 }
 
 export interface BuildingSnapshot {
@@ -23,7 +23,7 @@ export interface BuildingSnapshot {
   progress: number;
   status: 'building' | 'complete';
   createdAtMs: number;
-  requestedBy: 'system';
+  requestedBy: string;
 }
 
 export interface CreateBuildingRequest {
@@ -31,5 +31,5 @@ export interface CreateBuildingRequest {
   name: string;
   position: Vector3;
   rotationY?: number;
-  requestedBy?: 'system';
+  requestedBy?: string;
 }

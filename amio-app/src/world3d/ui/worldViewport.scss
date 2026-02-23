@@ -19,4 +19,31 @@
       touch-action: none;
     }
   }
+
+  &__toast {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: #e8f4ff;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: toastFadeInOut 2.5s ease-in-out forwards;
+    max-width: 80vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@keyframes toastFadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
 }

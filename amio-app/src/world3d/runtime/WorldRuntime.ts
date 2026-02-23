@@ -18,6 +18,7 @@ import { WorldRuntimeOptions } from './types';
 const CAMERA_TARGET_OFFSET = new Vector3(0, 1.1, 0);
 const CAMERA_FOLLOW_STRENGTH = 7;
 const MAX_FRAME_DELTA_SECONDS = 0.05;
+const PICK_DEBUG_STORAGE_KEY = 'worldPickDebug';
 
 export class WorldRuntime {
   private readonly container: HTMLElement;
@@ -146,15 +147,58 @@ export class WorldRuntime {
     this.joystickActive = active;
   }
 
+  public getPlayerPosition(): Vector3 | null {
+    return this.player ? this.player.position.clone() : null;
+  }
+
+  public getScene(): Scene | null {
+    return this.scene;
+  }
+
+  public getAgentManager(): AgentManager | null {
+    return this.agentManager;
+  }
+
+  public getBuildingManager(): BuildingManager | null {
+    return this.buildingManager;
+  }
+
   private readonly resizeEngineToContainer = (): void => {
     if (!this.engine) {
       return;
     }
 
-    const width = Math.max(1, this.container.clientWidth || window.innerWidth || 1);
-    const height = Math.max(1, this.container.clientHeight || window.innerHeight || 1);
-    this.engine.setSize(width, height);
+    const cssWidth = Math.max(1, this.container.clientWidth || window.innerWidth || 1);
+    const cssHeight = Math.max(1, this.container.clientHeight || window.innerHeight || 1);
+    const rawScale = this.engine.getHardwareScalingLevel();
+    const hardwareScalingLevel = Number.isFinite(rawScale) && rawScale > 0 ? rawScale : 1;
+    const renderWidth = Math.max(1, Math.round(cssWidth / hardwareScalingLevel));
+    const renderHeight = Math.max(1, Math.round(cssHeight / hardwareScalingLevel));
+
+    this.engine.setSize(renderWidth, renderHeight);
+
+    if (this.isPickDebugEnabled()) {
+      console.info('[WorldRuntime] resize', {
+        cssWidth,
+        cssHeight,
+        hardwareScalingLevel,
+        renderWidth,
+        renderHeight,
+      });
+    }
   };
+
+  private isPickDebugEnabled(): boolean {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    try {
+      return window.localStorage.getItem(PICK_DEBUG_STORAGE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  }
 
   private readonly renderLoop = (): void => {
     if (!this.engine || !this.scene || !this.camera || !this.player) {

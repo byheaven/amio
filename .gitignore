@@ -1,3 +1,15 @@
 .claude/
 .DS_Store
 docs/references/
+
+# Secrets - never commit
+**/.env
+packages/server/.env
+packages/server/.dev.vars
+
+# Test scripts and screenshots from browser testing
+amio-app/test-*.js
+amio-app/check-*.js
+amio-app/*.png
+amio-app/e2e/world-screenshot.spec.ts
+*.png

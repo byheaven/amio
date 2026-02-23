@@ -245,27 +245,29 @@ Root (Selector)
 
 **后端API服务**
 
-- Node.js + Express + TypeScript 项目搭建
+- **Cloudflare Workers + Hono** 框架（替代 Node.js + Express）
+- **Cloudflare KV** 持久化（替代 MongoDB）
+- API key 通过 `wrangler secret` 管理，不存入代码库
 - 3个API接口：
 
 ```markdown
 POST /api/chat
   请求：{ agentId, message, worldContext, history }
-  处理：构造Prompt → 调用LLM → 解析response
+  处理：构造Prompt → 调用LLM（OpenRouter） → 解析response
   响应：{ reply, action }
 
 POST /api/save-world
   请求：{ worldState }（序列化的世界状态）
-  处理：写入MongoDB
+  处理：写入 Cloudflare KV
   响应：{ success }
 
 GET /api/load-world
   请求：无
-  处理：从MongoDB读取最新世界状态
+  处理：从 Cloudflare KV 读取世界状态
   响应：{ worldState }
 ```
 
-- LLM集成（DeepSeek或通义千问 SDK）
+- LLM集成（OpenRouter API，支持 DeepSeek/通义千问 等模型）
 - Prompt模板实现
 
 **Prompt 设计**
@@ -359,23 +361,15 @@ GET /api/load-world
   - 用户关闭页面时（beforeunload事件）
   - 每5分钟定时保存
 - 页面加载时调用 `/api/load-world` 恢复世界状态
-- MongoDB数据结构：
+- Cloudflare KV 数据结构：
 
 ```markdown
-// worlds collection
+// KV key: "world:default"
+// Value: JSON string of WorldStateJSON
 {
-  worldId: "default",
+  version: 1,
   buildings: [...],
-  agentStates: [...],
-  globalState: { ... },
-  updatedAt: Date
-}
-
-// conversations collection（可选）
-{
-  agentId: string,
-  messages: [...],
-  createdAt: Date
+  agents: [...]
 }
 ```
 
@@ -400,19 +394,27 @@ GET /api/load-world
 
 | 组件 | 部署方案 | 成本 |
 |------|---------|------|
-| 前端静态资源 | 腾讯云COS + CDN | ~50元/月 |
-| 3D资产（模型/贴图） | 腾讯云COS + CDN | 同上 |
-| 后端API | 腾讯云CVM 2核4G 或 云函数 | ~150-300元/月 |
-| MongoDB | 腾讯云MongoDB 免费版 或 MongoDB Atlas | 0-200元/月 |
-| LLM API | DeepSeek/通义千问 按量 | ~10-50元/月 |
-| 域名 + HTTPS | — | ~100元/年 |
-| **合计** | | **~300-600元/月** |
+| 前端静态资源 | Cloudflare Pages | **免费** |
+| 后端API | Cloudflare Workers | **免费**（10万次/天）|
+| 世界持久化 | Cloudflare KV | **免费**（1GB存储）|
+| LLM API | OpenRouter 按量 | ~10-50元/月 |
+| 域名 + HTTPS | Cloudflare 自动颁发 | ~100元/年（域名费）|
+| **合计** | | **~10-50元/月** |
+
+部署命令：
+```bash
+# 后端
+cd packages/server && wrangler deploy
+
+# 前端（Cloudflare Pages CI 自动构建，或手动）
+TARO_APP_API_URL=https://amio-world-api.<subdomain>.workers.dev npm run build:h5
+```
 
 **基础监控**
 
-- 后端日志：API请求量、LLM响应时间、错误率
+- 后端日志：Cloudflare Dashboard → Workers → Logs（实时查看）
 - 前端日志：页面加载时间、FPS、Agent数量
-- 简单的告警（LLM API调用失败时通知）
+- API key 通过 `wrangler secret put OPENROUTER_API_KEY` 管理，加密存储在 Cloudflare
 
 ### 验收标准
 

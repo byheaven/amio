@@ -14,6 +14,14 @@ export default {
       ignoreOrder: true,
       filename: 'css/[name].css',
       chunkFilename: 'css/[name].css'
-    }
+    },
+    devServer: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8787',
+          changeOrigin: true,
+        },
+      },
+    },
   }
 } satisfies UserConfigExport

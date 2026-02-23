@@ -1,0 +1,18 @@
+{
+  "name": "@amio/server",
+  "version": "0.1.0",
+  "description": "AMIO 3D World backend API — Cloudflare Workers",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "hono": "^4.12.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "wrangler": "^4.0.0"
+  }
+}

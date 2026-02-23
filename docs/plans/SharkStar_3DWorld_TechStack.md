@@ -136,13 +136,13 @@ AI先遣队（Q版鲨鱼造型机器人）在星球上持续工作。用户可�
        └─────────────┘          └───────────────┘
 ```
 
-## 3.2 设计原则
+## 3.2 架构演进
 
-**服务器权威**：世界的“真实状态”只存在于服务器内存中。客户端只负责渲染服务器告诉它的内容，不能直接修改世界状态。AI Agent的行为、建筑的创建都在服务端计算。
+**MVP（单用户 + Cloudflare Workers）**：Agent行为树和世界状态在前端本地运行。后端仅处理 LLM 对话和世界快照持久化，通过 Cloudflare Workers 无服务器部署，完全免费，无需运维服务器。
 
-**增量广播**：不是每帧都发送完整世界状态，而是只发送变更部分（delta）。结合空间过滤，只把更新推送给附近的用户。
+**多人阶段（服务器权威 + Socket.IO）**：世界的真实状态迁移到服务器内存，Agent行为树在服务端运行，增量广播 + 空间过滤降低带宽。客户端只负责渲染。
 
-**异步AI对话**：LLM调用（1-3秒延迟）不阻塞游戏主循环。对话处理完全异步，结果通过回调注入Agent任务队列。
+**异步AI对话**：LLM调用（1-3秒延迟）不阻塞游戏主循环。对话处理完全异步，结果通过回调注入Agent任务队列。两个阶段均适用。
 
 ---
 
@@ -154,13 +154,15 @@ AI先遣队（Q版鲨鱼造型机器人）在星球上持续工作。用户可�
 |------|------|----------|
 | 3D渲染引擎（H5） | **Babylon.js** | TypeScript原生，功能完整 |
 | 3D渲染引擎（小程序） | **Cocos Creator 3.x** | 降级方案，官方支持微信小程序 |
-| 实时通信 | **Socket.IO** | 基于WebSocket，Node.js生态成熟 |
-| 世界服务器 | **Node.js + TypeScript** | 技术栈一致，事件循环适合此场景 |
+| 实时通信 | **Socket.IO** | 基于WebSocket，Node.js生态成熟（多人阶段） |
+| API服务器（MVP） | **Cloudflare Workers + Hono** | 免费、边缘部署、无需运维服务器 |
 | AI Agent行为 | **行为树（自实现）** | 确定性、轻量、可调试 |
-| AI对话模型 | **DeepSeek / 通义千问** | 国内访问快、中文能力好、成本低 |
-| 数据库 | **MongoDB** | 延续现有选型，灵活Schema |
+| AI对话模型 | **OpenRouter API** | 支持 DeepSeek / 通义千问 等，统一入口 |
+| 世界持久化（MVP） | **Cloudflare KV** | 免费，与 Workers 原生集成 |
+| 数据库（多人阶段） | **MongoDB** | 多用户数据、对话记录、能量贡献 |
 | 3D资产格式 | **glTF 2.0** | Web 3D通用标准 |
-| 部署 | **腾讯云CVM（4核8G）** | 单台即可支撑，月成本几百元 |
+| 部署（MVP） | **Cloudflare Pages + Workers** | 完全免费，全球CDN |
+| 部署（多人阶段） | **腾讯云CVM（4核8G）** | 支撑 WebSocket 长连接和服务端行为树 |
 
 ## 4.2 3D渲染引擎：Babylon.js
 
@@ -457,38 +459,51 @@ LLM输出的行为指令在执行前必须经过校验：
 
 # 6. 部署方案
 
-## 6.1 服务器配置
+## 6.1 MVP 阶段：Cloudflare（免费）
+
+| 组件 | 配置 | 月成本（估） |
+|------|------|------------|
+| 前端静态资源 | Cloudflare Pages | **免费** |
+| 后端API | Cloudflare Workers | **免费**（10万次请求/天）|
+| 世界持久化 | Cloudflare KV | **免费**（1GB存储）|
+| LLM API | OpenRouter 按量付费 | ~10-50元 |
+| 域名 + HTTPS | Cloudflare 自动 SSL | ~100元/年（域名费）|
+| **合计** | | **~10-50元/月** |
+
+## 6.2 多人阶段：腾讯云（需要 WebSocket）
+
+多用户实时同步需要持久化 WebSocket 连接，Cloudflare Workers 不支持，需迁移到专用服务器：
 
 | 组件 | 配置 | 月成本（估） |
 |------|------|------------|
 | 世界服务器 | 腾讯云CVM 4核8G | ~300-500元 |
 | MongoDB | 腾讯云MongoDB 2核4G | ~200-400元 |
-| LLM API | DeepSeek/通义千问 按量付费 | ~50-300元 |
+| LLM API | OpenRouter 按量付费 | ~50-300元 |
 | 域名 + SSL | — | ~100元 |
 | **合计** | | **~650-1300元/月** |
 
 单台4核8G CVM足以支撑：50个WebSocket长连接 + 50个Agent行为树tick + 5Hz游戏循环 + 异步LLM调用。
 
-## 6.2 部署架构
+## 6.3 MVP 部署架构（Cloudflare）
 
 ```markdown
-用户浏览器 → 腾讯云CLB（负载均衡/SSL卸载）
-                → CVM（Node.js世界服务器 + Socket.IO）
-                → MongoDB（持久化）
-                → DeepSeek API（对话处理）
-
-静态资源（3D模型/贴图）→ 腾讯云COS + CDN
+用户浏览器
+  → Cloudflare Pages（前端静态资源，全球CDN）
+  → Cloudflare Workers（API: /api/chat, /api/save-world, /api/load-world）
+      → Cloudflare KV（世界持久化）
+      → OpenRouter API（LLM对话）
 ```
 
-## 6.3 监控与运维
+API key（`OPENROUTER_API_KEY`）通过 `wrangler secret put` 加密存储在 Cloudflare，不出现在代码或构建产物中。
 
-| 监控项 | 工具 | 告警阈值 |
-|--------|------|---------|
-| 服务器CPU/内存 | 腾讯云监控 | CPU > 80%持续5分钟 |
-| WebSocket连接数 | 自定义metrics | > 50 |
-| 游戏循环tick耗时 | 自定义日志 | 单tick > 150ms |
-| LLM API响应时间 | 自定义日志 | > 5秒 |
-| MongoDB写入延迟 | 腾讯云监控 | > 500ms |
+## 6.4 监控与运维
+
+| 监控项 | 工具 | 说明 |
+|--------|------|------|
+| Workers 请求量/错误率 | Cloudflare Dashboard | 实时，无需配置 |
+| LLM API响应时间 | Workers console.log | 请求日志自动保留 |
+| KV 读写延迟 | Cloudflare Analytics | 内置 |
+| 前端加载时间/FPS | 前端自定义日志 | 发送到 Workers 日志接口 |
 
 ---
 
