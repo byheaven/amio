@@ -166,8 +166,8 @@ const createCamera = (
 
   camera.lowerRadiusLimit = 6;
   camera.upperRadiusLimit = 18;
-  camera.lowerBetaLimit = 0.6;
-  camera.upperBetaLimit = 1.35;
+  camera.lowerBetaLimit = 0.3;
+  camera.upperBetaLimit = 1.9;
   camera.panningSensibility = 0;
   camera.wheelDeltaPercentage = 0.01;
   camera.inertia = 0.65;
