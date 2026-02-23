@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # Custom domain: api.amio.love (requires amio.love to be on Cloudflare)
 # After deploying, add a DNS record in Cloudflare: CNAME api -> amio-world-api.workers.dev
 routes = [
-  { pattern = "api.amio.love/*", custom_domain = true }
+  { pattern = "api.amio.love", custom_domain = true }
 ]
 
 [vars]

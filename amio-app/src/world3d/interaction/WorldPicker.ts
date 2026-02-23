@@ -1,11 +1,12 @@
 import { Scene } from '@babylonjs/core/scene';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import { AgentManager } from '../agents/AgentManager';
 import { BuilderAgent } from '../agents/BuilderAgent';
 import { BuildingManager } from '../buildings/BuildingManager';
 import { BuildingSnapshot } from '../buildings/types';
 
-export const CHAT_INTERACTION_DISTANCE = 8;
+export const CHAT_INTERACTION_DISTANCE = 12;
 const TAP_MAX_DURATION_MS = 300;
 const TAP_MAX_MOVE_PX = 10;
 
@@ -23,14 +24,25 @@ export interface BuildingPickResult {
 }
 
 export type PickResult = AgentPickResult | BuildingPickResult;
+export type BuildingUnavailableReason = 'under_construction' | 'not_found';
+interface InteractiveHitCandidate {
+  distance: number;
+  meshName: string;
+  agentMeshName: string | null;
+  buildingMeshName: string | null;
+}
+
+const PICK_DEBUG_STORAGE_KEY = 'worldPickDebug';
 
 export interface WorldPickerOptions {
   scene: Scene;
   agentManager: AgentManager;
   buildingManager: BuildingManager;
   getPlayerPosition: () => Vector3 | null;
+  getCurrentUserId: () => string;
   onAgentPicked: (result: AgentPickResult) => void;
   onBuildingPicked: (result: BuildingPickResult) => void;
+  onBuildingUnavailable: (reason: BuildingUnavailableReason) => void;
   onTooFar: (agentName: string) => void;
   onAgentBusy: (agentName: string) => void;
 }
@@ -40,6 +52,7 @@ export class WorldPicker {
   private pointerDownTime = 0;
   private pointerDownX = 0;
   private pointerDownY = 0;
+  private lastPickHandledAtMs = 0;
   private disposed = false;
 
   public constructor(options: WorldPickerOptions) {
@@ -53,6 +66,7 @@ export class WorldPicker {
     if (canvas) {
       canvas.removeEventListener('pointerdown', this.onPointerDown);
       canvas.removeEventListener('pointerup', this.onPointerUp);
+      canvas.removeEventListener('click', this.onClick);
     }
   }
 
@@ -63,6 +77,7 @@ export class WorldPicker {
     }
     canvas.addEventListener('pointerdown', this.onPointerDown);
     canvas.addEventListener('pointerup', this.onPointerUp);
+    canvas.addEventListener('click', this.onClick);
   }
 
   private readonly onPointerDown = (evt: PointerEvent): void => {
@@ -84,31 +99,21 @@ export class WorldPicker {
       return;
     }
 
-    const pickResult = this.options.scene.pick(
-      evt.clientX,
-      evt.clientY,
-      (mesh) => mesh.isPickable && mesh.isEnabled(),
-    );
+    this.handlePick(evt.clientX, evt.clientY);
+  };
 
-    if (!pickResult?.hit || !pickResult.pickedMesh) {
+  private readonly onClick = (evt: MouseEvent): void => {
+    if (this.disposed) {
       return;
     }
 
-    const meshName = pickResult.pickedMesh.name;
-
-    // Check agent pick
-    if (meshName.startsWith('builder-agent-')) {
-      const agent = this.options.agentManager.findAgentByMeshName(meshName);
-      if (agent) {
-        this.handleAgentPick(agent);
-        return;
-      }
+    // Avoid double-trigger when click follows a successful pointerup pick.
+    const now = Date.now();
+    if (now - this.lastPickHandledAtMs < 150) {
+      return;
     }
 
-    // Check building pick (buildings use mesh names like "building-X-mesh-*" or "building-*")
-    if (meshName.startsWith('building-')) {
-      this.handleBuildingPick(meshName);
-    }
+    this.handlePick(evt.clientX, evt.clientY);
   };
 
   private handleAgentPick(agent: BuilderAgent): void {
@@ -130,7 +135,7 @@ export class WorldPicker {
 
     if (agent.isInConversation()) {
       const currentUser = agent.getConversationUserId();
-      if (currentUser !== 'player') {
+      if (currentUser !== this.options.getCurrentUserId()) {
         this.options.onAgentBusy(snapshot.name);
         return;
       }
@@ -149,13 +154,128 @@ export class WorldPicker {
     const buildings = this.options.buildingManager.getSnapshots();
     const buildingIdMatch = meshName.match(/^(building-\d+)/);
     if (!buildingIdMatch) {
+      this.options.onBuildingUnavailable('not_found');
       return;
     }
+
     const buildingId = buildingIdMatch[1];
     const building = buildings.find((b) => b.id === buildingId);
+    if (!building) {
+      this.options.onBuildingUnavailable('not_found');
+      return;
+    }
 
-    if (building && building.status === 'complete') {
+    if (building.status === 'complete') {
       this.options.onBuildingPicked({ type: 'building', building });
+      return;
+    }
+
+    this.options.onBuildingUnavailable('under_construction');
+  }
+
+  private handlePick(clientX: number, clientY: number): void {
+    const canvas = this.options.scene.getEngine().getRenderingCanvas();
+    if (!canvas) {
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) {
+      return;
+    }
+
+    const localX = clientX - rect.left;
+    const localY = clientY - rect.top;
+    if (localX < 0 || localX > rect.width || localY < 0 || localY > rect.height) {
+      return;
+    }
+
+    const engine = this.options.scene.getEngine();
+    const pickResults = this.options.scene.multiPick(
+      localX,
+      localY,
+      (mesh) => mesh.isPickable && mesh.isEnabled(),
+    );
+    if (!pickResults || pickResults.length === 0) {
+      return;
+    }
+
+    const hitCandidates = pickResults
+      .filter((hit) => hit.hit && hit.pickedMesh)
+      .map((hit): InteractiveHitCandidate => {
+        const pickedMesh = hit.pickedMesh as AbstractMesh;
+        return {
+          distance: hit.distance,
+          meshName: pickedMesh.name,
+          agentMeshName: this.findNamedMeshInHierarchy(pickedMesh, 'builder-agent-'),
+          buildingMeshName: this.findNamedMeshInHierarchy(pickedMesh, 'building-'),
+        };
+      })
+      .sort((left, right) => left.distance - right.distance);
+
+    if (hitCandidates.length === 0) {
+      return;
+    }
+
+    if (this.isPickDebugEnabled()) {
+      console.info('[WorldPicker] pick', {
+        clientX,
+        clientY,
+        localX,
+        localY,
+        hardwareScalingLevel: engine.getHardwareScalingLevel(),
+        renderWidth: engine.getRenderWidth(),
+        renderHeight: engine.getRenderHeight(),
+        hits: hitCandidates.slice(0, 3).map((hit) => ({
+          meshName: hit.meshName,
+          distance: Number(hit.distance.toFixed(3)),
+          agentMeshName: hit.agentMeshName,
+          buildingMeshName: hit.buildingMeshName,
+        })),
+      });
+    }
+
+    const nearestAgentHit = hitCandidates.find((hit) => hit.agentMeshName);
+    const nearestBuildingHit = hitCandidates.find(
+      (hit) => hit.buildingMeshName || hit.meshName.startsWith('building-')
+    );
+
+    this.lastPickHandledAtMs = Date.now();
+
+    // Bot-first priority when hits overlap.
+    if (nearestAgentHit?.agentMeshName) {
+      const agent = this.options.agentManager.findAgentByMeshName(nearestAgentHit.agentMeshName);
+      if (agent) {
+        this.handleAgentPick(agent);
+        return;
+      }
+    }
+
+    if (nearestBuildingHit) {
+      this.handleBuildingPick(nearestBuildingHit.buildingMeshName ?? nearestBuildingHit.meshName);
+    }
+  }
+
+  private findNamedMeshInHierarchy(mesh: AbstractMesh, prefix: string): string | null {
+    let current: AbstractMesh | null = mesh;
+    while (current) {
+      if (current.name.startsWith(prefix)) {
+        return current.name;
+      }
+      current = current.parent instanceof AbstractMesh ? current.parent : null;
+    }
+    return null;
+  }
+
+  private isPickDebugEnabled(): boolean {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    try {
+      return window.localStorage.getItem(PICK_DEBUG_STORAGE_KEY) === '1';
+    } catch {
+      return false;
     }
   }
 }

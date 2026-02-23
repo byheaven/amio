@@ -7,7 +7,7 @@ import { BuildingManager } from '../buildings/BuildingManager';
 import { BuildingType } from '../buildings/types';
 import { createBillboardText, BillboardText } from '../scene/createBillboardText';
 import { BuilderAgent } from './BuilderAgent';
-import { BuildTask, BuilderAgentSnapshot } from './types';
+import { AssignBuildTaskResult, BuildTask, BuilderAgentSnapshot } from './types';
 
 interface AgentEntry {
   agent: BuilderAgent;
@@ -117,11 +117,16 @@ export class AgentManager {
     return agent?.isInConversation() ?? false;
   }
 
-  public assignUserBuildTask(agentId: string, task: BuildTask): boolean {
+  public assignUserBuildTask(agentId: string, task: BuildTask): AssignBuildTaskResult {
     const agent = this.getAgentById(agentId);
     if (!agent) {
-      return false;
+      return 'agent_not_found';
     }
+
+    if (agent.hasBuildTask()) {
+      return 'agent_busy';
+    }
+
     agent.endConversation();
     agent.assignBuildTask(task);
     const entry = this.agents.find((e) => e.agent === agent);
@@ -130,7 +135,7 @@ export class AgentManager {
       entry.nextTaskAtMs = Number.POSITIVE_INFINITY;
       this.updateAgentLabel(entry);
     }
-    return true;
+    return 'assigned';
   }
 
   public dispose(): void {
@@ -156,6 +161,7 @@ export class AgentManager {
 
       mesh.position.copyFrom(AGENT_SPAWNS[index]);
       mesh.checkCollisions = true;
+      mesh.isPickable = true;
       mesh.ellipsoid = new Vector3(0.45, 0.95, 0.45);
       mesh.ellipsoidOffset = new Vector3(0, 0.95, 0);
 

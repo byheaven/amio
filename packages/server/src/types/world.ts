@@ -55,8 +55,16 @@ export interface WorldContextForPrompt {
 export interface ChatRequest {
   agentId: string;
   message: string;
+  userId: string;
+  clientDateKey: string;
   worldContext: WorldContextForPrompt;
   history: ChatMessage[];
+}
+
+export interface ChatQuota {
+  usedBuilds: number;
+  remainingBuilds: number;
+  pendingBuildToken?: string;
 }
 
 export type AgentAction =
@@ -67,4 +75,17 @@ export type AgentAction =
 export interface ChatResponse {
   reply: string;
   action: AgentAction | null;
+  quota: ChatQuota;
+}
+
+export interface ConfirmBuildRequest {
+  userId: string;
+  clientDateKey: string;
+  pendingBuildToken: string;
+}
+
+export interface ConfirmBuildResponse {
+  success: boolean;
+  tokenStatus: 'accepted' | 'already_confirmed';
+  quota: ChatQuota;
 }

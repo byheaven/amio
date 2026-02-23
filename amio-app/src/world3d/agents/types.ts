@@ -10,6 +10,8 @@ export interface BuildTask {
   requestedBy?: string;
 }
 
+export type AssignBuildTaskResult = 'assigned' | 'agent_not_found' | 'agent_busy';
+
 export type BuilderAgentMode = 'idle' | 'patrol' | 'building';
 
 export interface BuilderAgentTickContext {

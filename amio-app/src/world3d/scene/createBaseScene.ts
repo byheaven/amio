@@ -36,6 +36,7 @@ const createGround = (scene: Scene): void => {
   groundMaterial.specularColor = new Color3(0.03, 0.05, 0.08);
   ground.material = groundMaterial;
   ground.checkCollisions = true;
+  ground.isPickable = false;
 };
 
 const createSky = (scene: Scene): void => {
@@ -90,6 +91,7 @@ const createBoundaryWalls = (scene: Scene): void => {
     wall.position = new Vector3(definition.x, 4, definition.z);
     wall.checkCollisions = true;
     wall.isVisible = false;
+    wall.isPickable = false;
   });
 };
 
@@ -118,6 +120,7 @@ const createWorldObstacles = (scene: Scene): void => {
     obstacle.position = new Vector3(definition.x, definition.height / 2, definition.z);
     obstacle.material = obstacleMaterial;
     obstacle.checkCollisions = true;
+    obstacle.isPickable = false;
   });
 };
 
@@ -140,6 +143,7 @@ const createPlayer = (scene: Scene): Mesh => {
 
   player.position = new Vector3(0, PLAYER_GROUND_HEIGHT, 0);
   player.checkCollisions = true;
+  player.isPickable = false;
   player.ellipsoid = new Vector3(PLAYER_RADIUS, PLAYER_HEIGHT / 2, PLAYER_RADIUS);
   player.ellipsoidOffset = new Vector3(0, PLAYER_HEIGHT / 2, 0);
 

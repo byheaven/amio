@@ -15,13 +15,34 @@ export type AgentAction =
 export interface ChatApiRequest {
   agentId: string;
   message: string;
+  userId: string;
+  clientDateKey: string;
   worldContext: WorldContextForPrompt;
   history: Array<{ role: 'user' | 'assistant'; content: string }>;
+}
+
+export interface ChatQuotaInfo {
+  usedBuilds: number;
+  remainingBuilds: number;
+  pendingBuildToken?: string;
 }
 
 export interface ChatApiResponse {
   reply: string;
   action: AgentAction | null;
+  quota: ChatQuotaInfo;
+}
+
+export interface ConfirmBuildApiRequest {
+  userId: string;
+  clientDateKey: string;
+  pendingBuildToken: string;
+}
+
+export interface ConfirmBuildApiResponse {
+  success: boolean;
+  tokenStatus: 'accepted' | 'already_confirmed';
+  quota: ChatQuotaInfo;
 }
 
 export interface WorldContextForPrompt {

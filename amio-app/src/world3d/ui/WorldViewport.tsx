@@ -26,7 +26,6 @@ interface ChatState {
   isThinking: boolean;
 }
 
-const USER_ID = 'player';
 const AGENT_ZONE = 'Central Zone';
 
 const chatService = new ChatService();
@@ -98,10 +97,12 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
       agentManager,
       buildingManager,
       getPlayerPosition: () => runtime.getPlayerPosition(),
+      getCurrentUserId: () => chatService.getUserId(),
       onAgentPicked: (result) => {
         const agent = result.agent;
+        const userId = chatService.getUserId();
         activeAgentRef.current = agent;
-        agent.startConversation(USER_ID, runtime.getPlayerPosition() ?? new Vector3(0, 0, 0));
+        agent.startConversation(userId, runtime.getPlayerPosition() ?? new Vector3(0, 0, 0));
 
         setChatState({
           isOpen: true,
@@ -113,6 +114,13 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
       },
       onBuildingPicked: (result) => {
         setSelectedBuilding(result.building);
+      },
+      onBuildingUnavailable: (reason) => {
+        if (reason === 'under_construction') {
+          showToast('This building is still under construction.');
+          return;
+        }
+        showToast('Unable to find building details for this selection.');
       },
       onTooFar: (agentName) => {
         showToast(`走近一点再点击 ${agentName}！(Get closer to ${agentName}!)`);
@@ -176,6 +184,8 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
         return { name: b.name, type: b.type, distance: Math.round(dist) };
       });
 
+    const userId = chatService.getUserId();
+    const clientDateKey = chatService.getClientDateKey();
     const agentSnapshot = agentManager.getAgentById(agentId)?.getSnapshot();
     const worldContext: WorldContextForPrompt = {
       agentId,
@@ -184,16 +194,30 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
       agentCurrentTask: agentSnapshot?.taskId ?? null,
       buildingCount: buildingManager.getSnapshots().length,
       nearbyBuildings,
-      userDailyBuildCount: chatService.getDailyBuildCount(agentId),
-      userId: USER_ID,
+      userDailyBuildCount: chatService.getDailyBuildCount(userId),
+      userId,
     };
 
     try {
-      const response = await chatService.sendMessage(agentId, message, worldContext);
+      const response = await chatService.sendMessage(
+        agentId,
+        message,
+        worldContext,
+        userId,
+        clientDateKey,
+      );
       setChatMessages(chatService.getHistory(agentId));
 
       if (response.action && response.action.type === 'build') {
-        handleBuildAction(agentId, response.action, agentManager, buildingManager);
+        await handleBuildAction(
+          agentId,
+          response.action,
+          agentManager,
+          buildingManager,
+          response.quota.pendingBuildToken,
+          userId,
+          clientDateKey,
+        );
       }
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'error';
@@ -203,11 +227,14 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
     }
   }, [chatState]);
 
-  const handleBuildAction = useCallback((
+  const handleBuildAction = useCallback(async (
     agentId: string,
     action: AgentAction & { type: 'build' },
     agentManager: ReturnType<WorldRuntime['getAgentManager']>,
     buildingManager: ReturnType<WorldRuntime['getBuildingManager']>,
+    pendingBuildToken: string | undefined,
+    userId: string,
+    clientDateKey: string,
   ) => {
     if (!agentManager || !buildingManager) {
       return;
@@ -249,13 +276,37 @@ const WorldViewport: React.FC<WorldViewportProps> = ({ onLoaded }) => {
     }
 
     const taskId = `user-task-${Date.now()}`;
-    agentManager.assignUserBuildTask(agentId, {
+    const assignmentResult = agentManager.assignUserBuildTask(agentId, {
       id: taskId,
       type: action.buildingType,
       name: action.name,
       position: buildPosition,
-      requestedBy: USER_ID,
+      requestedBy: userId,
     });
+
+    if (assignmentResult === 'agent_busy') {
+      showToast(`${agentObj.getDisplayName()} is busy with another build task.`);
+      return;
+    }
+
+    if (assignmentResult !== 'assigned') {
+      return;
+    }
+
+    if (pendingBuildToken) {
+      try {
+        const confirmResponse = await chatService.confirmBuildAccepted(userId, clientDateKey, pendingBuildToken);
+        if (!confirmResponse.success) {
+          chatService.recordAcceptedBuild(userId);
+        }
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : 'error';
+        console.error('[WorldViewport] confirmBuildAccepted error:', msg);
+        chatService.recordAcceptedBuild(userId);
+      }
+    } else {
+      chatService.recordAcceptedBuild(userId);
+    }
 
     handleCloseChatDialog();
   }, [handleCloseChatDialog, showToast]);
