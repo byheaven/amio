@@ -52,7 +52,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({
   }
 
   const firstOpenMessage = messages.length === 0 ? (
-    <View className="chat-dialog__bubble chat-dialog__bubble--agent">
+    <View className="chat-dialog__bubble chat-dialog__bubble--assistant">
       <View className="chat-dialog__avatar">{agentName[0]}</View>
       <View className="chat-dialog__bubble-content">
         <Text>你好！有什么我可以帮你建造的吗？ (Hi! What can I build for you?)</Text>
@@ -79,7 +79,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({
           {messages.map((msg) => (
             <View
               key={msg.id}
-              className={`chat-dialog__bubble chat-dialog__bubble--${msg.role === 'user' ? 'user' : 'agent'}`}
+              className={`chat-dialog__bubble chat-dialog__bubble--${msg.role}`}
             >
               {msg.role === 'assistant' && (
                 <View className="chat-dialog__avatar">{agentName[0]}</View>
@@ -90,7 +90,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({
             </View>
           ))}
           {isThinking && (
-            <View className="chat-dialog__bubble chat-dialog__bubble--agent">
+            <View className="chat-dialog__bubble chat-dialog__bubble--assistant">
               <View className="chat-dialog__avatar">{agentName[0]}</View>
               <View className="chat-dialog__bubble-content chat-dialog__bubble-content--thinking">
                 <View className="chat-dialog__dots">
