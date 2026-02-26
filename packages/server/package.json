@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "AMIO 3D World backend API — Cloudflare Workers",
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  },
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
