@@ -14,20 +14,20 @@ All commands run from `amio-app/`:
 cd amio-app
 
 # Development
-npm run dev:h5          # H5 dev server with hot reload (localhost:10086)
-npm run dev:weapp       # WeChat mini-program watch mode
+pnpm run dev:h5          # H5 dev server with hot reload (localhost:10086)
+pnpm run dev:weapp       # WeChat mini-program watch mode
 
 # Production
-npm run build:h5        # Build for H5/web
-npm run build:weapp     # Build for WeChat Mini Program
+pnpm run build:h5        # Build for H5/web
+pnpm run build:weapp     # Build for WeChat Mini Program
 
 # Testing
-npm test                              # Run all tests
-npm run test:bdd                      # Run BDD tests only (*.steps.ts)
-npm run test:unit                     # Run unit tests only (unit/*)
-npm test -- --testPathPattern=chest   # Run specific feature/domain
-npm test -- --watch                   # Watch mode
-npm test -- --coverage                # Coverage report
+pnpm test                              # Run all tests
+pnpm run test:bdd                      # Run BDD tests only (*.steps.ts)
+pnpm run test:unit                     # Run unit tests only (unit/*)
+pnpm test -- --testPathPattern=chest   # Run specific feature/domain
+pnpm test -- --watch                   # Watch mode
+pnpm test -- --coverage                # Coverage report
 ```
 
 ## Architecture
@@ -267,9 +267,9 @@ afterEach(() => mockRandom.mockRestore());
 
 Run tests by tag using Jest's `--testNamePattern`:
 ```bash
-npm test -- --testPathPattern=chest      # All chest-related tests
-npm test -- --testPathPattern=game       # All game logic tests
-npm test -- --testPathPattern=tools      # All tool-related tests
+pnpm test -- --testPathPattern=chest      # All chest-related tests
+pnpm test -- --testPathPattern=game       # All game logic tests
+pnpm test -- --testPathPattern=tools      # All tool-related tests
 ```
 
 ### Reference Implementation
